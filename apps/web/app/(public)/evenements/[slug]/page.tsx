@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import {
   Calendar,
   MapPin,
@@ -12,6 +13,7 @@ import {
   Globe,
 } from "lucide-react";
 import { getEventBySlug, getAllEventSlugs } from "@/lib/queries/events";
+import { urlFor } from "@/lib/sanity/image";
 import { EventBadge, FormatBadge } from "@/components/events/EventBadge";
 import { EventSchema } from "@/components/events/EventSchema";
 import {
@@ -46,6 +48,9 @@ export async function generateMetadata({
       title: event.title,
       description: event.description ?? undefined,
       type: "website",
+      images: event.image
+        ? [{ url: urlFor(event.image).width(1200).height(630).auto("format").url() }]
+        : [],
     },
   };
 }
@@ -75,6 +80,20 @@ export default async function EventDetailPage({
           <ArrowLeft className="h-4 w-4" />
           Retour aux événements
         </Link>
+
+        {/* Hero image */}
+        {event.image && (
+          <div className="relative h-56 md:h-80 w-full rounded-xl overflow-hidden border-2 border-black mb-8">
+            <Image
+              src={urlFor(event.image).width(1200).height(400).auto("format").url()}
+              alt={event.image.alt ?? event.title}
+              fill
+              className="object-cover"
+              priority
+              sizes="(max-width: 896px) 100vw, 896px"
+            />
+          </div>
+        )}
 
         <article>
           {/* Header */}

@@ -83,8 +83,23 @@ export const submissionSchema = defineType({
       type: "string",
     }),
     defineField({
+      name: "country",
+      title: "Pays",
+      type: "string",
+      options: {
+        list: [
+          { title: "🇫🇷 France", value: "FR" },
+          { title: "🇧🇪 Belgique", value: "BE" },
+          { title: "🇨🇭 Suisse", value: "CH" },
+          { title: "🇱🇺 Luxembourg", value: "LU" },
+          { title: "🇨🇦 Canada", value: "CA" },
+        ],
+      },
+      initialValue: "FR",
+    }),
+    defineField({
       name: "departmentCode",
-      title: "Code département",
+      title: "Département / Province",
       type: "string",
     }),
     defineField({

@@ -62,8 +62,8 @@ async function geocodeWithBAN(query: string): Promise<GeoResult | null> {
 }
 
 /**
- * Fallback geocoder: Nominatim OSM.
- * Rate-limited to 1 req/s per ToS.
+ * Geocoder international : Nominatim OSM.
+ * Rate-limited to 1 req/s per ToS. No country restriction.
  */
 async function geocodeWithNominatim(query: string): Promise<GeoResult | null> {
   const now = Date.now();
@@ -73,10 +73,10 @@ async function geocodeWithNominatim(query: string): Promise<GeoResult | null> {
   }
   lastNominatimCall = Date.now();
 
-  const userAgent = process.env.NOMINATIM_USER_AGENT ?? "agenda-cartes-fr/1.0";
+  const userAgent = process.env.NOMINATIM_USER_AGENT ?? "agenda-cartes/1.0";
 
   try {
-    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1&countrycodes=fr`;
+    const url = `https://nominatim.openstreetmap.org/search?q=${encodeURIComponent(query)}&format=json&limit=1`;
     const res = await fetch(url, {
       headers: {
         "User-Agent": userAgent,
@@ -102,24 +102,32 @@ async function geocodeWithNominatim(query: string): Promise<GeoResult | null> {
 }
 
 /**
- * Geocode a location. Tries BAN first, falls back to Nominatim.
+ * Geocode a location.
+ * For France: tries BAN first (fast, free), falls back to Nominatim.
+ * For other countries: uses Nominatim directly (international).
  */
 export async function geocode(
   address: string | null,
   city: string,
-  postalCode?: string | null
+  postalCode?: string | null,
+  country?: string | null
 ): Promise<GeoResult | null> {
+  const countryLabel = country ?? "France";
+  const isFrance = !country || country.toLowerCase() === "france" || country.toLowerCase() === "fr";
+
   // Build query
-  const query = [address, postalCode, city, "France"]
+  const query = [address, postalCode, city, countryLabel]
     .filter(Boolean)
     .join(", ");
 
-  // Try BAN first (fast, free, FR-only)
-  const banResult = await geocodeWithBAN(query);
-  if (banResult) return banResult;
+  if (isFrance) {
+    // Try BAN first (fast, free, FR-only)
+    const banResult = await geocodeWithBAN(query);
+    if (banResult) return banResult;
+  }
 
-  // Fallback to Nominatim
-  const cityQuery = [postalCode, city, "France"].filter(Boolean).join(", ");
+  // Nominatim: works for all countries
+  const cityQuery = [postalCode, city, countryLabel].filter(Boolean).join(", ");
   return geocodeWithNominatim(cityQuery);
 }
 

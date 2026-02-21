@@ -1,9 +1,6 @@
-import type { NextConfig } from "next";
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   transpilePackages: ["@agenda-cartes/shared"],
-  // Sanity Studio requires this
-  // See: https://www.sanity.io/docs/next-js-app-router-live-preview
   images: {
     remotePatterns: [
       {

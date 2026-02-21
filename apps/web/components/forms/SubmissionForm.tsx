@@ -32,6 +32,7 @@ export function SubmissionForm() {
       venue_name: formData.get("venue_name") as string || null,
       address: formData.get("address") as string || null,
       city: formData.get("city") as string,
+      country: formData.get("country") as string || "FR",
       department_code: formData.get("department_code") as string || null,
       postal_code: formData.get("postal_code") as string || null,
       starts_at: formData.get("starts_at") as string,
@@ -185,6 +186,25 @@ export function SubmissionForm() {
           Lieu
         </h2>
         <div className="space-y-4">
+          <div>
+            <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-1">
+              Pays <span className="text-red-500">*</span>
+            </label>
+            <select
+              id="country"
+              name="country"
+              required
+              defaultValue="FR"
+              className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+            >
+              <option value="FR">🇫🇷 France</option>
+              <option value="BE">🇧🇪 Belgique</option>
+              <option value="CH">🇨🇭 Suisse</option>
+              <option value="LU">🇱🇺 Luxembourg</option>
+              <option value="CA">🇨🇦 Canada</option>
+            </select>
+          </div>
+
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
@@ -195,7 +215,7 @@ export function SubmissionForm() {
                 id="city"
                 name="city"
                 required
-                placeholder="Ex: Paris"
+                placeholder="Ex: Paris, Bruxelles, Genève..."
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -207,8 +227,7 @@ export function SubmissionForm() {
                 type="text"
                 id="postal_code"
                 name="postal_code"
-                pattern="[0-9]{5}"
-                placeholder="75001"
+                placeholder="75001, 1000, 1200..."
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>

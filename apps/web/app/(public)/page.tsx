@@ -1,10 +1,16 @@
 import Link from "next/link";
-import { ArrowRight, CalendarDays, Map, PlusCircle, TrendingUp } from "lucide-react";
+import { ArrowRight, CalendarDays, Map, PlusCircle } from "lucide-react";
 import { getEvents } from "@/lib/queries/events";
 import { EventCard } from "@/components/events/EventCard";
-import { TCG_CONFIG, TCGType } from "@agenda-cartes/shared";
+import { TCG_CONFIG } from "@agenda-cartes/shared";
 
-export const revalidate = 3600; // ISR: revalidate every hour
+export const revalidate = 3600;
+
+// Slight rotations for sticker effect
+const STICKER_ROTATIONS = [
+  "-rotate-2", "rotate-1", "-rotate-1", "rotate-2",
+  "-rotate-3", "rotate-2", "-rotate-1", "rotate-1", "-rotate-2",
+];
 
 export default async function HomePage() {
   const { data: upcomingEvents } = await getEvents({}, 1, 6);
@@ -12,28 +18,39 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white py-20 px-4">
-        <div className="container text-center">
-          <div className="text-6xl mb-6">🃏</div>
-          <h1 className="text-4xl md:text-5xl font-bold mb-4">
-            Agenda Cartes FR
+      <section className="bg-[#FFDE03] border-b-4 border-black py-20 px-4 relative overflow-hidden">
+        {/* Decorative doodles */}
+        <div className="absolute top-8 left-8 text-4xl opacity-20 rotate-12 select-none pointer-events-none">★</div>
+        <div className="absolute bottom-8 right-12 text-5xl opacity-20 -rotate-12 select-none pointer-events-none">✦</div>
+        <div className="absolute top-1/2 left-4 text-3xl opacity-15 rotate-6 select-none pointer-events-none">◆</div>
+        <div className="absolute top-6 right-1/4 text-2xl opacity-15 -rotate-6 select-none pointer-events-none">●</div>
+
+        <div className="container text-center relative z-10">
+          {/* Big floating card emoji */}
+          <div className="inline-block mb-8 bg-white border-4 border-black shadow-brutal-xl p-5 text-7xl animate-float">
+            🃏
+          </div>
+
+          <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-none mb-4 text-black">
+            CardAgenda
           </h1>
-          <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-            Le répertoire de référence des événements de cartes à collectionner
-            en France. Tournois, bourses, conventions — tout en un seul endroit.
+          <p className="text-lg md:text-xl font-bold mb-10 max-w-2xl mx-auto text-black/80">
+            Tous les événements cartes de collection, en un seul endroit.{" "}
+            <span className="text-black/50">TCG · NBA · Foot · et bien plus.</span>
           </p>
+
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/evenements"
-              className="inline-flex items-center gap-2 bg-white text-blue-700 px-6 py-3 rounded-lg font-semibold hover:bg-blue-50 transition-colors"
+              className="inline-flex items-center gap-2 bg-black text-[#FFDE03] px-8 py-4 font-display font-black uppercase text-lg border-2 border-black shadow-[6px_6px_0px_0px_#000,3px_3px_0px_0px_#FFDE03] hover:shadow-[10px_10px_0px_0px_#000,5px_5px_0px_0px_#FFDE03] hover:-translate-x-1 hover:-translate-y-1 active:shadow-none active:translate-x-2 active:translate-y-2 transition-all"
             >
               <CalendarDays className="h-5 w-5" />
-              Voir tous les événements
-              <ArrowRight className="h-4 w-4" />
+              Voir les événements
+              <ArrowRight className="h-5 w-5" />
             </Link>
             <Link
               href="/carte"
-              className="inline-flex items-center gap-2 border border-white/30 text-white px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition-colors"
+              className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 font-display font-black uppercase text-lg border-2 border-black shadow-[6px_6px_0px_0px_#000,3px_3px_0px_0px_#FFDE03] hover:shadow-[10px_10px_0px_0px_#000,5px_5px_0px_0px_#FFDE03] hover:-translate-x-1 hover:-translate-y-1 active:shadow-none active:translate-x-2 active:translate-y-2 transition-all"
             >
               <Map className="h-5 w-5" />
               Carte interactive
@@ -42,15 +59,26 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* TCG Type Pills */}
-      <section className="border-b bg-gray-50 py-4">
+      {/* Marquee */}
+      <div className="overflow-hidden border-b-4 border-black bg-black py-3 select-none">
+        <div className="flex whitespace-nowrap animate-marquee">
+          {[0, 1].map((i) => (
+            <span key={i} className="text-[#FFDE03] font-display font-black uppercase text-sm tracking-widest pr-0">
+              POKÉMON&nbsp;•&nbsp;MAGIC&nbsp;•&nbsp;YU-GI-OH&nbsp;•&nbsp;LORCANA&nbsp;•&nbsp;ONE&nbsp;PIECE&nbsp;•&nbsp;DRAGON&nbsp;BALL&nbsp;•&nbsp;FLESH&nbsp;&amp;&nbsp;BLOOD&nbsp;•&nbsp;NBA&nbsp;•&nbsp;FOOT&nbsp;•&nbsp;SPORTS&nbsp;CARDS&nbsp;•&nbsp;&nbsp;
+            </span>
+          ))}
+        </div>
+      </div>
+
+      {/* TCG Sticker Pills */}
+      <section className="border-b-4 border-black bg-white py-6">
         <div className="container">
-          <div className="flex flex-wrap gap-2 justify-center">
-            {Object.entries(TCG_CONFIG).map(([key, config]) => (
+          <div className="flex flex-wrap gap-3 justify-center items-center">
+            {Object.entries(TCG_CONFIG).map(([key, config], i) => (
               <Link
                 key={key}
                 href={`/evenements?tcg=${key}`}
-                className={`inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm font-medium ${config.bgColor} ${config.color} hover:opacity-80 transition-opacity`}
+                className={`inline-flex items-center gap-1.5 px-4 py-2 text-sm font-bold border-2 border-black shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all ${STICKER_ROTATIONS[i % STICKER_ROTATIONS.length]} ${config.bgColor} ${config.color}`}
               >
                 <span>{config.emoji}</span>
                 {config.labelShort}
@@ -61,18 +89,18 @@ export default async function HomePage() {
       </section>
 
       {/* Upcoming events */}
-      <section className="py-12">
+      <section className="py-14">
         <div className="container">
-          <div className="flex items-center justify-between mb-8">
+          <div className="flex items-end justify-between mb-8 border-b-4 border-black pb-4">
             <div>
-              <h2 className="text-2xl font-bold text-gray-900">
+              <h2 className="font-display text-3xl font-black uppercase text-black">
                 Prochains événements
               </h2>
-              <p className="text-gray-500 mt-1">Les événements TCG à venir en France</p>
+              <p className="text-black/60 font-medium mt-1">Les événements à venir</p>
             </div>
             <Link
               href="/evenements"
-              className="flex items-center gap-1 text-blue-600 hover:text-blue-800 font-medium text-sm"
+              className="flex items-center gap-1 font-bold uppercase text-sm border-2 border-black px-4 py-2 shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all bg-white"
             >
               Voir tout
               <ArrowRight className="h-4 w-4" />
@@ -80,34 +108,34 @@ export default async function HomePage() {
           </div>
 
           {upcomingEvents.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {upcomingEvents.map((event) => (
                 <EventCard key={event.id} event={event} />
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 text-gray-500">
-              <p>Aucun événement pour le moment. Soyez le premier à en ajouter un !</p>
+            <div className="border-4 border-black border-dashed p-12 text-center">
+              <p className="font-bold text-black/60">Aucun événement pour le moment. Soyez le premier à en ajouter un !</p>
             </div>
           )}
         </div>
       </section>
 
       {/* CTA: Submit event */}
-      <section className="py-12 bg-gray-50 border-t">
+      <section className="py-14 border-t-4 border-black bg-white">
         <div className="container">
-          <div className="bg-white rounded-2xl border border-gray-200 p-8 md:p-12 text-center max-w-2xl mx-auto">
-            <PlusCircle className="h-12 w-12 text-blue-600 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-gray-900 mb-3">
+          <div className="border-4 border-black shadow-brutal-xl p-8 md:p-12 text-center max-w-2xl mx-auto bg-[#FFDE03]">
+            <div className="text-6xl mb-4 inline-block rotate-3">📋</div>
+            <h2 className="font-display text-3xl font-black uppercase mb-3 text-black">
               Organisez un événement ?
             </h2>
-            <p className="text-gray-600 mb-6">
-              Soumettez votre tournoi, bourse ou convention pour le faire
-              apparaître dans notre annuaire. Modération sous 24h.
+            <p className="font-medium mb-8 text-black/80">
+              Soumettez votre tournoi, bourse ou convention.
+              Modération sous 24h — 100% gratuit.
             </p>
             <Link
               href="/soumettre"
-              className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
+              className="inline-flex items-center gap-2 bg-black text-[#FFDE03] px-8 py-4 font-display font-black uppercase text-lg border-2 border-black shadow-brutal hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none transition-all"
             >
               <PlusCircle className="h-5 w-5" />
               Soumettre un événement
@@ -117,25 +145,23 @@ export default async function HomePage() {
       </section>
 
       {/* Stats row */}
-      <section className="py-10 border-t">
+      <section className="py-12 border-t-4 border-black">
         <div className="container">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div>
-              <div className="text-3xl font-bold text-blue-600">9+</div>
-              <div className="text-sm text-gray-500 mt-1">Jeux référencés</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-blue-600">101</div>
-              <div className="text-sm text-gray-500 mt-1">Départements couverts</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-blue-600">🔄</div>
-              <div className="text-sm text-gray-500 mt-1">Mise à jour auto (6h)</div>
-            </div>
-            <div>
-              <div className="text-3xl font-bold text-blue-600">🆓</div>
-              <div className="text-sm text-gray-500 mt-1">100% gratuit</div>
-            </div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border-2 border-black">
+            {[
+              { value: "9+", label: "Jeux référencés" },
+              { value: "101", label: "Départements" },
+              { value: "6h", label: "Mise à jour auto" },
+              { value: "🆓", label: "100% gratuit" },
+            ].map((stat, i) => (
+              <div
+                key={i}
+                className={`p-6 text-center ${i < 3 ? "border-r-2 border-black" : ""} ${i >= 2 ? "border-t-2 md:border-t-0 border-black" : ""}`}
+              >
+                <div className="font-display text-4xl font-black text-black">{stat.value}</div>
+                <div className="text-sm font-bold text-black/60 mt-1 uppercase tracking-wide">{stat.label}</div>
+              </div>
+            ))}
           </div>
         </div>
       </section>

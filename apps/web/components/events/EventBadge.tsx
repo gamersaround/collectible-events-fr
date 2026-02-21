@@ -7,16 +7,31 @@ interface EventBadgeProps {
   className?: string;
 }
 
+// Small rotation per type for the sticker effect
+const BADGE_ROTATIONS: Partial<Record<TCGType, string>> = {
+  [TCGType.POKEMON]: "-rotate-1",
+  [TCGType.MAGIC]: "rotate-1",
+  [TCGType.YUGIOH]: "-rotate-2",
+  [TCGType.SPORTS_CARDS]: "rotate-1",
+  [TCGType.ONE_PIECE]: "-rotate-1",
+  [TCGType.DRAGON_BALL]: "rotate-2",
+  [TCGType.LORCANA]: "-rotate-1",
+  [TCGType.FLESH_BLOOD]: "rotate-1",
+  [TCGType.AUTRES]: "rotate-0",
+};
+
 export function EventBadge({ tcgType, size = "md", className }: EventBadgeProps) {
   const config = TCG_CONFIG[tcgType];
+  const rotation = BADGE_ROTATIONS[tcgType] ?? "rotate-0";
 
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1 rounded-full font-medium",
+        "inline-flex items-center gap-1 border border-black font-bold",
         config.bgColor,
         config.color,
-        size === "sm" ? "px-2 py-0.5 text-xs" : "px-3 py-1 text-sm",
+        rotation,
+        size === "sm" ? "px-1.5 py-0.5 text-[10px]" : "px-2.5 py-1 text-xs",
         className
       )}
     >
@@ -31,15 +46,15 @@ interface FormatBadgeProps {
   className?: string;
 }
 
-const FORMAT_COLORS: Record<string, string> = {
-  tournoi: "bg-blue-100 text-blue-800",
-  bourse: "bg-green-100 text-green-800",
-  convention: "bg-purple-100 text-purple-800",
-  draft: "bg-orange-100 text-orange-800",
-  prereleases: "bg-pink-100 text-pink-800",
-  league: "bg-cyan-100 text-cyan-800",
-  casual: "bg-gray-100 text-gray-700",
-  championship: "bg-yellow-100 text-yellow-800",
+const FORMAT_STYLES: Record<string, string> = {
+  tournoi: "bg-blue-100 text-blue-900 border-blue-900",
+  bourse: "bg-green-100 text-green-900 border-green-900",
+  convention: "bg-purple-100 text-purple-900 border-purple-900",
+  draft: "bg-orange-100 text-orange-900 border-orange-900",
+  prereleases: "bg-pink-100 text-pink-900 border-pink-900",
+  league: "bg-cyan-100 text-cyan-900 border-cyan-900",
+  casual: "bg-gray-100 text-gray-800 border-gray-800",
+  championship: "bg-yellow-100 text-yellow-900 border-yellow-900",
 };
 
 const FORMAT_LABELS: Record<string, string> = {
@@ -54,14 +69,14 @@ const FORMAT_LABELS: Record<string, string> = {
 };
 
 export function FormatBadge({ format, className }: FormatBadgeProps) {
-  const color = FORMAT_COLORS[format] ?? "bg-gray-100 text-gray-700";
+  const style = FORMAT_STYLES[format] ?? "bg-gray-100 text-gray-800 border-gray-800";
   const label = FORMAT_LABELS[format] ?? format;
 
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
-        color,
+        "inline-flex items-center border font-bold text-[10px] px-1.5 py-0.5 rotate-1",
+        style,
         className
       )}
     >

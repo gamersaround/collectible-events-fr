@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import "leaflet/dist/leaflet.css";
 import type { Map as LeafletMap } from "leaflet";
 import type { EventRow } from "@/lib/queries/events";
 import { TCGType, TCG_CONFIG } from "@agenda-cartes/shared";
@@ -18,8 +19,11 @@ export default function EventMap({ events, height = "600px" }: EventMapProps) {
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
+    let cancelled = false;
+
     // Dynamically import Leaflet to avoid SSR issues
     import("leaflet").then((L) => {
+      if (cancelled || !containerRef.current || mapRef.current) return;
       // Fix Leaflet default icon path issue with Next.js
       delete (L.Icon.Default.prototype as any)._getIconUrl;
       L.Icon.Default.mergeOptions({
@@ -28,10 +32,10 @@ export default function EventMap({ events, height = "600px" }: EventMapProps) {
         shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
       });
 
-      // Initialize map centered on France
+      // Initialize map centered on Europe (auto-adjusted via fitBounds below)
       const map = L.map(containerRef.current!, {
-        center: [46.603354, 1.888334],
-        zoom: 6,
+        center: [54, 15],
+        zoom: 4,
         zoomControl: true,
       });
 
@@ -45,6 +49,8 @@ export default function EventMap({ events, height = "600px" }: EventMapProps) {
       }).addTo(map);
 
       // Add markers for each event
+      const markerLatLngs: [number, number][] = [];
+
       for (const event of events) {
         if (!event.latitude || !event.longitude) continue;
 
@@ -100,10 +106,18 @@ export default function EventMap({ events, height = "600px" }: EventMapProps) {
         L.marker([event.latitude, event.longitude], { icon })
           .bindPopup(popup)
           .addTo(map);
+
+        markerLatLngs.push([event.latitude, event.longitude]);
+      }
+
+      // Auto-fit viewport to actual markers if any
+      if (markerLatLngs.length > 0) {
+        map.fitBounds(L.latLngBounds(markerLatLngs), { padding: [40, 40], maxZoom: 10 });
       }
     });
 
     return () => {
+      cancelled = true;
       mapRef.current?.remove();
       mapRef.current = null;
     };

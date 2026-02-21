@@ -12,6 +12,7 @@ const EVENT_PROJECTION = groq`{
   "venue_name": venueName,
   address,
   city,
+  "country": coalesce(country, "FR"),
   "department_code": departmentCode,
   "postal_code": postalCode,
   latitude,
@@ -25,14 +26,15 @@ const EVENT_PROJECTION = groq`{
   "organizer_contact": organizerContact,
   "website_url": websiteUrl,
   "source_url": sourceUrl,
-  fingerprint
+  fingerprint,
+  "image": image { asset, hotspot, crop, "alt": alt }
 }`;
 
 // Listing with filters — all params optional
 export const EVENTS_QUERY = groq`
   *[_type == "event"
     && status in ["a_venir", "en_cours"]
-    && startsAt > $now
+    && (!defined(startsAt) || startsAt > $now)
     && (!defined($tcgTypes) || count((tcgTypes[])[@ in $tcgTypes]) > 0)
     && (!defined($format) || format == $format)
     && (!defined($dept) || departmentCode == $dept)
@@ -45,7 +47,7 @@ export const EVENTS_QUERY = groq`
 export const EVENTS_PAGINATED_QUERY = groq`
   *[_type == "event"
     && status in ["a_venir", "en_cours"]
-    && startsAt > $now
+    && (!defined(startsAt) || startsAt > $now)
     && (!defined($tcgTypes) || count((tcgTypes[])[@ in $tcgTypes]) > 0)
     && (!defined($format) || format == $format)
     && (!defined($dept) || departmentCode == $dept)
@@ -58,7 +60,7 @@ export const EVENTS_PAGINATED_QUERY = groq`
 export const EVENTS_COUNT_QUERY = groq`
   count(*[_type == "event"
     && status in ["a_venir", "en_cours"]
-    && startsAt > $now
+    && (!defined(startsAt) || startsAt > $now)
     && (!defined($tcgTypes) || count((tcgTypes[])[@ in $tcgTypes]) > 0)
     && (!defined($format) || format == $format)
     && (!defined($dept) || departmentCode == $dept)
@@ -77,17 +79,19 @@ export const ALL_EVENT_SLUGS_QUERY = groq`
   *[_type == "event" && status in ["a_venir", "en_cours"]].slug.current
 `;
 
-// Lightweight projection for the map
+// Lightweight projection for the map — all future events, with or without coordinates
 export const MAP_EVENTS_QUERY = groq`
   *[_type == "event"
-    && defined(latitude)
-    && defined(longitude)
     && status in ["a_venir", "en_cours"]
+    && startsAt > $now
   ] {
     "id": _id,
     "slug": slug.current,
     title,
     city,
+    address,
+    "postal_code": postalCode,
+    country,
     latitude,
     longitude,
     "tcg_types": tcgTypes,

@@ -8,6 +8,7 @@ export interface SubmissionInput {
   venue_name?: string | null;
   address?: string | null;
   city: string;
+  country?: string | null;
   department_code?: string | null;
   postal_code?: string | null;
   starts_at: string;
@@ -36,6 +37,7 @@ export async function createSubmission(
     venueName: data.venue_name ?? null,
     address: data.address ?? null,
     city: data.city,
+    country: data.country ?? "FR",
     departmentCode: data.department_code ?? null,
     postalCode: data.postal_code ?? null,
     startsAt: data.starts_at,

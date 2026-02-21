@@ -28,6 +28,19 @@ export const eventSchema = defineType({
       rows: 3,
     }),
     defineField({
+      name: "image",
+      title: "Photo de l'événement",
+      type: "image",
+      options: { hotspot: true },
+      fields: [
+        defineField({
+          name: "alt",
+          title: "Texte alternatif (accessibilité)",
+          type: "string",
+        }),
+      ],
+    }),
+    defineField({
       name: "tcgTypes",
       title: "Types de jeu",
       type: "array",
@@ -96,8 +109,24 @@ export const eventSchema = defineType({
       validation: (Rule) => Rule.required(),
     }),
     defineField({
+      name: "country",
+      title: "Pays",
+      type: "string",
+      options: {
+        list: [
+          { title: "🇫🇷 France", value: "FR" },
+          { title: "🇧🇪 Belgique", value: "BE" },
+          { title: "🇨🇭 Suisse", value: "CH" },
+          { title: "🇱🇺 Luxembourg", value: "LU" },
+          { title: "🇨🇦 Canada", value: "CA" },
+        ],
+      },
+      initialValue: "FR",
+      validation: (Rule) => Rule.required(),
+    }),
+    defineField({
       name: "departmentCode",
-      title: "Code département",
+      title: "Département / Province",
       type: "string",
     }),
     defineField({

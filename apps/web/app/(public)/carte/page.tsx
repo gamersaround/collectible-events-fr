@@ -4,9 +4,9 @@ import { getEventsForMap } from "@/lib/queries/events";
 import { TCG_CONFIG } from "@agenda-cartes/shared";
 
 export const metadata: Metadata = {
-  title: "Carte des événements TCG en France",
+  title: "Carte des événements",
   description:
-    "Visualisez tous les événements TCG en France sur une carte interactive. Pokémon, Magic, Yu-Gi-Oh et plus.",
+    "Visualisez tous les événements de cartes à collectionner sur une carte interactive. Pokémon, Magic, Yu-Gi-Oh, cartes sport et plus.",
 };
 
 export const revalidate = 3600;
@@ -29,7 +29,7 @@ export default async function MapPage() {
           Carte des événements TCG
         </h1>
         <p className="text-gray-500">
-          {events.length} événement{events.length > 1 ? "s" : ""} à venir en France
+          {events.length} événement{events.length > 1 ? "s" : ""} à venir
         </p>
       </div>
 

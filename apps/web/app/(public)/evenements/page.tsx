@@ -3,7 +3,7 @@ import type { Metadata } from "next";
 import { getEvents, getDepartments } from "@/lib/queries/events";
 import { EventList, EventListSkeleton } from "@/components/events/EventList";
 import { EventFilters } from "@/components/events/EventFilters";
-import { parseFiltersFromParams } from "@/hooks/useFilters";
+import { parseFiltersFromParams } from "@/lib/utils/filters";
 import { Pagination } from "@/components/ui/Pagination";
 
 export const revalidate = 3600;
@@ -17,13 +17,13 @@ export async function generateMetadata({
   const tcg = Array.isArray(params.tcg) ? params.tcg[0] : params.tcg;
   const dept = Array.isArray(params.dept) ? params.dept[0] : params.dept;
 
-  let title = "Événements TCG en France";
-  if (tcg) title = `Événements ${tcg} en France`;
+  let title = "Événements cartes à collectionner";
+  if (tcg) title = `Événements ${tcg}`;
   if (dept) title += ` — Département ${dept}`;
 
   return {
     title,
-    description: `Trouvez tous les événements ${tcg ?? "TCG"} en France : tournois, bourses, conventions.`,
+    description: `Trouvez tous les événements ${tcg ?? "de cartes à collectionner"} : tournois, bourses, conventions.`,
   };
 }
 
@@ -46,7 +46,7 @@ export default async function EventsPage({
   return (
     <div className="container py-8">
       <h1 className="text-2xl font-bold text-gray-900 mb-8">
-        Événements TCG en France
+        Événements cartes à collectionner
       </h1>
 
       <div className="flex flex-col md:flex-row gap-8">

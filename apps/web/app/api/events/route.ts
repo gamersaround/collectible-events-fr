@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getEvents } from "@/lib/queries/events";
-import { parseFiltersFromParams } from "@/hooks/useFilters";
+import { parseFiltersFromParams } from "@/lib/utils/filters";
 
 export async function GET(request: NextRequest) {
   try {

@@ -1,30 +1,41 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Archivo_Black, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import { NoiseSVG } from "@/components/ui/NoiseSVG";
 
-const inter = Inter({ subsets: ["latin"] });
+const archivoBlack = Archivo_Black({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-display",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  variable: "--font-body",
+});
 
 export const metadata: Metadata = {
   title: {
-    default: "Agenda Cartes FR — Événements TCG en France",
-    template: "%s | Agenda Cartes FR",
+    default: "CardAgenda — TCG Events Near You",
+    template: "%s | CardAgenda",
   },
   description:
-    "Le répertoire des événements de cartes à collectionner en France : Pokémon TCG, Magic, Yu-Gi-Oh, One Piece, Lorcana et plus. Tournois, bourses, conventions.",
+    "Find TCG events near you: Pokémon, Magic: The Gathering, Yu-Gi-Oh!, One Piece, Lorcana and more. Tournaments, conventions, drafts.",
   keywords: [
-    "TCG France",
-    "événements Pokémon",
-    "tournois Magic",
-    "cartes à collectionner",
-    "tournois Yu-Gi-Oh",
-    "One Piece TCG France",
-    "Lorcana France",
+    "TCG events",
+    "Pokémon tournament",
+    "Magic the Gathering events",
+    "collectible card game",
+    "Yu-Gi-Oh tournament",
+    "One Piece TCG",
+    "Lorcana events",
+    "card game agenda",
   ],
   openGraph: {
     type: "website",
-    locale: "fr_FR",
+    locale: "en_US",
     url: process.env.NEXT_PUBLIC_APP_URL,
-    siteName: "Agenda Cartes FR",
+    siteName: "CardAgenda",
   },
   robots: {
     index: true,
@@ -39,7 +50,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="fr">
-      <body className={inter.className}>{children}</body>
+      <body className={`${archivoBlack.variable} ${spaceGrotesk.variable} font-body`}>
+        <NoiseSVG />
+        {children}
+      </body>
     </html>
   );
 }
