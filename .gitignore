@@ -40,3 +40,4 @@ yarn-debug.log*
 # Playwright (if used for crawler)
 playwright-report/
 test-results/
+pnpm-lock.yaml
