@@ -99,6 +99,7 @@ export default async function HomePage() {
               <Link
                 key={key}
                 href={`/evenements?tcg=${key}`}
+                prefetch={false}
                 className={`inline-flex items-center gap-1.5 px-4 py-2 text-sm font-bold border-2 border-black shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all ${STICKER_ROTATIONS[i % STICKER_ROTATIONS.length]} ${config.bgColor} ${config.color}`}
               >
                 <span>{config.emoji}</span>
