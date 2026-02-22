@@ -19,6 +19,7 @@ export interface SubmissionInput {
   organizer_name?: string | null;
   organizer_contact?: string | null;
   website_url?: string | null;
+  image_asset_id?: string | null;
   honeypot_field?: string;
   submitter_ip?: string | null;
   recaptcha_score?: number | null;
@@ -50,5 +51,8 @@ export async function createSubmission(
     websiteUrl: data.website_url ?? null,
     submitterIp: ip ?? null,
     status: "en_attente",
+    ...(data.image_asset_id
+      ? { image: { _type: "image", asset: { _type: "reference", _ref: data.image_asset_id } } }
+      : {}),
   });
 }

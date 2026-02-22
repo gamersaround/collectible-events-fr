@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import "leaflet/dist/leaflet.css";
 import type { Map as LeafletMap } from "leaflet";
 import type { EventRow } from "@/lib/queries/events";
@@ -15,6 +15,7 @@ interface EventMapProps {
 export default function EventMap({ events, height = "600px" }: EventMapProps) {
   const mapRef = useRef<LeafletMap | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const [mapReady, setMapReady] = useState(false);
 
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
@@ -114,6 +115,8 @@ export default function EventMap({ events, height = "600px" }: EventMapProps) {
       if (markerLatLngs.length > 0) {
         map.fitBounds(L.latLngBounds(markerLatLngs), { padding: [40, 40], maxZoom: 10 });
       }
+
+      setMapReady(true);
     });
 
     return () => {
@@ -124,10 +127,18 @@ export default function EventMap({ events, height = "600px" }: EventMapProps) {
   }, [events]);
 
   return (
-    <div
-      ref={containerRef}
-      style={{ height, width: "100%" }}
-      className="rounded-xl overflow-hidden border border-gray-200"
-    />
+    <div className="relative" style={{ height, width: "100%" }}>
+      {!mapReady && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 border-2 border-black z-10">
+          <div className="w-10 h-10 border-4 border-black border-t-[#FFDE03] rounded-full animate-spin mb-3" />
+          <p className="font-bold text-sm uppercase tracking-widest text-black">Chargement de la carte…</p>
+        </div>
+      )}
+      <div
+        ref={containerRef}
+        style={{ height: "100%", width: "100%" }}
+        className="border-2 border-black"
+      />
+    </div>
   );
 }

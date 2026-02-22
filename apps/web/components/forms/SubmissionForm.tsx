@@ -13,6 +13,8 @@ interface FormState {
 export function SubmissionForm() {
   const router = useRouter();
   const [state, setState] = useState<FormState>({ status: "idle" });
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageUploading, setImageUploading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -20,6 +22,22 @@ export function SubmissionForm() {
 
     const form = e.currentTarget;
     const formData = new FormData(form);
+
+    // Upload image first if provided
+    let imageAssetId: string | null = null;
+    if (imageFile) {
+      setImageUploading(true);
+      const fd = new FormData();
+      fd.append("file", imageFile);
+      const uploadRes = await fetch("/api/upload", { method: "POST", body: fd });
+      const uploadData = await uploadRes.json();
+      setImageUploading(false);
+      if (!uploadRes.ok) {
+        setState({ status: "error", errorMessage: uploadData.error ?? "Erreur lors de l'upload de l'image" });
+        return;
+      }
+      imageAssetId = uploadData.assetId ?? null;
+    }
 
     // Collect TCG types (multiple checkboxes)
     const tcgTypes = formData.getAll("tcg_types") as TCGType[];
@@ -45,6 +63,7 @@ export function SubmissionForm() {
       website_url: formData.get("website_url") as string || null,
       // Honeypot — must be empty
       honeypot_field: formData.get("website") as string || "",
+      image_asset_id: imageAssetId,
     };
 
     try {
@@ -293,7 +312,28 @@ export function SubmissionForm() {
         </div>
       </section>
 
-      {/* Section 4: Practical info */}
+      {/* Section 4: Photo */}
+      <section>
+        <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
+          Photo de l'événement
+        </h2>
+        <div>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Image <span className="text-gray-400 font-normal">(optionnelle, max 5 Mo — JPG, PNG, WebP)</span>
+          </label>
+          <input
+            type="file"
+            accept="image/*"
+            onChange={(e) => setImageFile(e.target.files?.[0] ?? null)}
+            className="block w-full text-sm border border-gray-300 rounded-lg px-3 py-2 cursor-pointer bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+          />
+          {imageFile && (
+            <p className="text-xs mt-1 text-gray-500">{imageFile.name} ({(imageFile.size / 1024).toFixed(0)} Ko)</p>
+          )}
+        </div>
+      </section>
+
+      {/* Section 5: Practical info */}
       <section>
         <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
           Informations pratiques
@@ -401,7 +441,7 @@ export function SubmissionForm() {
           {state.status === "submitting" ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              Envoi en cours...
+              {imageUploading ? "Upload de l'image…" : "Envoi en cours…"}
             </>
           ) : (
             "Soumettre l'événement"

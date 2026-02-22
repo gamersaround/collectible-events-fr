@@ -147,6 +147,12 @@ export const submissionSchema = defineType({
       title: "Site web",
       type: "url",
     }),
+    defineField({
+      name: "image",
+      title: "Photo de l'événement",
+      type: "image",
+      options: { hotspot: true },
+    }),
     // Metadata
     defineField({
       name: "honeypotField",

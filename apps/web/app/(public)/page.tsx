@@ -18,7 +18,7 @@ export default async function HomePage() {
   return (
     <div>
       {/* Hero */}
-      <section className="bg-[#FFDE03] border-b-4 border-black py-20 px-4 relative overflow-hidden">
+      <section className="bg-[#FFDE03] border-b-4 border-black py-12 md:py-20 px-4 relative overflow-hidden">
         {/* Decorative doodles */}
         <div className="absolute top-8 left-8 text-4xl opacity-20 rotate-12 select-none pointer-events-none">★</div>
         <div className="absolute bottom-8 right-12 text-5xl opacity-20 -rotate-12 select-none pointer-events-none">✦</div>
@@ -31,7 +31,7 @@ export default async function HomePage() {
             🃏
           </div>
 
-          <h1 className="font-display text-5xl md:text-7xl font-black uppercase leading-none mb-4 text-black">
+          <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-black uppercase leading-none mb-4 text-black">
             CardAgenda
           </h1>
           <p className="text-lg md:text-xl font-bold mb-10 max-w-2xl mx-auto text-black/80">

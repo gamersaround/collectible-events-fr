@@ -22,6 +22,7 @@ const submissionSchema = z.object({
   organizer_contact: z.string().email().nullable().optional(),
   website_url: z.string().url().nullable().optional(),
   honeypot_field: z.string().max(0, "Bot detected").optional(),
+  image_asset_id: z.string().nullable().optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -67,6 +68,7 @@ export async function POST(request: NextRequest) {
         organizer_name: parsed.data.organizer_name ?? null,
         organizer_contact: parsed.data.organizer_contact ?? null,
         website_url: parsed.data.website_url ?? null,
+        image_asset_id: parsed.data.image_asset_id ?? null,
       },
       ip
     );

@@ -59,12 +59,12 @@ export function EventCard({ event }: EventCardProps) {
 
         {/* Banner image */}
         {event.image && (
-          <div className="relative h-36 w-full border-b-2 border-black overflow-hidden shrink-0">
+          <div className="relative h-36 w-full border-b-2 border-black overflow-hidden shrink-0 bg-gray-50">
             <Image
-              src={urlFor(event.image).width(480).height(144).auto("format").url()}
+              src={urlFor(event.image).width(480).auto("format").url()}
               alt={event.image.alt ?? event.title}
               fill
-              className="object-cover"
+              className="object-contain"
               sizes="(max-width: 640px) 100vw, 480px"
             />
           </div>
