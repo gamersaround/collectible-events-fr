@@ -1,9 +1,9 @@
 "use client";
 
+import { useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Euro, Users } from "lucide-react";
-import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
 import type { EventRow } from "@/lib/queries/events";
 import { EventBadge, FormatBadge } from "./EventBadge";
 import { formatDateFr, formatEntryFee } from "@/lib/utils/dates";
@@ -19,24 +19,35 @@ export function EventCard({ event }: EventCardProps) {
   const day = startDate.getDate();
   const month = startDate.toLocaleDateString("fr-FR", { month: "short" }).toUpperCase();
 
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const rotateX = useSpring(useTransform(y, [-0.5, 0.5], [6, -6]), { stiffness: 300, damping: 30 });
-  const rotateY = useSpring(useTransform(x, [-0.5, 0.5], [-6, 6]), { stiffness: 300, damping: 30 });
+  const cardRef = useRef<HTMLElement>(null);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    x.set((e.clientX - rect.left) / rect.width - 0.5);
-    y.set((e.clientY - rect.top) / rect.height - 0.5);
+    const el = cardRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const nx = (e.clientX - rect.left) / rect.width - 0.5;  // -0.5 → +0.5
+    const ny = (e.clientY - rect.top) / rect.height - 0.5;
+    // Disable transition during tracking for instant response
+    el.style.transition = "box-shadow 150ms, transform 0s";
+    el.style.transform = `perspective(800px) rotateX(${ny * -12}deg) rotateY(${nx * 12}deg)`;
   };
-  const handleMouseLeave = () => { x.set(0); y.set(0); };
+
+  const handleMouseLeave = () => {
+    const el = cardRef.current;
+    if (!el) return;
+    // Re-enable transition so the card eases back smoothly (pure CSS, no JS loop)
+    el.style.transition = "box-shadow 150ms, transform 350ms ease-out";
+    el.style.transform = "perspective(800px) rotateX(0deg) rotateY(0deg)";
+  };
 
   const primaryTcg = event.tcg_types[0] as TCGType | undefined;
   const remainingTcgs = event.tcg_types.slice(1);
 
+  const ratio = event.tcg_sports_ratio; // null = pas de jauge
+
   return (
-    <motion.article
-      style={{ rotateX, rotateY, transformPerspective: 800 }}
+    <article
+      ref={cardRef as React.RefObject<HTMLElement>}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       className="group relative bg-white border-2 border-black shadow-[6px_6px_0px_0px_#000] hover:shadow-[2px_2px_0px_0px_#000] transition-shadow duration-150 hover:z-10 will-change-transform"
@@ -119,9 +130,29 @@ export function EventCard({ event }: EventCardProps) {
               </div>
             </div>
           </div>
+
         </div>
       </Link>
-    </motion.article>
+
+      {/* TCG / Sport ratio gauge — pleine largeur, hors padding */}
+      {typeof ratio === "number" && (
+        <div className="border-t-2 border-black flex overflow-hidden">
+          {ratio > 0 && (
+            <div
+              className="flex items-center justify-center h-8 shrink-0 bg-[#FFDE03] font-black text-[10px] uppercase tracking-widest text-black"
+              style={{ width: `${ratio}%` }}
+            >
+              {ratio >= 20 && "TCG"}
+            </div>
+          )}
+          {ratio < 100 && (
+            <div className="flex flex-1 items-center justify-center h-8 bg-blue-500 font-black text-[10px] uppercase tracking-widest text-white">
+              {(100 - ratio) >= 20 && "SPORT"}
+            </div>
+          )}
+        </div>
+      )}
+    </article>
   );
 }
 

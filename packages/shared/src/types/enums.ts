@@ -59,6 +59,7 @@ export interface TCGConfig {
   bgColor: string;      // Tailwind bg class
   emoji: string;
   markerColor: string;  // Hex for Leaflet markers
+  category: "tcg" | "sports";
 }
 
 export const TCG_CONFIG: Record<TCGType, TCGConfig> = {
@@ -69,6 +70,7 @@ export const TCG_CONFIG: Record<TCGType, TCGConfig> = {
     bgColor: "bg-yellow-100",
     emoji: "⚡",
     markerColor: "#FBBF24",
+    category: "tcg",
   },
   [TCGType.MAGIC]: {
     label: "Magic: The Gathering",
@@ -77,6 +79,7 @@ export const TCG_CONFIG: Record<TCGType, TCGConfig> = {
     bgColor: "bg-amber-100",
     emoji: "✨",
     markerColor: "#92400E",
+    category: "tcg",
   },
   [TCGType.YUGIOH]: {
     label: "Yu-Gi-Oh!",
@@ -85,6 +88,7 @@ export const TCG_CONFIG: Record<TCGType, TCGConfig> = {
     bgColor: "bg-purple-100",
     emoji: "🃏",
     markerColor: "#7C3AED",
+    category: "tcg",
   },
   [TCGType.SPORTS_CARDS]: {
     label: "Cartes sportives",
@@ -93,6 +97,7 @@ export const TCG_CONFIG: Record<TCGType, TCGConfig> = {
     bgColor: "bg-blue-100",
     emoji: "⚽",
     markerColor: "#1D4ED8",
+    category: "sports",
   },
   [TCGType.ONE_PIECE]: {
     label: "One Piece Card Game",
@@ -101,6 +106,7 @@ export const TCG_CONFIG: Record<TCGType, TCGConfig> = {
     bgColor: "bg-red-100",
     emoji: "🏴‍☠️",
     markerColor: "#B91C1C",
+    category: "tcg",
   },
   [TCGType.DRAGON_BALL]: {
     label: "Dragon Ball Super CG",
@@ -109,6 +115,7 @@ export const TCG_CONFIG: Record<TCGType, TCGConfig> = {
     bgColor: "bg-orange-100",
     emoji: "🐉",
     markerColor: "#C2410C",
+    category: "tcg",
   },
   [TCGType.LORCANA]: {
     label: "Disney Lorcana",
@@ -117,6 +124,7 @@ export const TCG_CONFIG: Record<TCGType, TCGConfig> = {
     bgColor: "bg-indigo-100",
     emoji: "🌊",
     markerColor: "#4338CA",
+    category: "tcg",
   },
   [TCGType.FLESH_BLOOD]: {
     label: "Flesh and Blood",
@@ -125,6 +133,7 @@ export const TCG_CONFIG: Record<TCGType, TCGConfig> = {
     bgColor: "bg-rose-100",
     emoji: "⚔️",
     markerColor: "#BE123C",
+    category: "tcg",
   },
   [TCGType.AUTRES]: {
     label: "Autres TCG",
@@ -133,6 +142,7 @@ export const TCG_CONFIG: Record<TCGType, TCGConfig> = {
     bgColor: "bg-gray-100",
     emoji: "🎴",
     markerColor: "#374151",
+    category: "tcg",
   },
 };
 

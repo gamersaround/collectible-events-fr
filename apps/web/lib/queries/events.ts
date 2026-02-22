@@ -21,6 +21,7 @@ export interface EventRow {
   slug: string;
   description: string | null;
   tcg_types: string[];
+  tcg_sports_ratio: number | null;
   format: string;
   status: string;
   venue_name: string | null;

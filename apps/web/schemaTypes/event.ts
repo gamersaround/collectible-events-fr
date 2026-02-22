@@ -61,6 +61,14 @@ export const eventSchema = defineType({
       validation: (Rule) => Rule.min(1),
     }),
     defineField({
+      name: "tcgSportsRatio",
+      title: "Ratio TCG / Cartes sportives",
+      type: "number",
+      description:
+        "Salons mixtes uniquement. Indiquez le % TCG : 0 = 100 % sport, 50 = moitié-moitié, 100 = 100 % TCG. Laisser vide si événement pur.",
+      validation: (Rule) => Rule.min(0).max(100).integer(),
+    }),
+    defineField({
       name: "format",
       title: "Format",
       type: "string",
