@@ -17,14 +17,28 @@ export default function EventMap({ events, height = "600px" }: EventMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [mapReady, setMapReady] = useState(false);
 
+  // Fire-and-forget: trigger background geocoding for events without coordinates
+  useEffect(() => {
+    fetch("/api/geocode", { method: "POST" }).catch(() => {});
+  }, []);
+
   useEffect(() => {
     if (!containerRef.current || mapRef.current) return;
 
     let cancelled = false;
 
-    // Dynamically import Leaflet to avoid SSR issues
-    import("leaflet").then((L) => {
+    // Dynamically import Leaflet + MarkerCluster to avoid SSR issues
+    import("leaflet").then(async (L) => {
       if (cancelled || !containerRef.current || mapRef.current) return;
+
+      // Load cluster CSS
+      await import("leaflet.markercluster/dist/MarkerCluster.css");
+      await import("leaflet.markercluster/dist/MarkerCluster.Default.css");
+
+      // markercluster's module.exports IS the extended L object — grab it from there
+      const mcMod = await import("leaflet.markercluster");
+      const extL = (mcMod as any).default ?? mcMod;
+
       // Fix Leaflet default icon path issue with Next.js
       delete (L.Icon.Default.prototype as any)._getIconUrl;
       L.Icon.Default.mergeOptions({
@@ -33,10 +47,10 @@ export default function EventMap({ events, height = "600px" }: EventMapProps) {
         shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
       });
 
-      // Initialize map centered on Europe (auto-adjusted via fitBounds below)
+      // Initialize map centered on France
       const map = L.map(containerRef.current!, {
-        center: [54, 15],
-        zoom: 4,
+        center: [46.5, 2.5],
+        zoom: 6,
         zoomControl: true,
       });
 
@@ -49,7 +63,13 @@ export default function EventMap({ events, height = "600px" }: EventMapProps) {
         maxZoom: 19,
       }).addTo(map);
 
-      // Add markers for each event
+      // Create cluster group — use extended L from markercluster's own export,
+      // with a fallback to plain layerGroup so the map never crashes
+      const clusterGroup =
+        typeof extL?.markerClusterGroup === "function"
+          ? extL.markerClusterGroup({ maxClusterRadius: 60 })
+          : L.layerGroup();
+
       const markerLatLngs: [number, number][] = [];
 
       for (const event of events) {
@@ -104,12 +124,13 @@ export default function EventMap({ events, height = "600px" }: EventMapProps) {
           </div>
         `);
 
-        L.marker([event.latitude, event.longitude], { icon })
-          .bindPopup(popup)
-          .addTo(map);
+        const marker = L.marker([event.latitude, event.longitude], { icon }).bindPopup(popup);
+        clusterGroup.addLayer(marker);
 
         markerLatLngs.push([event.latitude, event.longitude]);
       }
+
+      map.addLayer(clusterGroup);
 
       // Auto-fit viewport to actual markers if any
       if (markerLatLngs.length > 0) {

@@ -4,7 +4,7 @@ import { SubmissionForm } from "@/components/forms/SubmissionForm";
 export const metadata: Metadata = {
   title: "Soumettre un événement",
   description:
-    "Soumettez votre tournoi, bourse ou convention TCG pour le faire apparaître sur Agenda Cartes FR.",
+    "Organisez un tournoi, une bourse ou une convention de cartes à collectionner ? Soumettez votre événement gratuitement sur CardAgenda.",
 };
 
 export default function SubmitPage() {

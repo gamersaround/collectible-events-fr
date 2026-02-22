@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 
 export function Footer() {
   return (
@@ -7,9 +8,14 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-b-2 border-white/20 pb-8">
           {/* Brand */}
           <div>
-            <div className="flex items-center gap-2 font-display font-black text-xl uppercase mb-3">
-              <span className="inline-block -rotate-6">🃏</span>
-              <span className="text-[#FFDE03]">CardAgenda</span>
+            <div className="mb-3">
+              <Image
+                src="/logo.jpg"
+                alt="CardAgenda"
+                width={80}
+                height={80}
+                className="rounded-sm"
+              />
             </div>
             <p className="text-sm text-white/60 font-medium">
               Le répertoire des événements de cartes à collectionner.

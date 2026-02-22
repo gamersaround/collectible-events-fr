@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { CalendarDays, Map, PlusCircle, X } from "lucide-react";
 
 export function Header() {
@@ -16,8 +17,14 @@ export function Header() {
           className="flex items-center gap-2 font-display text-xl font-black uppercase tracking-tight text-black"
           onClick={() => setOpen(false)}
         >
-          <span className="text-2xl inline-block -rotate-6">🃏</span>
-          <span>CardAgenda</span>
+          <Image
+            src="/logo.jpg"
+            alt="CardAgenda"
+            width={44}
+            height={44}
+            className="rounded-sm"
+            priority
+          />
         </Link>
 
         {/* Nav desktop */}

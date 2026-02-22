@@ -1,12 +1,20 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { getEvents, getDepartments } from "@/lib/queries/events";
+import { getEvents } from "@/lib/queries/events";
 import { EventList, EventListSkeleton } from "@/components/events/EventList";
 import { EventFilters } from "@/components/events/EventFilters";
 import { parseFiltersFromParams } from "@/lib/utils/filters";
 import { Pagination } from "@/components/ui/Pagination";
 
 export const revalidate = 3600;
+
+const COUNTRY_LABELS: Record<string, string> = {
+  FR: "France",
+  BE: "Belgique",
+  CH: "Suisse",
+  LU: "Luxembourg",
+  CA: "Canada",
+};
 
 export async function generateMetadata({
   searchParams,
@@ -15,15 +23,15 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const params = await searchParams;
   const tcg = Array.isArray(params.tcg) ? params.tcg[0] : params.tcg;
-  const dept = Array.isArray(params.dept) ? params.dept[0] : params.dept;
+  const pays = Array.isArray(params.pays) ? params.pays[0] : params.pays;
 
-  let title = "Événements cartes à collectionner";
-  if (tcg) title = `Événements ${tcg}`;
-  if (dept) title += ` — Département ${dept}`;
+  let title = "Événements cartes à collectionner en France";
+  if (tcg) title = `Événements ${tcg} en France`;
+  if (pays) title += ` — ${COUNTRY_LABELS[pays] ?? pays}`;
 
   return {
     title,
-    description: `Trouvez tous les événements ${tcg ?? "de cartes à collectionner"} : tournois, bourses, conventions.`,
+    description: `Tous les ${tcg ?? "événements de cartes à collectionner"} : tournois, bourses, conventions, drafts. Agenda mis à jour en temps réel.`,
   };
 }
 
@@ -38,10 +46,7 @@ export default async function EventsPage({
   const filters = parseFiltersFromParams(params);
   const page = parseInt((params.page as string) ?? "1", 10) || 1;
 
-  const [{ data: events, total, totalPages }, departments] = await Promise.all([
-    getEvents(filters, page, PER_PAGE),
-    getDepartments(),
-  ]);
+  const { data: events, total, totalPages } = await getEvents(filters, page, PER_PAGE);
 
   return (
     <div className="container py-8">
@@ -53,7 +58,7 @@ export default async function EventsPage({
         {/* Sidebar filters */}
         <div className="w-full md:w-64 shrink-0">
           <Suspense>
-            <EventFilters departments={departments} />
+            <EventFilters />
           </Suspense>
         </div>
 

@@ -24,7 +24,7 @@ export function parseFiltersFromParams(
   return {
     tcgTypes: getAll("tcg") as TCGType[],
     formats: getAll("format") as EventFormat[],
-    departmentCode: get("dept") ?? undefined,
+    country: get("pays") ?? undefined,
     search: get("q") ?? undefined,
     dateFrom: get("from") ?? undefined,
     dateTo: get("to") ?? undefined,

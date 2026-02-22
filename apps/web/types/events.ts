@@ -6,7 +6,7 @@ export type Event = EventRow;
 export interface EventFilters {
   tcgTypes?: string[];
   formats?: string[];
-  departmentCode?: string;
+  country?: string;
   search?: string;
   dateFrom?: string;
   dateTo?: string;

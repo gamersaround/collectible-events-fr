@@ -15,31 +15,60 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://agenda-cartes.fr"),
   title: {
-    default: "CardAgenda — TCG Events Near You",
+    default: "CardAgenda — Agenda des événements cartes à collectionner",
     template: "%s | CardAgenda",
   },
   description:
-    "Find TCG events near you: Pokémon, Magic: The Gathering, Yu-Gi-Oh!, One Piece, Lorcana and more. Tournaments, conventions, drafts.",
+    "Trouvez tous les événements cartes de collection en France et en Belgique : tournois Pokémon, Magic, Yu-Gi-Oh, One Piece, Lorcana, cartes NBA, foot et bien plus. Calendrier mis à jour en temps réel.",
   keywords: [
-    "TCG events",
-    "Pokémon tournament",
-    "Magic the Gathering events",
-    "collectible card game",
-    "Yu-Gi-Oh tournament",
-    "One Piece TCG",
-    "Lorcana events",
-    "card game agenda",
+    "événement Pokémon France",
+    "tournoi Magic the Gathering",
+    "tournoi Yu-Gi-Oh",
+    "agenda tournoi carte",
+    "bourse carte à collectionner",
+    "convention TCG",
+    "événement carte NBA",
+    "cartes foot",
+    "tournoi One Piece carte",
+    "calendrier événement TCG",
+    "tournoi Lorcana",
+    "Dragon Ball Super Card Game",
+    "Flesh and Blood tournoi",
+    "sports cards événement",
+    "carte collection France",
   ],
   openGraph: {
     type: "website",
-    locale: "en_US",
-    url: process.env.NEXT_PUBLIC_APP_URL,
+    locale: "fr_FR",
+    url: process.env.NEXT_PUBLIC_APP_URL ?? "https://agenda-cartes.fr",
     siteName: "CardAgenda",
+    images: [
+      {
+        url: "/logo.jpg",
+        width: 500,
+        height: 500,
+        alt: "CardAgenda — Agenda des événements cartes à collectionner",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary",
+    title: "CardAgenda — Agenda des événements cartes à collectionner",
+    description:
+      "Tous les tournois, bourses et conventions de cartes à collectionner en France. Pokémon, Magic, NBA, Foot et plus.",
+    images: ["/logo.jpg"],
   },
   robots: {
     index: true,
     follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
   },
 };
 

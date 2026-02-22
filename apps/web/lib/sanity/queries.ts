@@ -37,7 +37,7 @@ export const EVENTS_QUERY = groq`
     && (!defined(startsAt) || startsAt > $now)
     && (!defined($tcgTypes) || count((tcgTypes[])[@ in $tcgTypes]) > 0)
     && (!defined($format) || format == $format)
-    && (!defined($dept) || departmentCode == $dept)
+    && (!defined($country) || country == $country)
     && (!defined($q) || title match $q || city match $q || description match $q)
     && (!defined($freeOnly) || $freeOnly == false || entryFee == 0 || !defined(entryFee))
   ] | order(startsAt asc)
@@ -50,7 +50,7 @@ export const EVENTS_PAGINATED_QUERY = groq`
     && (!defined(startsAt) || startsAt > $now)
     && (!defined($tcgTypes) || count((tcgTypes[])[@ in $tcgTypes]) > 0)
     && (!defined($format) || format == $format)
-    && (!defined($dept) || departmentCode == $dept)
+    && (!defined($country) || country == $country)
     && (!defined($q) || title match $q || city match $q || description match $q)
     && (!defined($freeOnly) || $freeOnly == false || entryFee == 0 || !defined(entryFee))
   ] | order(startsAt asc) [$from...$to] ${EVENT_PROJECTION}
@@ -63,7 +63,7 @@ export const EVENTS_COUNT_QUERY = groq`
     && (!defined(startsAt) || startsAt > $now)
     && (!defined($tcgTypes) || count((tcgTypes[])[@ in $tcgTypes]) > 0)
     && (!defined($format) || format == $format)
-    && (!defined($dept) || departmentCode == $dept)
+    && (!defined($country) || country == $country)
     && (!defined($q) || title match $q || city match $q || description match $q)
     && (!defined($freeOnly) || $freeOnly == false || entryFee == 0 || !defined(entryFee))
   ])
@@ -79,32 +79,23 @@ export const ALL_EVENT_SLUGS_QUERY = groq`
   *[_type == "event" && status in ["a_venir", "en_cours"]].slug.current
 `;
 
-// Lightweight projection for the map — all future events, with or without coordinates
+// Lightweight projection for the map — only events with coordinates (fast, no geocoding)
 export const MAP_EVENTS_QUERY = groq`
   *[_type == "event"
     && status in ["a_venir", "en_cours"]
     && startsAt > $now
-  ] {
+    && defined(latitude) && latitude != null
+    && defined(longitude) && longitude != null
+  ][0...500] {
     "id": _id,
     "slug": slug.current,
     title,
     city,
-    address,
-    "postal_code": postalCode,
-    country,
-    latitude,
-    longitude,
     "tcg_types": tcgTypes,
     format,
-    "starts_at": startsAt
-  }
-`;
-
-// Departments for filter sidebar
-export const DEPARTMENTS_QUERY = groq`
-  *[_type == "department"] | order(code asc) {
-    code,
-    name
+    "starts_at": startsAt,
+    latitude,
+    longitude
   }
 `;
 

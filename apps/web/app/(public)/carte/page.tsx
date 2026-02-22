@@ -6,7 +6,7 @@ import { TCG_CONFIG } from "@agenda-cartes/shared";
 export const metadata: Metadata = {
   title: "Carte des événements",
   description:
-    "Visualisez tous les événements de cartes à collectionner sur une carte interactive. Pokémon, Magic, Yu-Gi-Oh, cartes sport et plus.",
+    "Visualisez tous les événements cartes à collectionner sur carte interactive : tournois Pokémon, Magic, Yu-Gi-Oh, cartes NBA et foot, en France et Belgique.",
 };
 
 export const revalidate = 3600;

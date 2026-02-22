@@ -1,10 +1,9 @@
 import type { MetadataRoute } from "next";
-import { getAllEventSlugs } from "@/lib/queries/events";
+import { sanityServerClient } from "@/lib/sanity/client";
+
+const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://agenda-cartes.fr";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://agenda-cartes.fr";
-  const slugs = await getAllEventSlugs();
-
   const staticPages: MetadataRoute.Sitemap = [
     {
       url: appUrl,
@@ -21,8 +20,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     {
       url: `${appUrl}/carte`,
       lastModified: new Date(),
-      changeFrequency: "hourly",
-      priority: 0.8,
+      changeFrequency: "daily",
+      priority: 0.7,
     },
     {
       url: `${appUrl}/soumettre`,
@@ -32,11 +31,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     },
   ];
 
-  const eventPages: MetadataRoute.Sitemap = slugs.map((slug) => ({
-    url: `${appUrl}/evenements/${slug}`,
-    lastModified: new Date(),
-    changeFrequency: "daily",
-    priority: 0.7,
+  const events = await sanityServerClient.fetch<Array<{ slug: string; updatedAt: string }>>(
+    `*[_type == "event" && defined(slug.current)][0...1000] { "slug": slug.current, "updatedAt": _updatedAt }`
+  );
+
+  const eventPages: MetadataRoute.Sitemap = (events ?? []).map((e) => ({
+    url: `${appUrl}/evenements/${e.slug}`,
+    lastModified: new Date(e.updatedAt),
+    changeFrequency: "weekly" as const,
+    priority: 0.8,
   }));
 
   return [...staticPages, ...eventPages];

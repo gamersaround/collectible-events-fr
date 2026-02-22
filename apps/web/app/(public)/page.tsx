@@ -1,10 +1,24 @@
+import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { ArrowRight, CalendarDays, Map, PlusCircle } from "lucide-react";
 import { getEvents } from "@/lib/queries/events";
 import { EventCard } from "@/components/events/EventCard";
 import { TCG_CONFIG } from "@agenda-cartes/shared";
 
 export const revalidate = 3600;
+
+export const metadata: Metadata = {
+  title: "CardAgenda — Agenda des événements cartes à collectionner",
+  description:
+    "Tous les événements cartes de collection en France et Belgique : tournois Pokémon, Magic the Gathering, Yu-Gi-Oh!, NBA, foot et bien plus. Gratuit, mis à jour en continu.",
+  openGraph: {
+    title: "CardAgenda — Agenda des événements cartes à collectionner",
+    description:
+      "Tournois, bourses et conventions de cartes à collectionner. Pokémon, Magic, NBA, Foot et plus.",
+    images: [{ url: "/logo.jpg", width: 500, height: 500, alt: "CardAgenda" }],
+  },
+};
 
 // Slight rotations for sticker effect
 const STICKER_ROTATIONS = [
@@ -27,8 +41,15 @@ export default async function HomePage() {
 
         <div className="container text-center relative z-10">
           {/* Big floating card emoji */}
-          <div className="inline-block mb-8 bg-white border-4 border-black shadow-brutal-xl p-5 text-7xl animate-float">
-            🃏
+          <div className="inline-block mb-8 bg-white border-4 border-black shadow-brutal-xl p-5 animate-float">
+            <Image
+              src="/logo.jpg"
+              alt="CardAgenda"
+              width={112}
+              height={112}
+              className="rounded-sm"
+              priority
+            />
           </div>
 
           <h1 className="font-display text-4xl sm:text-5xl md:text-7xl font-black uppercase leading-none mb-4 text-black">

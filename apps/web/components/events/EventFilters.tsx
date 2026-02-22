@@ -6,11 +6,15 @@ import { X, SlidersHorizontal } from "lucide-react";
 import { TCGType, TCG_CONFIG, EventFormat, EVENT_FORMAT_LABELS } from "@agenda-cartes/shared";
 import { cn } from "@/lib/utils/cn";
 
-interface EventFiltersProps {
-  departments: Array<{ code: string; name: string }>;
-}
+const COUNTRIES = [
+  { code: "FR", label: "🇫🇷 France" },
+  { code: "BE", label: "🇧🇪 Belgique" },
+  { code: "CH", label: "🇨🇭 Suisse" },
+  { code: "LU", label: "🇱🇺 Luxembourg" },
+  { code: "CA", label: "🇨🇦 Canada" },
+] as const;
 
-export function EventFilters({ departments }: EventFiltersProps) {
+export function EventFilters() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -47,7 +51,7 @@ export function EventFilters({ departments }: EventFiltersProps) {
   // Current filter values from URL
   const activeTcgTypes = searchParams.getAll("tcg") as TCGType[];
   const activeFormats = searchParams.getAll("format") as EventFormat[];
-  const activeDepartment = searchParams.get("dept") ?? "";
+  const activeCountry = searchParams.get("pays") ?? "";
   const activeSearch = searchParams.get("q") ?? "";
   const activeFreeOnly = searchParams.get("gratuit") === "1";
 
@@ -72,7 +76,7 @@ export function EventFilters({ departments }: EventFiltersProps) {
   const hasActiveFilters =
     activeTcgTypes.length > 0 ||
     activeFormats.length > 0 ||
-    activeDepartment !== "" ||
+    activeCountry !== "" ||
     activeSearch !== "" ||
     activeFreeOnly;
 
@@ -158,21 +162,28 @@ export function EventFilters({ departments }: EventFiltersProps) {
         </div>
       </div>
 
-      {/* Department */}
+      {/* Country */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Département</label>
-        <select
-          value={activeDepartment}
-          onChange={(e) => navigateWithFilter({ dept: e.target.value || null })}
-          className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="">Tous les départements</option>
-          {departments.map((d) => (
-            <option key={d.code} value={d.code}>
-              {d.code} — {d.name}
-            </option>
-          ))}
-        </select>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Pays</label>
+        <div className="space-y-1.5">
+          {COUNTRIES.map(({ code, label }) => {
+            const isActive = activeCountry === code;
+            return (
+              <button
+                key={code}
+                onClick={() => navigateWithFilter({ pays: isActive ? null : code })}
+                className={cn(
+                  "w-full px-3 py-2 rounded-lg text-sm text-left transition-colors",
+                  isActive
+                    ? "bg-blue-100 text-blue-800 font-medium"
+                    : "text-gray-700 hover:bg-gray-100"
+                )}
+              >
+                {label}
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Free only */}
