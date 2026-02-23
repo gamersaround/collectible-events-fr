@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
-import Link from "next/link";
 import Image from "next/image";
 import {
   Calendar,
@@ -12,10 +11,14 @@ import {
   Mail,
   Globe,
 } from "lucide-react";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
+import { routing } from "@/i18n/routing";
 import { getEventBySlug, getAllEventSlugs } from "@/lib/queries/events";
 import { urlFor } from "@/lib/sanity/image";
 import { EventBadge, FormatBadge } from "@/components/events/EventBadge";
 import { EventSchema } from "@/components/events/EventSchema";
+import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
 import {
   formatEventDateRange,
   formatDateFr,
@@ -23,27 +26,30 @@ import {
 } from "@/lib/utils/dates";
 import { TCGType } from "@agenda-cartes/shared";
 
-// ISR: revalidate every hour, on-demand via webhook
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
   const slugs = await getAllEventSlugs();
-  return slugs.map((slug) => ({ slug }));
+  return routing.locales.flatMap((locale) =>
+    slugs.map((slug) => ({ locale, slug }))
+  );
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: "eventDetail" });
   const event = await getEventBySlug(slug);
 
-  if (!event) return { title: "Événement introuvable" };
+  if (!event) return { title: t("notFound") };
 
+  const dateLocale = locale as "fr" | "en";
   return {
     title: event.title,
-    description: event.description ?? `${event.title} — ${event.city}, ${formatDateFr(event.starts_at)}`,
+    description: event.description ?? `${event.title} — ${event.city}, ${formatDateFr(event.starts_at, "EEEE d MMMM yyyy", dateLocale)}`,
     openGraph: {
       title: event.title,
       description: event.description ?? undefined,
@@ -58,18 +64,22 @@ export async function generateMetadata({
 export default async function EventDetailPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: "eventDetail" });
   const event = await getEventBySlug(slug);
 
   if (!event) notFound();
 
   const isCancelled = event.status === "annule";
+  const dateLocale = locale as "fr" | "en";
+  const freeLabel = locale === "fr" ? "Gratuit" : "Free";
 
   return (
     <>
-      <EventSchema event={event} />
+      <EventSchema event={event} locale={locale} />
+      <BreadcrumbSchema locale={locale} eventTitle={event.title} slug={slug} />
 
       <div className="container py-8 max-w-4xl">
         {/* Back link */}
@@ -78,7 +88,7 @@ export default async function EventDetailPage({
           className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 mb-6 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          Retour aux événements
+          {t("backLink")}
         </Link>
 
         {/* Hero image */}
@@ -106,7 +116,7 @@ export default async function EventDetailPage({
               <FormatBadge format={event.format} />
               {isCancelled && (
                 <span className="inline-flex items-center px-3 py-1 rounded-full bg-red-100 text-red-700 text-sm font-medium">
-                  Annulé
+                  {t("cancelled")}
                 </span>
               )}
             </div>
@@ -128,10 +138,10 @@ export default async function EventDetailPage({
             <div className="bg-white border border-gray-200 rounded-xl p-5">
               <div className="flex items-center gap-2 text-blue-600 font-semibold mb-3">
                 <Calendar className="h-5 w-5" />
-                Date et horaires
+                {t("dateTitle")}
               </div>
               <p className="text-gray-900 font-medium">
-                {formatEventDateRange(event.starts_at, event.ends_at)}
+                {formatEventDateRange(event.starts_at, event.ends_at, dateLocale)}
               </p>
             </div>
 
@@ -139,7 +149,7 @@ export default async function EventDetailPage({
             <div className="bg-white border border-gray-200 rounded-xl p-5">
               <div className="flex items-center gap-2 text-blue-600 font-semibold mb-3">
                 <MapPin className="h-5 w-5" />
-                Lieu
+                {t("locationTitle")}
               </div>
               {event.venue_name && (
                 <p className="font-medium text-gray-900">{event.venue_name}</p>
@@ -158,7 +168,7 @@ export default async function EventDetailPage({
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1 mt-2 text-sm text-blue-600 hover:underline"
                 >
-                  Voir sur la carte
+                  {t("viewOnMap")}
                   <ExternalLink className="h-3.5 w-3.5" />
                 </a>
               )}
@@ -168,15 +178,15 @@ export default async function EventDetailPage({
             <div className="bg-white border border-gray-200 rounded-xl p-5">
               <div className="flex items-center gap-2 text-blue-600 font-semibold mb-3">
                 <Euro className="h-5 w-5" />
-                Tarif
+                {t("priceTitle")}
               </div>
               <p className={`font-medium text-lg ${event.entry_fee === null || event.entry_fee === 0 ? "text-green-600" : "text-gray-900"}`}>
-                {formatEntryFee(event.entry_fee)}
+                {formatEntryFee(event.entry_fee, freeLabel)}
               </p>
               {event.max_participants && (
                 <p className="flex items-center gap-1.5 text-sm text-gray-500 mt-2">
                   <Users className="h-4 w-4" />
-                  {event.max_participants} places maximum
+                  {t("maxParticipants", { count: event.max_participants })}
                 </p>
               )}
             </div>
@@ -186,7 +196,7 @@ export default async function EventDetailPage({
               <div className="bg-white border border-gray-200 rounded-xl p-5">
                 <div className="flex items-center gap-2 text-blue-600 font-semibold mb-3">
                   <Users className="h-5 w-5" />
-                  Organisateur
+                  {t("organizerTitle")}
                 </div>
                 {event.organizer_name && (
                   <p className="font-medium text-gray-900">{event.organizer_name}</p>
@@ -208,7 +218,7 @@ export default async function EventDetailPage({
                     className="flex items-center gap-1.5 mt-1 text-sm text-gray-600 hover:text-blue-600"
                   >
                     <Globe className="h-3.5 w-3.5" />
-                    Site web
+                    {t("website")}
                     <ExternalLink className="h-3 w-3" />
                   </a>
                 )}
@@ -219,14 +229,14 @@ export default async function EventDetailPage({
           {/* Registration CTA */}
           {event.registration_url && !isCancelled && (
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 text-center">
-              <h2 className="font-semibold text-blue-900 mb-2">Inscription</h2>
+              <h2 className="font-semibold text-blue-900 mb-2">{t("registrationTitle")}</h2>
               <a
                 href={event.registration_url}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
               >
-                S'inscrire à l'événement
+                {t("register")}
                 <ExternalLink className="h-4 w-4" />
               </a>
             </div>
@@ -241,7 +251,7 @@ export default async function EventDetailPage({
                 rel="noopener noreferrer"
                 className="hover:text-gray-600"
               >
-                Source originale
+                {t("originalSource")}
               </a>
             </div>
           )}

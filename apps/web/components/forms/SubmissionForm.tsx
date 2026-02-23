@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { CheckCircle, AlertCircle, Loader2 } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useRouter } from "@/i18n/navigation";
 import { TCG_CONFIG, TCGType, EVENT_FORMAT_LABELS, EventFormat } from "@agenda-cartes/shared";
 
 interface FormState {
@@ -12,6 +13,7 @@ interface FormState {
 
 export function SubmissionForm() {
   const router = useRouter();
+  const t = useTranslations("form");
   const [state, setState] = useState<FormState>({ status: "idle" });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUploading, setImageUploading] = useState(false);
@@ -33,13 +35,12 @@ export function SubmissionForm() {
       const uploadData = await uploadRes.json();
       setImageUploading(false);
       if (!uploadRes.ok) {
-        setState({ status: "error", errorMessage: uploadData.error ?? "Erreur lors de l'upload de l'image" });
+        setState({ status: "error", errorMessage: uploadData.error ?? t("uploadError") });
         return;
       }
       imageAssetId = uploadData.assetId ?? null;
     }
 
-    // Collect TCG types (multiple checkboxes)
     const tcgTypes = formData.getAll("tcg_types") as TCGType[];
 
     const payload = {
@@ -61,7 +62,6 @@ export function SubmissionForm() {
       organizer_name: formData.get("organizer_name") as string || null,
       organizer_contact: formData.get("organizer_contact") as string || null,
       website_url: formData.get("website_url") as string || null,
-      // Honeypot — must be empty
       honeypot_field: formData.get("website") as string || "",
       image_asset_id: imageAssetId,
     };
@@ -75,7 +75,7 @@ export function SubmissionForm() {
 
       if (!res.ok) {
         const err = await res.json();
-        throw new Error(err.error ?? "Erreur lors de la soumission");
+        throw new Error(err.error ?? t("submissionError"));
       }
 
       setState({ status: "success" });
@@ -83,7 +83,7 @@ export function SubmissionForm() {
     } catch (err) {
       setState({
         status: "error",
-        errorMessage: err instanceof Error ? err.message : "Une erreur est survenue",
+        errorMessage: err instanceof Error ? err.message : t("errorOccurred"),
       });
     }
   }
@@ -92,16 +92,13 @@ export function SubmissionForm() {
     return (
       <div className="text-center py-12">
         <CheckCircle className="h-16 w-16 text-green-500 mx-auto mb-4" />
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">Soumission reçue !</h2>
-        <p className="text-gray-600 mb-6">
-          Votre événement a été soumis et sera examiné par notre équipe. Il
-          apparaîtra sur le site après modération (généralement sous 24h).
-        </p>
+        <h2 className="text-2xl font-bold text-gray-900 mb-2">{t("successTitle")}</h2>
+        <p className="text-gray-600 mb-6">{t("successDescription")}</p>
         <button
           onClick={() => setState({ status: "idle" })}
           className="text-blue-600 hover:underline"
         >
-          Soumettre un autre événement
+          {t("submitAnother")}
         </button>
       </div>
     );
@@ -116,21 +113,21 @@ export function SubmissionForm() {
         </div>
       )}
 
-      {/* Honeypot — hidden from real users */}
+      {/* Honeypot */}
       <div aria-hidden="true" className="hidden">
-        <label htmlFor="website">Ne pas remplir ce champ</label>
+        <label htmlFor="website">{t("honeypot")}</label>
         <input type="text" id="website" name="website" tabIndex={-1} autoComplete="off" />
       </div>
 
       {/* Section 1: Event info */}
       <section>
         <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-          Informations de l'événement
+          {t("section1Title")}
         </h2>
         <div className="space-y-4">
           <div>
             <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-1">
-              Titre de l'événement <span className="text-red-500">*</span>
+              {t("titleLabel")} <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
@@ -138,21 +135,21 @@ export function SubmissionForm() {
               name="title"
               required
               maxLength={200}
-              placeholder="Ex: Tournoi Pokémon TCG — Circuit Régional Paris"
+              placeholder={t("titlePlaceholder")}
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <div>
             <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-1">
-              Description
+              {t("descriptionLabel")}
             </label>
             <textarea
               id="description"
               name="description"
               rows={3}
               maxLength={2000}
-              placeholder="Format, règles, informations supplémentaires..."
+              placeholder={t("descriptionPlaceholder")}
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -160,7 +157,7 @@ export function SubmissionForm() {
           {/* TCG Types */}
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Type(s) de jeu <span className="text-red-500">*</span>
+              {t("tcgTypesLabel")} <span className="text-red-500">*</span>
             </label>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
               {Object.entries(TCG_CONFIG).map(([key, config]) => (
@@ -182,7 +179,7 @@ export function SubmissionForm() {
           {/* Format */}
           <div>
             <label htmlFor="format" className="block text-sm font-medium text-gray-700 mb-1">
-              Format <span className="text-red-500">*</span>
+              {t("formatLabel")} <span className="text-red-500">*</span>
             </label>
             <select
               id="format"
@@ -190,7 +187,7 @@ export function SubmissionForm() {
               required
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="">Sélectionnez un format</option>
+              <option value="">{t("formatPlaceholder")}</option>
               {Object.entries(EVENT_FORMAT_LABELS).map(([key, label]) => (
                 <option key={key} value={key}>{label}</option>
               ))}
@@ -202,12 +199,12 @@ export function SubmissionForm() {
       {/* Section 2: Location */}
       <section>
         <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-          Lieu
+          {t("section2Title")}
         </h2>
         <div className="space-y-4">
           <div>
             <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-1">
-              Pays <span className="text-red-500">*</span>
+              {t("countryLabel")} <span className="text-red-500">*</span>
             </label>
             <select
               id="country"
@@ -278,26 +275,26 @@ export function SubmissionForm() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-1">
-                Ville <span className="text-red-500">*</span>
+                {t("cityLabel")} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 id="city"
                 name="city"
                 required
-                placeholder="Ex: Paris, Bruxelles, Genève..."
+                placeholder={t("cityPlaceholder")}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
               <label htmlFor="postal_code" className="block text-sm font-medium text-gray-700 mb-1">
-                Code postal
+                {t("postalCodeLabel")}
               </label>
               <input
                 type="text"
                 id="postal_code"
                 name="postal_code"
-                placeholder="75001, 1000, 1200..."
+                placeholder={t("postalCodePlaceholder")}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -305,26 +302,26 @@ export function SubmissionForm() {
 
           <div>
             <label htmlFor="venue_name" className="block text-sm font-medium text-gray-700 mb-1">
-              Nom du lieu
+              {t("venueNameLabel")}
             </label>
             <input
               type="text"
               id="venue_name"
               name="venue_name"
-              placeholder="Ex: Salle des fêtes, Game Shop..."
+              placeholder={t("venueNamePlaceholder")}
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
 
           <div>
             <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
-              Adresse
+              {t("addressLabel")}
             </label>
             <input
               type="text"
               id="address"
               name="address"
-              placeholder="Ex: 10 Rue de la Paix"
+              placeholder={t("addressPlaceholder")}
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -334,12 +331,12 @@ export function SubmissionForm() {
       {/* Section 3: Dates */}
       <section>
         <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-          Dates et horaires
+          {t("section3Title")}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label htmlFor="starts_at" className="block text-sm font-medium text-gray-700 mb-1">
-              Début <span className="text-red-500">*</span>
+              {t("startsAtLabel")} <span className="text-red-500">*</span>
             </label>
             <input
               type="datetime-local"
@@ -351,7 +348,7 @@ export function SubmissionForm() {
           </div>
           <div>
             <label htmlFor="ends_at" className="block text-sm font-medium text-gray-700 mb-1">
-              Fin
+              {t("endsAtLabel")}
             </label>
             <input
               type="datetime-local"
@@ -366,11 +363,11 @@ export function SubmissionForm() {
       {/* Section 4: Photo */}
       <section>
         <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-          Photo de l'événement
+          {t("section4Title")}
         </h2>
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">
-            Image <span className="text-gray-400 font-normal">(optionnelle, max 5 Mo — JPG, PNG, WebP)</span>
+            {t("imageLabel")} <span className="text-gray-400 font-normal">{t("imageHint")}</span>
           </label>
           <input
             type="file"
@@ -379,7 +376,9 @@ export function SubmissionForm() {
             className="block w-full text-sm border border-gray-300 rounded-lg px-3 py-2 cursor-pointer bg-white focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           {imageFile && (
-            <p className="text-xs mt-1 text-gray-500">{imageFile.name} ({(imageFile.size / 1024).toFixed(0)} Ko)</p>
+            <p className="text-xs mt-1 text-gray-500">
+              {t("imageInfo", { name: imageFile.name, size: (imageFile.size / 1024).toFixed(0) })}
+            </p>
           )}
         </div>
       </section>
@@ -387,13 +386,13 @@ export function SubmissionForm() {
       {/* Section 5: Practical info */}
       <section>
         <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-          Informations pratiques
+          {t("section5Title")}
         </h2>
         <div className="space-y-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label htmlFor="entry_fee" className="block text-sm font-medium text-gray-700 mb-1">
-                Frais d'inscription (€)
+                {t("entryFeeLabel")}
               </label>
               <input
                 type="number"
@@ -401,20 +400,20 @@ export function SubmissionForm() {
                 name="entry_fee"
                 min="0"
                 step="0.50"
-                placeholder="0 = gratuit"
+                placeholder={t("entryFeePlaceholder")}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
             <div>
               <label htmlFor="max_participants" className="block text-sm font-medium text-gray-700 mb-1">
-                Nombre de places
+                {t("maxParticipantsLabel")}
               </label>
               <input
                 type="number"
                 id="max_participants"
                 name="max_participants"
                 min="1"
-                placeholder="Ex: 32"
+                placeholder={t("maxParticipantsPlaceholder")}
                 className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
@@ -422,7 +421,7 @@ export function SubmissionForm() {
 
           <div>
             <label htmlFor="registration_url" className="block text-sm font-medium text-gray-700 mb-1">
-              Lien d'inscription
+              {t("registrationUrlLabel")}
             </label>
             <input
               type="url"
@@ -435,28 +434,28 @@ export function SubmissionForm() {
         </div>
       </section>
 
-      {/* Section 5: Organizer */}
+      {/* Section 6: Organizer */}
       <section>
         <h2 className="text-lg font-semibold text-gray-900 mb-4 pb-2 border-b">
-          Organisateur
+          {t("section6Title")}
         </h2>
         <div className="space-y-4">
           <div>
             <label htmlFor="organizer_name" className="block text-sm font-medium text-gray-700 mb-1">
-              Nom de l'organisateur / association
+              {t("organizerNameLabel")}
             </label>
             <input
               type="text"
               id="organizer_name"
               name="organizer_name"
-              placeholder="Ex: Club Pokémon Paris"
+              placeholder={t("organizerNamePlaceholder")}
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label htmlFor="organizer_contact" className="block text-sm font-medium text-gray-700 mb-1">
-                Email de contact
+                {t("organizerContactLabel")}
               </label>
               <input
                 type="email"
@@ -468,7 +467,7 @@ export function SubmissionForm() {
             </div>
             <div>
               <label htmlFor="website_url" className="block text-sm font-medium text-gray-700 mb-1">
-                Site web
+                {t("websiteUrlLabel")}
               </label>
               <input
                 type="url"
@@ -492,15 +491,13 @@ export function SubmissionForm() {
           {state.status === "submitting" ? (
             <>
               <Loader2 className="h-4 w-4 animate-spin" />
-              {imageUploading ? "Upload de l'image…" : "Envoi en cours…"}
+              {imageUploading ? t("uploadingButton") : t("submittingButton")}
             </>
           ) : (
-            "Soumettre l'événement"
+            t("submitButton")
           )}
         </button>
-        <p className="mt-2 text-xs text-gray-500">
-          Votre soumission sera examinée par notre équipe avant publication.
-        </p>
+        <p className="mt-2 text-xs text-gray-500">{t("reviewNote")}</p>
       </div>
     </form>
   );

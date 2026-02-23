@@ -1,6 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { parseBody } from "next-sanity/webhook";
+import { routing } from "@/i18n/routing";
 
 export async function POST(req: NextRequest) {
   try {
@@ -15,13 +16,14 @@ export async function POST(req: NextRequest) {
 
     const slug = (body as { slug?: { current?: string } })?.slug?.current;
 
-    if (slug) {
-      revalidatePath(`/evenements/${slug}`);
+    for (const locale of routing.locales) {
+      if (slug) {
+        revalidatePath(`/${locale}/evenements/${slug}`);
+      }
+      revalidatePath(`/${locale}/evenements`);
+      revalidatePath(`/${locale}`);
+      revalidatePath(`/${locale}/carte`);
     }
-
-    revalidatePath("/evenements");
-    revalidatePath("/");
-    revalidatePath("/carte");
 
     return NextResponse.json({ revalidated: true, slug: slug ?? null });
   } catch (err) {

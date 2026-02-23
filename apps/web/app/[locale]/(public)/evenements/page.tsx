@@ -1,5 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import { getEvents } from "@/lib/queries/events";
 import { EventList, EventListSkeleton } from "@/components/events/EventList";
 import { EventFilters } from "@/components/events/EventFilters";
@@ -8,30 +9,24 @@ import { Pagination } from "@/components/ui/Pagination";
 
 export const revalidate = 3600;
 
-const COUNTRY_LABELS: Record<string, string> = {
-  FR: "France",
-  BE: "Belgique",
-  CH: "Suisse",
-  LU: "Luxembourg",
-  CA: "Canada",
-};
-
 export async function generateMetadata({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }): Promise<Metadata> {
-  const params = await searchParams;
-  const tcg = Array.isArray(params.tcg) ? params.tcg[0] : params.tcg;
-  const pays = Array.isArray(params.pays) ? params.pays[0] : params.pays;
+  const { locale } = await params;
+  const sp = await searchParams;
+  const t = await getTranslations({ locale, namespace: "events" });
 
-  let title = "Événements cartes à collectionner en France";
-  if (tcg) title = `Événements ${tcg} en France`;
-  if (pays) title += ` — ${COUNTRY_LABELS[pays] ?? pays}`;
+  const tcg = Array.isArray(sp.tcg) ? sp.tcg[0] : sp.tcg;
+
+  const title = tcg ? t("metaTitleWithTcg", { tcg }) : t("metaTitleDefault");
 
   return {
     title,
-    description: `Tous les ${tcg ?? "événements de cartes à collectionner"} : tournois, bourses, conventions, drafts. Agenda mis à jour en temps réel.`,
+    description: t("metaDescription", { tcg: tcg ?? (locale === "fr" ? "événements de cartes à collectionner" : "collectible card events") }),
   };
 }
 
@@ -51,7 +46,7 @@ export default async function EventsPage({
   return (
     <div className="container py-8">
       <h1 className="text-2xl font-bold text-gray-900 mb-8">
-        Événements cartes à collectionner
+        {/* Heading is rendered by EventList */}
       </h1>
 
       <div className="flex flex-col md:flex-row gap-8">
@@ -73,6 +68,7 @@ export default async function EventsPage({
               <Pagination
                 currentPage={page}
                 totalPages={totalPages}
+                basePath="/evenements"
                 searchParams={params}
               />
             </div>

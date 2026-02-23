@@ -1,23 +1,21 @@
 "use client";
 
-import { useRouter, useSearchParams, usePathname } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 import { useCallback } from "react";
 import { X, SlidersHorizontal } from "lucide-react";
+import { useTranslations } from "next-intl";
+import { useRouter, usePathname } from "@/i18n/navigation";
 import { TCGType, TCG_CONFIG, EventFormat, EVENT_FORMAT_LABELS } from "@agenda-cartes/shared";
 import { cn } from "@/lib/utils/cn";
 
-const COUNTRIES = [
-  { code: "FR", label: "🇫🇷 France" },
-  { code: "BE", label: "🇧🇪 Belgique" },
-  { code: "CH", label: "🇨🇭 Suisse" },
-  { code: "LU", label: "🇱🇺 Luxembourg" },
-  { code: "CA", label: "🇨🇦 Canada" },
-] as const;
+const COUNTRY_CODES = ["FR", "BE", "CH", "LU", "CA"] as const;
 
 export function EventFilters() {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const t = useTranslations("filters");
+  const tc = useTranslations("countries");
 
   const createQueryString = useCallback(
     (updates: Record<string, string | string[] | null>) => {
@@ -34,7 +32,6 @@ export function EventFilters() {
         }
       }
 
-      // Reset to page 1 when filters change
       params.delete("page");
       return params.toString();
     },
@@ -48,7 +45,6 @@ export function EventFilters() {
     [router, pathname, createQueryString]
   );
 
-  // Current filter values from URL
   const activeTcgTypes = searchParams.getAll("tcg") as TCGType[];
   const activeFormats = searchParams.getAll("format") as EventFormat[];
   const activeCountry = searchParams.get("pays") ?? "";
@@ -86,7 +82,7 @@ export function EventFilters() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2 font-semibold text-gray-900">
           <SlidersHorizontal className="h-4 w-4" />
-          Filtres
+          {t("title")}
         </div>
         {hasActiveFilters && (
           <button
@@ -94,17 +90,17 @@ export function EventFilters() {
             className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800"
           >
             <X className="h-3 w-3" />
-            Effacer tout
+            {t("clearAll")}
           </button>
         )}
       </div>
 
       {/* Search */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Recherche</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">{t("searchLabel")}</label>
         <input
           type="search"
-          placeholder="Titre, ville..."
+          placeholder={t("searchPlaceholder")}
           value={activeSearch}
           onChange={(e) => navigateWithFilter({ q: e.target.value || null })}
           className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -113,7 +109,7 @@ export function EventFilters() {
 
       {/* TCG Types */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Type de jeu</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">{t("tcgTypeLabel")}</label>
         <div className="space-y-1.5">
           {Object.entries(TCG_CONFIG).map(([key, config]) => {
             const tcg = key as TCGType;
@@ -139,7 +135,7 @@ export function EventFilters() {
 
       {/* Format */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Format</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">{t("formatLabel")}</label>
         <div className="space-y-1.5">
           {Object.entries(EVENT_FORMAT_LABELS).map(([key, label]) => {
             const format = key as EventFormat;
@@ -164,9 +160,9 @@ export function EventFilters() {
 
       {/* Country */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Pays</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">{t("countryLabel")}</label>
         <div className="space-y-1.5">
-          {COUNTRIES.map(({ code, label }) => {
+          {COUNTRY_CODES.map((code) => {
             const isActive = activeCountry === code;
             return (
               <button
@@ -179,7 +175,7 @@ export function EventFilters() {
                     : "text-gray-700 hover:bg-gray-100"
                 )}
               >
-                {label}
+                {tc(code)}
               </button>
             );
           })}
@@ -195,7 +191,7 @@ export function EventFilters() {
             onChange={(e) => navigateWithFilter({ gratuit: e.target.checked ? "1" : null })}
             className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
           />
-          <span className="text-sm text-gray-700">Entrée gratuite uniquement</span>
+          <span className="text-sm text-gray-700">{t("freeOnlyLabel")}</span>
         </label>
       </div>
     </aside>

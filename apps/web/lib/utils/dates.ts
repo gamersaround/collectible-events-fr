@@ -1,19 +1,34 @@
 import { format, formatDistanceToNow, isToday, isTomorrow, isThisWeek } from "date-fns";
-import { fr } from "date-fns/locale";
+import { fr, enGB } from "date-fns/locale";
+
+type DateLocale = "fr" | "en";
+
+function getDateFnsLocale(locale: DateLocale) {
+  return locale === "fr" ? fr : enGB;
+}
 
 /**
- * Format a date for display in French.
+ * Format a date for display in the given locale.
  */
-export function formatDateFr(date: string | Date, formatStr = "EEEE d MMMM yyyy"): string {
-  return format(new Date(date), formatStr, { locale: fr });
+export function formatDateFr(
+  date: string | Date,
+  formatStr = "EEEE d MMMM yyyy",
+  locale: DateLocale = "fr"
+): string {
+  return format(new Date(date), formatStr, { locale: getDateFnsLocale(locale) });
 }
 
 /**
  * Format event date range (start → end).
  */
-export function formatEventDateRange(startsAt: string, endsAt?: string | null): string {
+export function formatEventDateRange(
+  startsAt: string,
+  endsAt?: string | null,
+  locale: DateLocale = "fr"
+): string {
+  const dateFnsLocale = getDateFnsLocale(locale);
   const start = new Date(startsAt);
-  const startStr = format(start, "EEEE d MMMM yyyy", { locale: fr });
+  const startStr = format(start, "EEEE d MMMM yyyy", { locale: dateFnsLocale });
 
   if (!endsAt) return startStr;
 
@@ -24,36 +39,38 @@ export function formatEventDateRange(startsAt: string, endsAt?: string | null): 
     return `${startStr}, ${format(start, "HH:mm")} – ${format(end, "HH:mm")}`;
   }
 
-  return `${startStr} au ${format(end, "d MMMM yyyy", { locale: fr })}`;
+  const connector = locale === "fr" ? "au" : "to";
+  return `${startStr} ${connector} ${format(end, "d MMMM yyyy", { locale: dateFnsLocale })}`;
 }
 
 /**
- * Human-readable relative time ("dans 3 jours", "hier", etc.)
+ * Human-readable relative time ("dans 3 jours", "in 3 days", etc.)
  */
-export function formatRelativeDate(date: string | Date): string {
+export function formatRelativeDate(date: string | Date, locale: DateLocale = "fr"): string {
+  const dateFnsLocale = getDateFnsLocale(locale);
   const d = new Date(date);
 
-  if (isToday(d)) return "Aujourd'hui";
-  if (isTomorrow(d)) return "Demain";
-  if (isThisWeek(d, { locale: fr })) {
-    return format(d, "EEEE", { locale: fr });
+  if (isToday(d)) return locale === "fr" ? "Aujourd'hui" : "Today";
+  if (isTomorrow(d)) return locale === "fr" ? "Demain" : "Tomorrow";
+  if (isThisWeek(d, { locale: dateFnsLocale })) {
+    return format(d, "EEEE", { locale: dateFnsLocale });
   }
 
-  return formatDistanceToNow(d, { locale: fr, addSuffix: true });
+  return formatDistanceToNow(d, { locale: dateFnsLocale, addSuffix: true });
 }
 
 /**
- * Format time in HH:mm (Paris timezone aware).
+ * Format time in HH:mm.
  */
 export function formatTime(date: string | Date): string {
   return format(new Date(date), "HH:mm");
 }
 
 /**
- * Format entry fee in euros.
+ * Format entry fee. Pass a translated freeLabel for i18n.
  */
-export function formatEntryFee(fee: number | null): string {
-  if (fee === null || fee === 0) return "Gratuit";
+export function formatEntryFee(fee: number | null, freeLabel = "Gratuit"): string {
+  if (fee === null || fee === 0) return freeLabel;
   return new Intl.NumberFormat("fr-FR", {
     style: "currency",
     currency: "EUR",

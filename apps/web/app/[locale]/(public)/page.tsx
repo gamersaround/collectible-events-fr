@@ -1,24 +1,36 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, CalendarDays, Map, PlusCircle } from "lucide-react";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { getEvents } from "@/lib/queries/events";
 import { EventCard } from "@/components/events/EventCard";
 import { TCG_CONFIG } from "@agenda-cartes/shared";
 
 export const revalidate = 3600;
 
-export const metadata: Metadata = {
-  title: "CardAgenda — Agenda des événements cartes à collectionner",
-  description:
-    "Tous les événements cartes de collection en France et Belgique : tournois Pokémon, Magic the Gathering, Yu-Gi-Oh!, NBA, foot et bien plus. Gratuit, mis à jour en continu.",
-  openGraph: {
-    title: "CardAgenda — Agenda des événements cartes à collectionner",
-    description:
-      "Tournois, bourses et conventions de cartes à collectionner. Pokémon, Magic, NBA, Foot et plus.",
-    images: [{ url: "/logo.jpg", width: 500, height: 500, alt: "CardAgenda" }],
-  },
-};
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "home" });
+
+  return {
+    title: "CardAgenda — " + (locale === "fr"
+      ? "Agenda des événements cartes à collectionner"
+      : "Collectible card event calendar"),
+    description: locale === "fr"
+      ? "Tous les événements cartes de collection en France et Belgique : tournois Pokémon, Magic the Gathering, Yu-Gi-Oh!, NBA, foot et bien plus. Gratuit, mis à jour en continu."
+      : "All collectible card events in France and Belgium: Pokémon, Magic, Yu-Gi-Oh!, NBA, football cards and more. Free, updated continuously.",
+    openGraph: {
+      title: "CardAgenda",
+      description: t("heroTagline"),
+      images: [{ url: "/logo.jpg", width: 500, height: 500, alt: "CardAgenda" }],
+    },
+  };
+}
 
 // Slight rotations for sticker effect
 const STICKER_ROTATIONS = [
@@ -26,7 +38,13 @@ const STICKER_ROTATIONS = [
   "-rotate-3", "rotate-2", "-rotate-1", "rotate-1", "-rotate-2",
 ];
 
-export default async function HomePage() {
+export default async function HomePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "home" });
   const { data: upcomingEvents } = await getEvents({}, 1, 6);
 
   return (
@@ -56,8 +74,8 @@ export default async function HomePage() {
             CardAgenda
           </h1>
           <p className="text-lg md:text-xl font-bold mb-10 max-w-2xl mx-auto text-black/80">
-            Tous les événements cartes de collection, en un seul endroit.{" "}
-            <span className="text-black/50">TCG · NBA · Foot · et bien plus.</span>
+            {t("heroTagline")}{" "}
+            <span className="text-black/50">{t("heroSubTagline")}</span>
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -66,7 +84,7 @@ export default async function HomePage() {
               className="inline-flex items-center gap-2 bg-black text-[#FFDE03] px-8 py-4 font-display font-black uppercase text-lg border-2 border-black shadow-[6px_6px_0px_0px_#000,3px_3px_0px_0px_#FFDE03] hover:shadow-[10px_10px_0px_0px_#000,5px_5px_0px_0px_#FFDE03] hover:-translate-x-1 hover:-translate-y-1 active:shadow-none active:translate-x-2 active:translate-y-2 transition-all"
             >
               <CalendarDays className="h-5 w-5" />
-              Voir les événements
+              {t("ctaEvents")}
               <ArrowRight className="h-5 w-5" />
             </Link>
             <Link
@@ -74,7 +92,7 @@ export default async function HomePage() {
               className="inline-flex items-center gap-2 bg-white text-black px-8 py-4 font-display font-black uppercase text-lg border-2 border-black shadow-[6px_6px_0px_0px_#000,3px_3px_0px_0px_#FFDE03] hover:shadow-[10px_10px_0px_0px_#000,5px_5px_0px_0px_#FFDE03] hover:-translate-x-1 hover:-translate-y-1 active:shadow-none active:translate-x-2 active:translate-y-2 transition-all"
             >
               <Map className="h-5 w-5" />
-              Carte interactive
+              {t("ctaMap")}
             </Link>
           </div>
         </div>
@@ -116,15 +134,15 @@ export default async function HomePage() {
           <div className="flex items-end justify-between mb-8 border-b-4 border-black pb-4">
             <div>
               <h2 className="font-display text-3xl font-black uppercase text-black">
-                Prochains événements
+                {t("upcomingEventsTitle")}
               </h2>
-              <p className="text-black/60 font-medium mt-1">Les événements à venir</p>
+              <p className="text-black/60 font-medium mt-1">{t("upcomingEventsSubtitle")}</p>
             </div>
             <Link
               href="/evenements"
               className="flex items-center gap-1 font-bold uppercase text-sm border-2 border-black px-4 py-2 shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all bg-white"
             >
-              Voir tout
+              {t("viewAll")}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
@@ -137,7 +155,7 @@ export default async function HomePage() {
             </div>
           ) : (
             <div className="border-4 border-black border-dashed p-12 text-center">
-              <p className="font-bold text-black/60">Aucun événement pour le moment. Soyez le premier à en ajouter un !</p>
+              <p className="font-bold text-black/60">{t("noEvents")}</p>
             </div>
           )}
         </div>
@@ -151,7 +169,7 @@ export default async function HomePage() {
             <div className="relative min-h-[240px] md:min-h-0 border-b-4 md:border-b-0 md:border-r-4 border-white overflow-hidden">
               <Image
                 src="/cardscanner-preview.jpg"
-                alt="CardScanner.fr — gérez votre collection"
+                alt="CardScanner.fr"
                 fill
                 className="object-cover object-left-top"
                 sizes="(max-width: 768px) 100vw, 50vw"
@@ -161,14 +179,13 @@ export default async function HomePage() {
             {/* Text */}
             <div className="p-8 md:p-10 flex flex-col justify-center bg-black">
               <div className="inline-flex items-center gap-2 bg-[#FFDE03] text-black px-3 py-1 text-[10px] font-black uppercase tracking-widest mb-5 w-fit border-2 border-white">
-                🤝 Outil partenaire
+                {t("partnerBadge")}
               </div>
               <h2 className="font-display text-3xl md:text-4xl font-black uppercase leading-none mb-4 text-white">
-                Gérez votre<br />collection
+                {t("partnerTitle")}
               </h2>
               <p className="text-white/70 font-medium mb-6 text-sm leading-relaxed">
-                <span className="text-[#FFDE03] font-black">CardScanner.fr</span> — scannez vos cartes pour les identifier automatiquement,
-                évaluez votre collection en temps réel et exportez vers eBay ou Whatnot en quelques clics.
+                <span className="text-[#FFDE03] font-black">CardScanner.fr</span> — {t("partnerDescription")}
               </p>
               <div className="flex flex-wrap gap-2 mb-8">
                 {["📷 Scan auto", "💶 Cote en direct", "📦 Collections", "🛒 Export eBay"].map((tag) => (
@@ -177,15 +194,15 @@ export default async function HomePage() {
                   </span>
                 ))}
               </div>
-              <Link
+              <a
                 href="https://cardscanner.fr"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-[#FFDE03] text-black px-6 py-3 font-display font-black uppercase text-sm border-2 border-white shadow-[4px_4px_0px_0px_#fff] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] transition-all w-fit"
               >
-                Découvrir CardScanner.fr
+                {t("partnerCta")}
                 <ArrowRight className="h-4 w-4" />
-              </Link>
+              </a>
             </div>
           </div>
         </div>
@@ -197,18 +214,17 @@ export default async function HomePage() {
           <div className="border-4 border-black shadow-brutal-xl p-8 md:p-12 text-center max-w-2xl mx-auto bg-[#FFDE03]">
             <div className="text-6xl mb-4 inline-block rotate-3">📋</div>
             <h2 className="font-display text-3xl font-black uppercase mb-3 text-black">
-              Organisez un événement ?
+              {t("submitTitle")}
             </h2>
             <p className="font-medium mb-8 text-black/80">
-              Soumettez votre tournoi, bourse ou convention.
-              Modération sous 24h — 100% gratuit.
+              {t("submitDescription")}
             </p>
             <Link
               href="/soumettre"
               className="inline-flex items-center gap-2 bg-black text-[#FFDE03] px-8 py-4 font-display font-black uppercase text-lg border-2 border-black shadow-brutal hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none transition-all"
             >
               <PlusCircle className="h-5 w-5" />
-              Soumettre un événement
+              {t("submitCta")}
             </Link>
           </div>
         </div>
@@ -219,10 +235,10 @@ export default async function HomePage() {
         <div className="container">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-0 border-2 border-black">
             {[
-              { value: "9+", label: "Jeux référencés" },
-              { value: "101", label: "Départements" },
-              { value: "6h", label: "Mise à jour auto" },
-              { value: "🆓", label: "100% gratuit" },
+              { value: t("stat1Value"), label: t("stat1Label") },
+              { value: t("stat2Value"), label: t("stat2Label") },
+              { value: t("stat3Value"), label: t("stat3Label") },
+              { value: t("stat4Value"), label: t("stat4Label") },
             ].map((stat, i) => (
               <div
                 key={i}

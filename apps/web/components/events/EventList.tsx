@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { EventCard, EventCardSkeleton } from "./EventCard";
 import type { EventRow } from "@/lib/queries/events";
 
@@ -6,26 +7,28 @@ interface EventListProps {
   total: number;
 }
 
-export function EventList({ events, total }: EventListProps) {
+export async function EventList({ events, total }: EventListProps) {
+  const t = await getTranslations("events");
+
   if (events.length === 0) {
     return (
       <div className="text-center py-16">
         <div className="text-5xl mb-4">🃏</div>
         <h2 className="text-lg font-semibold text-gray-900 mb-2">
-          Aucun événement trouvé
+          {t("noEventsTitle")}
         </h2>
         <p className="text-gray-500">
-          Essayez de modifier vos filtres ou revenez plus tard.
+          {t("noEventsDescription")}
         </p>
       </div>
     );
   }
 
+  const countLabel = total === 1 ? t("foundOne", { count: total }) : t("foundOther", { count: total });
+
   return (
     <div>
-      <p className="text-sm text-gray-500 mb-4">
-        {total} événement{total > 1 ? "s" : ""} trouvé{total > 1 ? "s" : ""}
-      </p>
+      <p className="text-sm text-gray-500 mb-4">{countLabel}</p>
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
         {events.map((event) => (
           <EventCard key={event.id} event={event} />

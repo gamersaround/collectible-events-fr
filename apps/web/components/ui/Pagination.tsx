@@ -1,15 +1,18 @@
-import Link from "next/link";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils/cn";
 
 interface PaginationProps {
   currentPage: number;
   totalPages: number;
+  basePath: string;
   searchParams: Record<string, string | string[] | undefined>;
 }
 
 function buildUrl(
   page: number,
+  basePath: string,
   searchParams: Record<string, string | string[] | undefined>
 ): string {
   const params = new URLSearchParams();
@@ -26,13 +29,14 @@ function buildUrl(
   if (page > 1) params.set("page", String(page));
 
   const qs = params.toString();
-  return `/evenements${qs ? `?${qs}` : ""}`;
+  return `${basePath}${qs ? `?${qs}` : ""}`;
 }
 
-export function Pagination({ currentPage, totalPages, searchParams }: PaginationProps) {
+export async function Pagination({ currentPage, totalPages, basePath, searchParams }: PaginationProps) {
   if (totalPages <= 1) return null;
 
-  // Generate page numbers to show
+  const t = await getTranslations("pagination");
+
   const pages: (number | "...")[] = [];
   if (totalPages <= 7) {
     for (let i = 1; i <= totalPages; i++) pages.push(i);
@@ -51,9 +55,9 @@ export function Pagination({ currentPage, totalPages, searchParams }: Pagination
       {/* Previous */}
       {currentPage > 1 ? (
         <Link
-          href={buildUrl(currentPage - 1, searchParams)}
+          href={buildUrl(currentPage - 1, basePath, searchParams)}
           className="p-2 rounded-lg hover:bg-gray-100 text-gray-600"
-          aria-label="Page précédente"
+          aria-label={t("previousPage")}
         >
           <ChevronLeft className="h-5 w-5" />
         </Link>
@@ -70,7 +74,7 @@ export function Pagination({ currentPage, totalPages, searchParams }: Pagination
         ) : (
           <Link
             key={page}
-            href={buildUrl(page, searchParams)}
+            href={buildUrl(page, basePath, searchParams)}
             className={cn(
               "min-w-[2.25rem] h-9 flex items-center justify-center rounded-lg text-sm font-medium",
               page === currentPage
@@ -87,9 +91,9 @@ export function Pagination({ currentPage, totalPages, searchParams }: Pagination
       {/* Next */}
       {currentPage < totalPages ? (
         <Link
-          href={buildUrl(currentPage + 1, searchParams)}
+          href={buildUrl(currentPage + 1, basePath, searchParams)}
           className="p-2 rounded-lg hover:bg-gray-100 text-gray-600"
-          aria-label="Page suivante"
+          aria-label={t("nextPage")}
         >
           <ChevronRight className="h-5 w-5" />
         </Link>

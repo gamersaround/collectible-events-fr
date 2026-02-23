@@ -1,7 +1,10 @@
-import Link from "next/link";
 import Image from "next/image";
+import { getTranslations } from "next-intl/server";
+import { Link } from "@/i18n/navigation";
 
-export function Footer() {
+export async function Footer() {
+  const t = await getTranslations("footer");
+
   return (
     <footer className="border-t-4 border-black bg-black text-white">
       <div className="container py-10">
@@ -18,24 +21,23 @@ export function Footer() {
               />
             </div>
             <p className="text-sm text-white/60 font-medium">
-              Le répertoire des événements de cartes à collectionner.
-              Pokémon, Magic, Yu-Gi-Oh, One Piece et plus.
+              {t("tagline")}
             </p>
           </div>
 
           {/* Links */}
           <div>
-            <h3 className="font-display font-black uppercase text-[#FFDE03] mb-3 text-sm tracking-wide">Navigation</h3>
+            <h3 className="font-display font-black uppercase text-[#FFDE03] mb-3 text-sm tracking-wide">{t("navigationTitle")}</h3>
             <ul className="space-y-2 text-sm font-medium">
-              <li><Link href="/evenements" className="text-white/70 hover:text-[#FFDE03] transition-colors">Tous les événements</Link></li>
-              <li><Link href="/carte" className="text-white/70 hover:text-[#FFDE03] transition-colors">Carte interactive</Link></li>
-              <li><Link href="/soumettre" className="text-white/70 hover:text-[#FFDE03] transition-colors">Soumettre un événement</Link></li>
+              <li><Link href="/evenements" className="text-white/70 hover:text-[#FFDE03] transition-colors">{t("allEvents")}</Link></li>
+              <li><Link href="/carte" className="text-white/70 hover:text-[#FFDE03] transition-colors">{t("interactiveMap")}</Link></li>
+              <li><Link href="/soumettre" className="text-white/70 hover:text-[#FFDE03] transition-colors">{t("submitEvent")}</Link></li>
             </ul>
           </div>
 
           {/* TCG types */}
           <div>
-            <h3 className="font-display font-black uppercase text-[#FFDE03] mb-3 text-sm tracking-wide">Jeux</h3>
+            <h3 className="font-display font-black uppercase text-[#FFDE03] mb-3 text-sm tracking-wide">{t("gamesTitle")}</h3>
             <ul className="space-y-2 text-sm font-medium">
               <li><Link href="/evenements?tcg=pokemon" prefetch={false} className="text-white/70 hover:text-[#FFDE03] transition-colors">⚡ Pokémon TCG</Link></li>
               <li><Link href="/evenements?tcg=magic" prefetch={false} className="text-white/70 hover:text-[#FFDE03] transition-colors">✨ Magic: The Gathering</Link></li>
@@ -47,7 +49,7 @@ export function Footer() {
         </div>
 
         <div className="mt-6 text-center text-sm font-bold text-white/40 uppercase tracking-widest">
-          © {new Date().getFullYear()} CardAgenda — Made with ❤️ for the TCG community
+          {t("copyright", { year: new Date().getFullYear() })}
         </div>
       </div>
     </footer>

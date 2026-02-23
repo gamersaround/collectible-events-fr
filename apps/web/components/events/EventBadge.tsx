@@ -1,3 +1,6 @@
+"use client";
+
+import { useTranslations } from "next-intl";
 import { TCG_CONFIG, TCGType } from "@agenda-cartes/shared";
 import { cn } from "@/lib/utils/cn";
 
@@ -57,20 +60,17 @@ const FORMAT_STYLES: Record<string, string> = {
   championship: "bg-yellow-100 text-yellow-900 border-yellow-900",
 };
 
-const FORMAT_LABELS: Record<string, string> = {
-  tournoi: "Tournoi",
-  bourse: "Bourse",
-  convention: "Convention",
-  draft: "Draft",
-  prereleases: "Prélancement",
-  league: "Ligue",
-  casual: "Casual",
-  championship: "Championnat",
-};
+const KNOWN_FORMATS = ["tournoi", "bourse", "convention", "draft", "prereleases", "league", "casual", "championship"] as const;
+type KnownFormat = (typeof KNOWN_FORMATS)[number];
+
+function isKnownFormat(f: string): f is KnownFormat {
+  return (KNOWN_FORMATS as readonly string[]).includes(f);
+}
 
 export function FormatBadge({ format, className }: FormatBadgeProps) {
+  const t = useTranslations("formatLabels");
   const style = FORMAT_STYLES[format] ?? "bg-gray-100 text-gray-800 border-gray-800";
-  const label = FORMAT_LABELS[format] ?? format;
+  const label = isKnownFormat(format) ? t(format) : format;
 
   return (
     <span

@@ -1,9 +1,10 @@
 "use client";
 
 import { useRef } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { MapPin, Euro, Users } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import type { EventRow } from "@/lib/queries/events";
 import { EventBadge, FormatBadge } from "./EventBadge";
 import { formatDateFr, formatEntryFee } from "@/lib/utils/dates";
@@ -15,19 +16,31 @@ interface EventCardProps {
 }
 
 export function EventCard({ event }: EventCardProps) {
+  const locale = useLocale() as "fr" | "en";
+  const t = useTranslations("form");
+
   const startDate = new Date(event.starts_at);
   const day = startDate.getDate();
-  const month = startDate.toLocaleDateString("fr-FR", { month: "short" }).toUpperCase();
+  const month = startDate
+    .toLocaleDateString(locale === "fr" ? "fr-FR" : "en-GB", { month: "short" })
+    .toUpperCase();
 
   const cardRef = useRef<HTMLElement>(null);
+  const leaveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const handleMouseEnter = () => {
+    const el = cardRef.current;
+    if (!el) return;
+    if (leaveTimerRef.current) clearTimeout(leaveTimerRef.current);
+    el.style.willChange = "transform";
+  };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
     const el = cardRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
-    const nx = (e.clientX - rect.left) / rect.width - 0.5;  // -0.5 → +0.5
+    const nx = (e.clientX - rect.left) / rect.width - 0.5;
     const ny = (e.clientY - rect.top) / rect.height - 0.5;
-    // Disable transition during tracking for instant response
     el.style.transition = "box-shadow 150ms, transform 0s";
     el.style.transform = `perspective(800px) rotateX(${ny * -12}deg) rotateY(${nx * 12}deg)`;
   };
@@ -35,22 +48,25 @@ export function EventCard({ event }: EventCardProps) {
   const handleMouseLeave = () => {
     const el = cardRef.current;
     if (!el) return;
-    // Re-enable transition so the card eases back smoothly (pure CSS, no JS loop)
     el.style.transition = "box-shadow 150ms, transform 350ms ease-out";
     el.style.transform = "perspective(800px) rotateX(0deg) rotateY(0deg)";
+    // Release the compositor layer after the return animation completes
+    leaveTimerRef.current = setTimeout(() => {
+      if (el) el.style.willChange = "auto";
+    }, 400);
   };
 
   const primaryTcg = (event.primary_tcg_type ?? event.tcg_types[0]) as TCGType | undefined;
   const remainingTcgs = event.tcg_types.slice(1);
-
-  const ratio = event.tcg_sports_ratio; // null = pas de jauge
+  const ratio = event.tcg_sports_ratio;
 
   return (
     <article
       ref={cardRef as React.RefObject<HTMLElement>}
+      onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="group relative bg-white border-2 border-black shadow-[6px_6px_0px_0px_#000] hover:shadow-[2px_2px_0px_0px_#000] transition-shadow duration-150 hover:z-10 will-change-transform"
+      className="group relative bg-white border-2 border-black shadow-[6px_6px_0px_0px_#000] hover:shadow-[2px_2px_0px_0px_#000] transition-shadow duration-150 hover:z-10"
     >
       {/* Circular TCG seal badge */}
       {primaryTcg && (() => {
@@ -91,7 +107,7 @@ export function EventCard({ event }: EventCardProps) {
 
           {/* Content */}
           <div className="p-4 flex-1 min-w-0">
-            {/* Badges — remaining TCGs + format */}
+            {/* Badges */}
             <div className="flex flex-wrap gap-1 mb-2">
               {remainingTcgs.map((tcg) => (
                 <EventBadge key={tcg} tcgType={tcg as TCGType} size="sm" />
@@ -119,7 +135,7 @@ export function EventCard({ event }: EventCardProps) {
               <div className="flex items-center gap-1.5 text-xs font-medium">
                 <Euro className="h-3 w-3 shrink-0 text-black/70" />
                 <span className={event.entry_fee === null || event.entry_fee === 0 ? "text-green-700 font-bold" : "text-black/70"}>
-                  {formatEntryFee(event.entry_fee)}
+                  {formatEntryFee(event.entry_fee, t("free"))}
                 </span>
                 {event.max_participants && (
                   <span className="flex items-center gap-0.5 ml-2 text-black/50">
@@ -130,10 +146,9 @@ export function EventCard({ event }: EventCardProps) {
               </div>
             </div>
           </div>
-
         </div>
 
-        {/* TCG / Sport ratio — étiquette texte */}
+        {/* TCG / Sport ratio */}
         {typeof ratio === "number" && (
           <div className="border-t-2 border-black px-4 py-2 bg-white flex items-center justify-center gap-1.5">
             <span className="font-black text-[10px] uppercase tracking-widest text-black">{ratio}% TCG</span>
