@@ -132,26 +132,16 @@ export function EventCard({ event }: EventCardProps) {
           </div>
 
         </div>
-      </Link>
 
-      {/* TCG / Sport ratio gauge — pleine largeur, hors padding */}
-      {typeof ratio === "number" && (
-        <div className="border-t-2 border-black flex overflow-hidden">
-          {ratio > 0 && (
-            <div
-              className="flex items-center justify-center h-8 shrink-0 bg-[#FFDE03] font-black text-[10px] uppercase tracking-widest text-black"
-              style={{ width: `${ratio}%` }}
-            >
-              {ratio >= 20 && "TCG"}
-            </div>
-          )}
-          {ratio < 100 && (
-            <div className="flex flex-1 items-center justify-center h-8 bg-blue-500 font-black text-[10px] uppercase tracking-widest text-white">
-              {(100 - ratio) >= 20 && "SPORT"}
-            </div>
-          )}
-        </div>
-      )}
+        {/* TCG / Sport ratio — étiquette texte */}
+        {typeof ratio === "number" && (
+          <div className="border-t-2 border-black px-4 py-2 bg-white flex items-center justify-center gap-1.5">
+            <span className="font-black text-[10px] uppercase tracking-widest text-black">{ratio}% TCG</span>
+            <span className="font-black text-[10px] text-black/30">·</span>
+            <span className="font-black text-[10px] uppercase tracking-widest text-blue-500">{100 - ratio}% SPORT</span>
+          </div>
+        )}
+      </Link>
     </article>
   );
 }

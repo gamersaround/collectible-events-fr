@@ -95,6 +95,7 @@ export async function POST(request: NextRequest) {
       "organizerName",
       "organizerContact",
       "websiteUrl",
+      "image",
     ]
 
     for (const field of fieldsToCopy) {
