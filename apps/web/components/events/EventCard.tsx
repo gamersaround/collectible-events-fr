@@ -40,7 +40,7 @@ export function EventCard({ event }: EventCardProps) {
     el.style.transform = "perspective(800px) rotateX(0deg) rotateY(0deg)";
   };
 
-  const primaryTcg = event.tcg_types[0] as TCGType | undefined;
+  const primaryTcg = (event.primary_tcg_type ?? event.tcg_types[0]) as TCGType | undefined;
   const remainingTcgs = event.tcg_types.slice(1);
 
   const ratio = event.tcg_sports_ratio; // null = pas de jauge

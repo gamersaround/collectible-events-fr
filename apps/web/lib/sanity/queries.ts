@@ -8,6 +8,7 @@ const EVENT_PROJECTION = groq`{
   description,
   "tcg_types": tcgTypes,
   "tcg_sports_ratio": tcgSportsRatio,
+  "primary_tcg_type": primaryTcgType,
   format,
   status,
   "venue_name": venueName,

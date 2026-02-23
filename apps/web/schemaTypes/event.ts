@@ -69,6 +69,26 @@ export const eventSchema = defineType({
       validation: (Rule) => Rule.min(0).max(100).integer(),
     }),
     defineField({
+      name: "primaryTcgType",
+      title: "Icône principale (badge)",
+      type: "string",
+      description:
+        "Icône affichée en haut à droite de la carte. Par défaut : premier jeu de la liste ci-dessus. Choisir ici pour mettre en avant un jeu en particulier (ex. un salon mixte où les sports cards dominent).",
+      options: {
+        list: [
+          { title: "Pokémon TCG", value: "pokemon" },
+          { title: "Magic: The Gathering", value: "magic" },
+          { title: "Yu-Gi-Oh!", value: "yugioh" },
+          { title: "Cartes sportives", value: "sports_cards" },
+          { title: "One Piece Card Game", value: "one_piece" },
+          { title: "Dragon Ball Super CG", value: "dragon_ball" },
+          { title: "Disney Lorcana", value: "lorcana" },
+          { title: "Flesh and Blood", value: "flesh_blood" },
+          { title: "Autres TCG", value: "autres" },
+        ],
+      },
+    }),
+    defineField({
       name: "format",
       title: "Format",
       type: "string",
