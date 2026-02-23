@@ -24,9 +24,19 @@ export async function generateMetadata({
 
   const title = tcg ? t("metaTitleWithTcg", { tcg }) : t("metaTitleDefault");
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
+  const otherLocale = locale === "fr" ? "en" : "fr";
   return {
     title,
     description: t("metaDescription", { tcg: tcg ?? (locale === "fr" ? "événements de cartes à collectionner" : "collectible card events") }),
+    alternates: {
+      canonical: `${appUrl}/${locale}/evenements`,
+      languages: {
+        [locale]: `${appUrl}/${locale}/evenements`,
+        [otherLocale]: `${appUrl}/${otherLocale}/evenements`,
+        "x-default": `${appUrl}/fr/evenements`,
+      },
+    },
   };
 }
 

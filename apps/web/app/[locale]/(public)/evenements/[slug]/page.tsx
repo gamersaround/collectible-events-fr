@@ -46,10 +46,20 @@ export async function generateMetadata({
 
   if (!event) return { title: t("notFound") };
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
   const dateLocale = locale as "fr" | "en";
+  const otherLocale = locale === "fr" ? "en" : "fr";
   return {
     title: event.title,
     description: event.description ?? `${event.title} — ${event.city}, ${formatDateFr(event.starts_at, "EEEE d MMMM yyyy", dateLocale)}`,
+    alternates: {
+      canonical: `${appUrl}/${locale}/evenements/${slug}`,
+      languages: {
+        [locale]: `${appUrl}/${locale}/evenements/${slug}`,
+        [otherLocale]: `${appUrl}/${otherLocale}/evenements/${slug}`,
+        "x-default": `${appUrl}/fr/evenements/${slug}`,
+      },
+    },
     openGraph: {
       title: event.title,
       description: event.description ?? undefined,

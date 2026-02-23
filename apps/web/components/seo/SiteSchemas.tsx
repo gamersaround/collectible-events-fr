@@ -1,12 +1,15 @@
 export function SiteSchemas({ locale }: { locale: string }) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
   const schemas = [
     {
       "@context": "https://schema.org",
       "@type": "Organization",
       name: "CardAgenda",
       url: appUrl,
-      logo: `${appUrl}/logo.jpg`,
+      logo: {
+        "@type": "ImageObject",
+        url: `${appUrl}/logo.jpg`,
+      },
       description:
         locale === "fr"
           ? "Agenda des événements cartes à collectionner en France et Belgique"

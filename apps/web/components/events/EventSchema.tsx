@@ -10,7 +10,7 @@ interface EventSchemaProps {
  * https://schema.org/Event
  */
 export function EventSchema({ event, locale }: EventSchemaProps) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
 
   const schema = {
     "@context": "https://schema.org",

@@ -20,9 +20,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: route.changeFrequency,
       priority: route.priority,
       alternates: {
-        languages: Object.fromEntries(
-          locales.map((l) => [l, `${appUrl}/${l}${route.path}`])
-        ),
+        languages: {
+          ...Object.fromEntries(locales.map((l) => [l, `${appUrl}/${l}${route.path}`])),
+          "x-default": `${appUrl}/fr${route.path}`,
+        },
       },
     }))
   );
@@ -38,9 +39,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       changeFrequency: "weekly" as const,
       priority: 0.8,
       alternates: {
-        languages: Object.fromEntries(
-          locales.map((l) => [l, `${appUrl}/${l}/evenements/${e.slug}`])
-        ),
+        languages: {
+          ...Object.fromEntries(locales.map((l) => [l, `${appUrl}/${l}/evenements/${e.slug}`])),
+          "x-default": `${appUrl}/fr/evenements/${e.slug}`,
+        },
       },
     }))
   );

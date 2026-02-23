@@ -5,7 +5,7 @@ interface BreadcrumbSchemaProps {
 }
 
 export function BreadcrumbSchema({ locale, eventTitle, slug }: BreadcrumbSchemaProps) {
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
   const schema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
