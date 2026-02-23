@@ -15,7 +15,7 @@ const spaceGrotesk = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://agenda-cartes.fr"),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com"),
   title: {
     default: "CardAgenda — Agenda des événements cartes à collectionner",
     template: "%s | CardAgenda",
@@ -42,7 +42,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "fr_FR",
-    url: process.env.NEXT_PUBLIC_APP_URL ?? "https://agenda-cartes.fr",
+    url: process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com",
     siteName: "CardAgenda",
     images: [
       {

@@ -33,7 +33,7 @@ export function EventSchema({ event }: EventSchemaProps) {
         "@type": "PostalAddress",
         addressLocality: event.city,
         postalCode: event.postal_code ?? undefined,
-        addressCountry: "FR",
+        addressCountry: event.country,
         streetAddress: event.address ?? undefined,
       },
       ...(event.latitude && event.longitude

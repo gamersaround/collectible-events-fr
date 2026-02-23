@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { sanityServerClient } from "@/lib/sanity/client";
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://agenda-cartes.fr";
+const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticPages: MetadataRoute.Sitemap = [
