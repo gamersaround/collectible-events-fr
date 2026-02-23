@@ -143,6 +143,54 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* CardScanner.fr partner banner */}
+      <section className="py-14 border-t-4 border-black bg-black">
+        <div className="container">
+          <div className="border-4 border-white shadow-[8px_8px_0px_0px_#FFDE03] grid grid-cols-1 md:grid-cols-2 overflow-hidden">
+            {/* Screenshot */}
+            <div className="relative min-h-[240px] md:min-h-0 border-b-4 md:border-b-0 md:border-r-4 border-white overflow-hidden">
+              <Image
+                src="/cardscanner-preview.jpg"
+                alt="CardScanner.fr — gérez votre collection"
+                fill
+                className="object-cover object-left-top"
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
+            </div>
+
+            {/* Text */}
+            <div className="p-8 md:p-10 flex flex-col justify-center bg-black">
+              <div className="inline-flex items-center gap-2 bg-[#FFDE03] text-black px-3 py-1 text-[10px] font-black uppercase tracking-widest mb-5 w-fit border-2 border-white">
+                🤝 Outil partenaire
+              </div>
+              <h2 className="font-display text-3xl md:text-4xl font-black uppercase leading-none mb-4 text-white">
+                Gérez votre<br />collection
+              </h2>
+              <p className="text-white/70 font-medium mb-6 text-sm leading-relaxed">
+                <span className="text-[#FFDE03] font-black">CardScanner.fr</span> — scannez vos cartes pour les identifier automatiquement,
+                évaluez votre collection en temps réel et exportez vers eBay ou Whatnot en quelques clics.
+              </p>
+              <div className="flex flex-wrap gap-2 mb-8">
+                {["📷 Scan auto", "💶 Cote en direct", "📦 Collections", "🛒 Export eBay"].map((tag) => (
+                  <span key={tag} className="text-[10px] font-black uppercase tracking-wider border-2 border-white/40 text-white/60 px-2 py-1">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+              <Link
+                href="https://cardscanner.fr"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 bg-[#FFDE03] text-black px-6 py-3 font-display font-black uppercase text-sm border-2 border-white shadow-[4px_4px_0px_0px_#fff] hover:shadow-none hover:translate-x-[4px] hover:translate-y-[4px] transition-all w-fit"
+              >
+                Découvrir CardScanner.fr
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA: Submit event */}
       <section className="py-14 border-t-4 border-black bg-white">
         <div className="container">
