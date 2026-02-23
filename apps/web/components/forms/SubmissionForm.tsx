@@ -216,11 +216,62 @@ export function SubmissionForm() {
               defaultValue="FR"
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <option value="FR">🇫🇷 France</option>
-              <option value="BE">🇧🇪 Belgique</option>
-              <option value="CH">🇨🇭 Suisse</option>
-              <option value="LU">🇱🇺 Luxembourg</option>
-              <option value="CA">🇨🇦 Canada</option>
+              <optgroup label="Europe de l'Ouest">
+                <option value="FR">🇫🇷 France</option>
+                <option value="BE">🇧🇪 Belgique</option>
+                <option value="CH">🇨🇭 Suisse</option>
+                <option value="LU">🇱🇺 Luxembourg</option>
+                <option value="DE">🇩🇪 Allemagne</option>
+                <option value="GB">🇬🇧 Royaume-Uni</option>
+                <option value="IE">🇮🇪 Irlande</option>
+                <option value="NL">🇳🇱 Pays-Bas</option>
+                <option value="ES">🇪🇸 Espagne</option>
+                <option value="PT">🇵🇹 Portugal</option>
+                <option value="IT">🇮🇹 Italie</option>
+                <option value="AT">🇦🇹 Autriche</option>
+              </optgroup>
+              <optgroup label="Europe du Nord">
+                <option value="SE">🇸🇪 Suède</option>
+                <option value="NO">🇳🇴 Norvège</option>
+                <option value="DK">🇩🇰 Danemark</option>
+                <option value="FI">🇫🇮 Finlande</option>
+                <option value="IS">🇮🇸 Islande</option>
+              </optgroup>
+              <optgroup label="Europe centrale &amp; de l'Est">
+                <option value="PL">🇵🇱 Pologne</option>
+                <option value="CZ">🇨🇿 République tchèque</option>
+                <option value="SK">🇸🇰 Slovaquie</option>
+                <option value="HU">🇭🇺 Hongrie</option>
+                <option value="RO">🇷🇴 Roumanie</option>
+                <option value="BG">🇧🇬 Bulgarie</option>
+                <option value="GR">🇬🇷 Grèce</option>
+                <option value="SI">🇸🇮 Slovénie</option>
+                <option value="HR">🇭🇷 Croatie</option>
+                <option value="RS">🇷🇸 Serbie</option>
+                <option value="LT">🇱🇹 Lituanie</option>
+                <option value="LV">🇱🇻 Lettonie</option>
+                <option value="EE">🇪🇪 Estonie</option>
+                <option value="MT">🇲🇹 Malte</option>
+                <option value="CY">🇨🇾 Chypre</option>
+              </optgroup>
+              <optgroup label="Amérique du Nord">
+                <option value="US">🇺🇸 États-Unis</option>
+                <option value="CA">🇨🇦 Canada</option>
+                <option value="MX">🇲🇽 Mexique</option>
+              </optgroup>
+              <optgroup label="Amérique du Sud">
+                <option value="BR">🇧🇷 Brésil</option>
+                <option value="AR">🇦🇷 Argentine</option>
+              </optgroup>
+              <optgroup label="Asie-Pacifique">
+                <option value="JP">🇯🇵 Japon</option>
+                <option value="KR">🇰🇷 Corée du Sud</option>
+                <option value="AU">🇦🇺 Australie</option>
+                <option value="NZ">🇳🇿 Nouvelle-Zélande</option>
+              </optgroup>
+              <optgroup label="Autre">
+                <option value="OTHER">🌍 Autre</option>
+              </optgroup>
             </select>
           </div>
 
