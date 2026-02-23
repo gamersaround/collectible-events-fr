@@ -2,13 +2,14 @@ import type { EventRow } from "@/lib/queries/events";
 
 interface EventSchemaProps {
   event: EventRow;
+  locale: string;
 }
 
 /**
  * JSON-LD Event schema for Google rich snippets.
  * https://schema.org/Event
  */
-export function EventSchema({ event }: EventSchemaProps) {
+export function EventSchema({ event, locale }: EventSchemaProps) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "";
 
   const schema = {
@@ -25,7 +26,8 @@ export function EventSchema({ event }: EventSchemaProps) {
         ? "https://schema.org/EventScheduled"
         : "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    url: `${appUrl}/evenements/${event.slug}`,
+    isAccessibleForFree: event.entry_fee === 0 || event.entry_fee === null,
+    url: `${appUrl}/${locale}/evenements/${event.slug}`,
     location: {
       "@type": "Place",
       name: event.venue_name ?? event.city,
