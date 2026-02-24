@@ -1,3 +1,4 @@
+import { urlFor } from "@/lib/sanity/image";
 import type { EventRow } from "@/lib/queries/events";
 
 interface EventSchemaProps {
@@ -11,6 +12,7 @@ interface EventSchemaProps {
  */
 export function EventSchema({ event, locale }: EventSchemaProps) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
+  const eventUrl = `${appUrl}/${locale}/evenements/${event.slug}`;
 
   const schema = {
     "@context": "https://schema.org",
@@ -22,12 +24,15 @@ export function EventSchema({ event, locale }: EventSchemaProps) {
     eventStatus:
       event.status === "annule"
         ? "https://schema.org/EventCancelled"
-        : event.status === "en_cours"
-        ? "https://schema.org/EventScheduled"
         : "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
     isAccessibleForFree: event.entry_fee === 0 || event.entry_fee === null,
-    url: `${appUrl}/${locale}/evenements/${event.slug}`,
+    url: eventUrl,
+    ...(event.image
+      ? {
+          image: urlFor(event.image).width(1200).height(630).auto("format").url(),
+        }
+      : {}),
     location: {
       "@type": "Place",
       name: event.venue_name ?? event.city,
@@ -48,22 +53,22 @@ export function EventSchema({ event, locale }: EventSchemaProps) {
           }
         : {}),
     },
-    ...(event.organizer_name
-      ? {
-          organizer: {
-            "@type": "Organization",
-            name: event.organizer_name,
-            url: event.website_url ?? undefined,
-          },
-        }
-      : {}),
+    organizer: {
+      "@type": "Organization",
+      name: event.organizer_name ?? "CardAgenda",
+      url: event.website_url ?? appUrl,
+    },
+    performer: {
+      "@type": "Organization",
+      name: event.organizer_name ?? "CardAgenda",
+    },
     ...(event.entry_fee !== null
       ? {
           offers: {
             "@type": "Offer",
             price: event.entry_fee,
             priceCurrency: "EUR",
-            url: event.registration_url ?? undefined,
+            url: event.registration_url ?? eventUrl,
             availability:
               event.status === "annule"
                 ? "https://schema.org/Discontinued"
