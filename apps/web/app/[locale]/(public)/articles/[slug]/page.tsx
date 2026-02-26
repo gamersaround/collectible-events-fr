@@ -52,7 +52,7 @@ export async function generateMetadata({
       type: "article",
       publishedTime: article.published_at,
       authors: [article.author ?? "CardAgenda"],
-      images: article.cover_image
+      images: article.cover_image?.asset
         ? [{ url: urlFor(article.cover_image).width(1200).height(630).auto("format").url() }]
         : [],
     },
@@ -112,7 +112,9 @@ const portableTextComponents = {
       value,
     }: {
       value: { asset: unknown; alt?: string; caption?: string };
-    }) => (
+    }) => {
+      if (!value?.asset) return null;
+      return (
       <figure className="my-8 border-2 border-black overflow-hidden shadow-brutal">
         <div className="relative w-full" style={{ aspectRatio: "16/9" }}>
           <Image
@@ -132,7 +134,8 @@ const portableTextComponents = {
           </figcaption>
         )}
       </figure>
-    ),
+      );
+    },
   },
 };
 
@@ -171,7 +174,7 @@ export default async function ArticleDetailPage({
         </Link>
 
         {/* Cover image */}
-        {article.cover_image && (
+        {article.cover_image?.asset && (
           <div className="relative h-56 md:h-80 w-full overflow-hidden border-2 border-black mb-8 shadow-brutal">
             <Image
               src={urlFor(article.cover_image).width(896).height(400).auto("format").url()}

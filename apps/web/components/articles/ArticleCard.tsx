@@ -49,7 +49,7 @@ export function ArticleCard({ article, locale }: ArticleCardProps) {
     >
       {/* Cover image */}
       <div className="relative h-48 overflow-hidden border-b-2 border-black bg-gray-100">
-        {article.cover_image ? (
+        {article.cover_image?.asset ? (
           <Image
             src={urlFor(article.cover_image).width(600).height(400).auto("format").url()}
             alt={article.cover_image.alt ?? article.title}

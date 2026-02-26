@@ -34,7 +34,7 @@ export function ArticleSchema({ article, locale }: ArticleSchemaProps) {
       "@type": "WebPage",
       "@id": articleUrl,
     },
-    ...(article.cover_image
+    ...(article.cover_image?.asset
       ? {
           image: urlFor(article.cover_image).width(1200).height(630).auto("format").url(),
         }
