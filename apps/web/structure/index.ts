@@ -16,6 +16,19 @@ export const structure = (S: StructureBuilder) =>
 
       S.divider(),
 
+      // Articles
+      S.listItem()
+        .title("✍️ Articles")
+        .schemaType("article")
+        .child(
+          S.documentList()
+            .title("Articles")
+            .filter('_type == "article"')
+            .defaultOrdering([{ field: "publishedAt", direction: "desc" }])
+        ),
+
+      S.divider(),
+
       // Events
       S.listItem()
         .title("📅 Événements")
