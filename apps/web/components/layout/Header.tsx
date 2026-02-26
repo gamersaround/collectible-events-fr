@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { CalendarDays, Map, PlusCircle, X } from "lucide-react";
+import { CalendarDays, Map, PlusCircle, BookOpen, X } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { Link, useRouter, usePathname } from "@/i18n/navigation";
 
@@ -64,6 +64,13 @@ export function Header() {
             {t("map")}
           </Link>
           <Link
+            href="/articles"
+            className="flex items-center gap-1.5 px-4 py-2 font-bold uppercase text-sm text-black hover:bg-black hover:text-[#FFDE03] transition-colors"
+          >
+            <BookOpen className="h-4 w-4" />
+            {t("blog")}
+          </Link>
+          <Link
             href="/soumettre"
             className="flex items-center gap-1.5 ml-2 bg-black text-[#FFDE03] px-4 py-2 font-bold uppercase text-sm border-2 border-black shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all"
           >
@@ -114,6 +121,14 @@ export function Header() {
             >
               <Map className="h-4 w-4" />
               {t("map")}
+            </Link>
+            <Link
+              href="/articles"
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2 px-2 py-3 font-bold uppercase text-sm border-b-2 border-black/20 hover:bg-black hover:text-[#FFDE03] transition-colors"
+            >
+              <BookOpen className="h-4 w-4" />
+              {t("blog")}
             </Link>
             <Link
               href="/soumettre"

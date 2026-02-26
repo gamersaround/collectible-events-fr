@@ -4,7 +4,9 @@ import { ArrowRight, CalendarDays, Map, PlusCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { getEvents } from "@/lib/queries/events";
+import { getRecentArticles } from "@/lib/queries/articles";
 import { EventCard } from "@/components/events/EventCard";
+import { ArticleCard } from "@/components/articles/ArticleCard";
 import { TCG_CONFIG } from "@agenda-cartes/shared";
 
 export const revalidate = 3600;
@@ -45,7 +47,10 @@ export default async function HomePage({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "home" });
-  const { data: upcomingEvents } = await getEvents({}, 1, 6);
+  const [{ data: upcomingEvents }, recentArticles] = await Promise.all([
+    getEvents({}, 1, 6),
+    getRecentArticles(),
+  ]);
 
   return (
     <div>
@@ -160,6 +165,34 @@ export default async function HomePage({
           )}
         </div>
       </section>
+
+      {/* Latest articles — hidden when no articles yet */}
+      {recentArticles.length > 0 && (
+        <section className="py-14 border-t-4 border-black bg-white">
+          <div className="container">
+            <div className="flex items-end justify-between mb-8 border-b-4 border-black pb-4">
+              <div>
+                <h2 className="font-display text-3xl font-black uppercase text-black">
+                  {t("recentArticlesTitle")}
+                </h2>
+                <p className="text-black/60 font-medium mt-1">{t("recentArticlesSubtitle")}</p>
+              </div>
+              <Link
+                href="/articles"
+                className="flex items-center gap-1 font-bold uppercase text-sm border-2 border-black px-4 py-2 shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all bg-white"
+              >
+                {t("viewAllArticles")}
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {recentArticles.map((article) => (
+                <ArticleCard key={article.id} article={article} locale={locale} />
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CardScanner.fr partner banner */}
       <section className="py-14 border-t-4 border-black bg-black">

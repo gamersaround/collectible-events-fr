@@ -105,3 +105,50 @@ export const MAP_EVENTS_QUERY = groq`
 export const PENDING_SUBMISSIONS_QUERY = groq`
   *[_type == "submission" && status == "en_attente"] | order(_createdAt asc)
 `;
+
+// ─── Article queries ──────────────────────────────────────────────────────────
+
+const ARTICLE_PROJECTION = groq`{
+  "id": _id,
+  title,
+  "slug": slug.current,
+  excerpt,
+  "published_at": publishedAt,
+  author,
+  category,
+  "tcg_types": tcgTypes,
+  "cover_image": coverImage { asset, hotspot, crop, "alt": alt }
+}`;
+
+const ARTICLE_DETAIL_PROJECTION = groq`{
+  "id": _id,
+  title,
+  "slug": slug.current,
+  excerpt,
+  "published_at": publishedAt,
+  author,
+  category,
+  "tcg_types": tcgTypes,
+  "cover_image": coverImage { asset, hotspot, crop, "alt": alt },
+  body
+}`;
+
+export const ARTICLES_PAGINATED_QUERY = groq`
+  *[_type == "article"] | order(publishedAt desc) [$from...$to] ${ARTICLE_PROJECTION}
+`;
+
+export const ARTICLES_COUNT_QUERY = groq`
+  count(*[_type == "article"])
+`;
+
+export const ARTICLE_BY_SLUG_QUERY = groq`
+  *[_type == "article" && slug.current == $slug][0] ${ARTICLE_DETAIL_PROJECTION}
+`;
+
+export const ALL_ARTICLE_SLUGS_QUERY = groq`
+  *[_type == "article"].slug.current
+`;
+
+export const RECENT_ARTICLES_QUERY = groq`
+  *[_type == "article"] | order(publishedAt desc) [0...3] ${ARTICLE_PROJECTION}
+`;

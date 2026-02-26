@@ -8,6 +8,7 @@ const locales = routing.locales;
 const STATIC_ROUTES = [
   { path: "", changeFrequency: "hourly" as const, priority: 1 },
   { path: "/evenements", changeFrequency: "hourly" as const, priority: 0.9 },
+  { path: "/articles", changeFrequency: "daily" as const, priority: 0.8 },
   { path: "/carte", changeFrequency: "daily" as const, priority: 0.7 },
   { path: "/soumettre", changeFrequency: "monthly" as const, priority: 0.5 },
 ];
@@ -28,9 +29,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   );
 
-  const events = await sanityServerClient.fetch<Array<{ slug: string; updatedAt: string }>>(
-    `*[_type == "event" && defined(slug.current)][0...1000] { "slug": slug.current, "updatedAt": _updatedAt }`
-  );
+  const [events, articles] = await Promise.all([
+    sanityServerClient.fetch<Array<{ slug: string; updatedAt: string }>>(
+      `*[_type == "event" && defined(slug.current)][0...1000] { "slug": slug.current, "updatedAt": _updatedAt }`
+    ),
+    sanityServerClient.fetch<Array<{ slug: string; updatedAt: string }>>(
+      `*[_type == "article" && defined(slug.current)][0...500] { "slug": slug.current, "updatedAt": _updatedAt }`
+    ),
+  ]);
 
   const eventPages: MetadataRoute.Sitemap = (events ?? []).flatMap((e) =>
     locales.map((locale) => ({
@@ -47,5 +53,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   );
 
-  return [...staticPages, ...eventPages];
+  const articlePages: MetadataRoute.Sitemap = (articles ?? []).flatMap((a) =>
+    locales.map((locale) => ({
+      url: `${appUrl}/${locale}/articles/${a.slug}`,
+      lastModified: new Date(a.updatedAt),
+      changeFrequency: "monthly" as const,
+      priority: 0.7,
+      alternates: {
+        languages: {
+          ...Object.fromEntries(locales.map((l) => [l, `${appUrl}/${l}/articles/${a.slug}`])),
+          "x-default": `${appUrl}/fr/articles/${a.slug}`,
+        },
+      },
+    }))
+  );
+
+  return [...staticPages, ...eventPages, ...articlePages];
 }

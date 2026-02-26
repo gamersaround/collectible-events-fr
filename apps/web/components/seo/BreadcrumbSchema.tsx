@@ -1,11 +1,29 @@
 interface BreadcrumbSchemaProps {
   locale: string;
+  /** Title of the leaf page (3rd breadcrumb) */
   eventTitle: string;
+  /**
+   * Full path segment after the section, e.g. "mon-slug" for events
+   * or "articles/mon-slug" for articles.
+   */
   slug: string;
+  /** Display name of the section (2nd breadcrumb). Defaults to "Événements" / "Events". */
+  sectionName?: string;
+  /** URL path of the section (2nd breadcrumb). Defaults to "/evenements". */
+  sectionPath?: string;
 }
 
-export function BreadcrumbSchema({ locale, eventTitle, slug }: BreadcrumbSchemaProps) {
+export function BreadcrumbSchema({
+  locale,
+  eventTitle,
+  slug,
+  sectionName,
+  sectionPath = "/evenements",
+}: BreadcrumbSchemaProps) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
+  const defaultSectionName =
+    sectionName ?? (locale === "fr" ? "Événements" : "Events");
+
   const schema = {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -19,14 +37,14 @@ export function BreadcrumbSchema({ locale, eventTitle, slug }: BreadcrumbSchemaP
       {
         "@type": "ListItem",
         position: 2,
-        name: locale === "fr" ? "Événements" : "Events",
-        item: `${appUrl}/${locale}/evenements`,
+        name: defaultSectionName,
+        item: `${appUrl}/${locale}${sectionPath}`,
       },
       {
         "@type": "ListItem",
         position: 3,
         name: eventTitle,
-        item: `${appUrl}/${locale}/evenements/${slug}`,
+        item: `${appUrl}/${locale}${sectionPath}/${slug}`,
       },
     ],
   };

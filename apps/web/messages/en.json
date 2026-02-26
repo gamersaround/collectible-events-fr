@@ -2,6 +2,7 @@
   "nav": {
     "events": "Events",
     "map": "Map",
+    "blog": "Blog",
     "submit": "Submit",
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
@@ -24,6 +25,9 @@
     "upcomingEventsTitle": "Upcoming events",
     "upcomingEventsSubtitle": "Events coming up",
     "viewAll": "View all",
+    "recentArticlesTitle": "Latest articles",
+    "recentArticlesSubtitle": "TCG guides & news",
+    "viewAllArticles": "View all articles",
     "noEvents": "No events yet. Be the first to add one!",
     "partnerBadge": "🤝 Partner tool",
     "partnerTitle": "Manage your collection",
@@ -161,6 +165,23 @@
     "defaultTitle": "CardAgenda — Collectible card event calendar",
     "titleTemplate": "%s | CardAgenda",
     "defaultDescription": "Find all collectible card events in France and Belgium: Pokémon, Magic, Yu-Gi-Oh, One Piece, Lorcana, NBA cards, football cards and more. Calendar updated in real time."
+  },
+  "articles": {
+    "title": "Blog",
+    "subtitle": "Guides, news and tournament reports",
+    "metaTitle": "Blog — TCG Guides & News",
+    "metaDescription": "Tournament guides, collectible card news and TCG event reports in France and Belgium.",
+    "noArticles": "No articles yet. Check back soon!",
+    "articleCountOne": "article",
+    "articleCountOther": "articles",
+    "recentTitle": "Latest articles",
+    "recentSubtitle": "TCG guides & news",
+    "viewAll": "View all articles"
+  },
+  "articleDetail": {
+    "backLink": "Back to articles",
+    "publishedAt": "Published on",
+    "notFound": "Article not found"
   },
   "notFound": {
     "title": "404",
