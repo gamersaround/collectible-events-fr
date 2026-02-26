@@ -13,6 +13,7 @@ import { ArticleSchema } from "@/components/seo/ArticleSchema";
 import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
 
 export const revalidate = 3600;
+export const maxDuration = 30;
 
 export async function generateStaticParams() {
   const slugs = await getAllArticleSlugs();
