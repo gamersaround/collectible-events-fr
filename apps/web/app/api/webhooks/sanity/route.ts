@@ -14,18 +14,27 @@ export async function POST(req: NextRequest) {
       return new NextResponse("Invalid signature", { status: 401 });
     }
 
-    const slug = (body as { slug?: { current?: string } })?.slug?.current;
+    const doc = body as { _type?: string; slug?: { current?: string } };
+    const slug = doc?.slug?.current;
+    const docType = doc?._type;
 
     for (const locale of routing.locales) {
-      if (slug) {
-        revalidatePath(`/${locale}/evenements/${slug}`);
+      if (docType === "article") {
+        if (slug) {
+          revalidatePath(`/${locale}/articles/${slug}`);
+        }
+        revalidatePath(`/${locale}/articles`);
+      } else {
+        if (slug) {
+          revalidatePath(`/${locale}/evenements/${slug}`);
+        }
+        revalidatePath(`/${locale}/evenements`);
+        revalidatePath(`/${locale}`);
+        revalidatePath(`/${locale}/carte`);
       }
-      revalidatePath(`/${locale}/evenements`);
-      revalidatePath(`/${locale}`);
-      revalidatePath(`/${locale}/carte`);
     }
 
-    return NextResponse.json({ revalidated: true, slug: slug ?? null });
+    return NextResponse.json({ revalidated: true, slug: slug ?? null, type: docType ?? null });
   } catch (err) {
     console.error("Sanity webhook error:", err);
     return NextResponse.json({ error: "Webhook error" }, { status: 500 });

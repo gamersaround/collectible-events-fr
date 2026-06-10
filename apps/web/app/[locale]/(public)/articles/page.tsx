@@ -4,7 +4,7 @@ import { ArticleCard } from "@/components/articles/ArticleCard";
 import { Pagination } from "@/components/ui/Pagination";
 import { getArticles } from "@/lib/queries/articles";
 
-export const revalidate = 3600;
+export const revalidate = 60;
 
 export async function generateMetadata({
   params,
