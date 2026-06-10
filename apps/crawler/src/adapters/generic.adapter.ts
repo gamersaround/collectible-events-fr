@@ -86,7 +86,7 @@ export class GenericAdapter extends BaseAdapter {
               address,
               tcgTypes: this.config.tcgTypes,
               sourceUrl,
-              format: "tournoi",
+              format: (this.config.adapterConfig?.format as string) ?? "tournoi",
             });
           } catch (err) {
             console.warn("GenericAdapter: Error parsing event:", err);

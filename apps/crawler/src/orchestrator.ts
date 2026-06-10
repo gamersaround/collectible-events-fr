@@ -3,12 +3,14 @@ import {
   createCrawlRun,
   updateCrawlRun,
   updateSourceLastCrawled,
+  getSanityClient,
   type SanitySource,
 } from "./services/sanity.service";
 import { processEvents } from "./pipeline/extractor";
 import { PokemonAdapter } from "./adapters/pokemon.adapter";
 import { MagicAdapter } from "./adapters/magic.adapter";
 import { GenericAdapter } from "./adapters/generic.adapter";
+import { BrocabracAdapter } from "./adapters/brocabrac.adapter";
 import type { BaseAdapter } from "./adapters/base.adapter";
 
 function createAdapter(source: SanitySource): BaseAdapter | null {
@@ -19,6 +21,10 @@ function createAdapter(source: SanitySource): BaseAdapter | null {
     adapterConfig: source.adapterConfig ?? {},
     tcgTypes: source.tcgTypes ?? [],
   };
+
+  if (source.url.includes("brocabrac.fr")) {
+    return new BrocabracAdapter(config);
+  }
 
   if (source.tcgTypes.includes("pokemon")) {
     return new PokemonAdapter(config);
@@ -117,4 +123,29 @@ export async function crawlAll(): Promise<void> {
   }
 
   console.log("\n✅ Crawl run complete");
+}
+
+export async function refreshEventStatuses(): Promise<void> {
+  const sanity = getSanityClient();
+  const now = new Date().toISOString();
+
+  const [pastEvents, activeEvents] = await Promise.all([
+    sanity.fetch<{ _id: string }[]>(
+      `*[_type == "event" && status in ["a_venir", "en_cours"] && ((defined(endsAt) && endsAt < $now) || (!defined(endsAt) && startsAt < $now))] { _id }`,
+      { now }
+    ),
+    sanity.fetch<{ _id: string }[]>(
+      `*[_type == "event" && status == "a_venir" && startsAt <= $now && defined(endsAt) && endsAt > $now] { _id }`,
+      { now }
+    ),
+  ]);
+
+  for (const e of pastEvents) {
+    await sanity.patch(e._id).set({ status: "termine" }).commit();
+  }
+  for (const e of activeEvents) {
+    await sanity.patch(e._id).set({ status: "en_cours" }).commit();
+  }
+
+  console.log(`[STATUS] ${pastEvents.length} → terminé, ${activeEvents.length} → en_cours`);
 }
