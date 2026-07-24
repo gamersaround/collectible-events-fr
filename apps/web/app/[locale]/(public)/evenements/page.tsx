@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getTranslations, getLocale } from "next-intl/server";
 import { getEvents } from "@/lib/queries/events";
 import { EventList, EventListSkeleton } from "@/components/events/EventList";
 import { EventFilters } from "@/components/events/EventFilters";
@@ -47,13 +47,42 @@ export default async function EventsPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  const locale = await getLocale();
   const params = await searchParams;
   const filters = parseFiltersFromParams(params);
   const page = parseInt((params.page as string) ?? "1", 10) || 1;
 
   const { data: events, total, totalPages } = await getEvents(filters, page, PER_PAGE);
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
+  const isFr = locale === "fr";
+  const collectionSchema = {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: isFr ? "Événements cartes à collectionner en France" : "Collectible card events in France",
+    description: isFr
+      ? "Tous les tournois, bourses et conventions de cartes à collectionner en France et en Belgique."
+      : "All tournaments, trade fairs and conventions for collectible cards in France and Belgium.",
+    url: `${appUrl}/${locale}/evenements`,
+    mainEntity: {
+      "@type": "ItemList",
+      name: isFr ? "Événements à venir" : "Upcoming events",
+      numberOfItems: total,
+      itemListElement: events.slice(0, 10).map((event, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: event.title,
+        url: `${appUrl}/${locale}/evenements/${event.slug}`,
+      })),
+    },
+  };
+
   return (
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
+      />
     <div className="container py-8">
       <h1 className="text-2xl font-bold text-gray-900 mb-8">
         {/* Heading is rendered by EventList */}
@@ -86,5 +115,6 @@ export default async function EventsPage({
         </div>
       </div>
     </div>
+    </>
   );
 }

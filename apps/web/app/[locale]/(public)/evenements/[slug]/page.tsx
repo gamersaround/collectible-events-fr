@@ -24,14 +24,35 @@ import {
   formatDateFr,
   formatEntryFee,
 } from "@/lib/utils/dates";
-import { TCGType } from "@agenda-cartes/shared";
+import { TCGType, TCG_CONFIG } from "@agenda-cartes/shared";
+import { TcgLandingPage } from "@/components/events/TcgLandingPage";
+import dynamic from "next/dynamic";
+
+const EventDetailMap = dynamic(
+  () => import("@/components/map/EventDetailMap"),
+  { ssr: false }
+);
+
+// Maps clean URL slugs to TCGType enum values — these become /fr/evenements/pokemon etc.
+const TCG_SLUG_MAP: Record<string, string> = {
+  "pokemon": "pokemon",
+  "magic": "magic",
+  "yugioh": "yugioh",
+  "sports-cards": "sports_cards",
+  "one-piece": "one_piece",
+  "dragon-ball": "dragon_ball",
+  "lorcana": "lorcana",
+  "flesh-blood": "flesh_blood",
+  "autres": "autres",
+};
 
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
   const slugs = await getAllEventSlugs();
+  const tcgSlugs = Object.keys(TCG_SLUG_MAP);
   return routing.locales.flatMap((locale) =>
-    slugs.map((slug) => ({ locale, slug }))
+    [...slugs, ...tcgSlugs].map((slug) => ({ locale, slug }))
   );
 }
 
@@ -41,14 +62,40 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
+  const otherLocale = locale === "fr" ? "en" : "fr";
+
+  // TCG landing page metadata
+  if (slug in TCG_SLUG_MAP) {
+    const tcgType = TCG_SLUG_MAP[slug];
+    const config = TCG_CONFIG[tcgType as TCGType];
+    const title = locale === "fr"
+      ? `Événements ${config.label} en France — Tournois, Bourses & Conventions`
+      : `${config.label} Events in France — Tournaments, Trade Fairs & Conventions`;
+    const description = locale === "fr"
+      ? `Tous les événements ${config.label} en France et en Belgique : tournois, bourses, conventions, drafts. Agenda mis à jour quotidiennement.`
+      : `All ${config.label} events in France and Belgium: tournaments, trade fairs, conventions, drafts. Calendar updated daily.`;
+    return {
+      title,
+      description,
+      alternates: {
+        canonical: `${appUrl}/${locale}/evenements/${slug}`,
+        languages: {
+          [locale]: `${appUrl}/${locale}/evenements/${slug}`,
+          [otherLocale]: `${appUrl}/${otherLocale}/evenements/${slug}`,
+          "x-default": `${appUrl}/fr/evenements/${slug}`,
+        },
+      },
+      openGraph: { title, description, type: "website" },
+    };
+  }
+
   const t = await getTranslations({ locale, namespace: "eventDetail" });
   const event = await getEventBySlug(slug);
 
   if (!event) return { title: t("notFound") };
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
   const dateLocale = locale as "fr" | "en";
-  const otherLocale = locale === "fr" ? "en" : "fr";
   return {
     title: event.title,
     description: event.description ?? `${event.title} — ${event.city}, ${formatDateFr(event.starts_at, "EEEE d MMMM yyyy", dateLocale)}`,
@@ -77,6 +124,12 @@ export default async function EventDetailPage({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { locale, slug } = await params;
+
+  // TCG landing pages: /fr/evenements/pokemon, /fr/evenements/magic, etc.
+  if (slug in TCG_SLUG_MAP) {
+    return <TcgLandingPage tcgType={TCG_SLUG_MAP[slug]} locale={locale} urlSlug={slug} />;
+  }
+
   const t = await getTranslations({ locale, namespace: "eventDetail" });
   const event = await getEventBySlug(slug);
 
@@ -172,15 +225,24 @@ export default async function EventDetailPage({
                 <span className="font-medium">{event.city}</span>
               </p>
               {event.latitude && event.longitude && (
-                <a
-                  href={`https://www.openstreetmap.org/?mlat=${event.latitude}&mlon=${event.longitude}&zoom=15`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 mt-2 text-sm text-blue-600 hover:underline"
-                >
-                  {t("viewOnMap")}
-                  <ExternalLink className="h-3.5 w-3.5" />
-                </a>
+                <>
+                  <EventDetailMap
+                    latitude={event.latitude}
+                    longitude={event.longitude}
+                    venueName={event.venue_name}
+                    address={event.address}
+                    city={event.city}
+                  />
+                  <a
+                    href={`https://www.openstreetmap.org/?mlat=${event.latitude}&mlon=${event.longitude}&zoom=15`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 mt-2 text-sm text-blue-600 hover:underline"
+                  >
+                    {t("viewOnMap")}
+                    <ExternalLink className="h-3.5 w-3.5" />
+                  </a>
+                </>
               )}
             </div>
 

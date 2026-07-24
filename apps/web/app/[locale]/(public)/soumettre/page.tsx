@@ -10,11 +10,21 @@ export async function generateMetadata({
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "submit" });
 
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
+  const otherLocale = locale === "fr" ? "en" : "fr";
   return {
     title: t("title"),
     description: locale === "fr"
       ? "Organisez un tournoi, une bourse ou une convention de cartes à collectionner ? Soumettez votre événement gratuitement sur CardAgenda."
       : "Organising a tournament, trade fair or convention? Submit your collectible card event for free on CardAgenda.",
+    alternates: {
+      canonical: `${appUrl}/${locale}/soumettre`,
+      languages: {
+        [locale]: `${appUrl}/${locale}/soumettre`,
+        [otherLocale]: `${appUrl}/${otherLocale}/soumettre`,
+        "x-default": `${appUrl}/fr/soumettre`,
+      },
+    },
   };
 }
 

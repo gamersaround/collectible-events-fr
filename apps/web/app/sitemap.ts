@@ -5,6 +5,19 @@ import { routing } from "@/i18n/routing";
 const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
 const locales = routing.locales;
 
+// Dedicated TCG landing pages — one per game type, high-value SEO targets
+const TCG_LANDING_SLUGS = [
+  "pokemon",
+  "magic",
+  "yugioh",
+  "sports-cards",
+  "one-piece",
+  "dragon-ball",
+  "lorcana",
+  "flesh-blood",
+  "autres",
+];
+
 const STATIC_ROUTES = [
   { path: "", changeFrequency: "hourly" as const, priority: 1 },
   { path: "/evenements", changeFrequency: "hourly" as const, priority: 0.9 },
@@ -68,5 +81,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   );
 
-  return [...staticPages, ...eventPages, ...articlePages];
+  const tcgLandingPages: MetadataRoute.Sitemap = TCG_LANDING_SLUGS.flatMap((tcgSlug) =>
+    locales.map((locale) => ({
+      url: `${appUrl}/${locale}/evenements/${tcgSlug}`,
+      lastModified: new Date(),
+      changeFrequency: "daily" as const,
+      priority: 0.85,
+      alternates: {
+        languages: {
+          ...Object.fromEntries(locales.map((l) => [l, `${appUrl}/${l}/evenements/${tcgSlug}`])),
+          "x-default": `${appUrl}/fr/evenements/${tcgSlug}`,
+        },
+      },
+    }))
+  );
+
+  return [...staticPages, ...tcgLandingPages, ...eventPages, ...articlePages];
 }

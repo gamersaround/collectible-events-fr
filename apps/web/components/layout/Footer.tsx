@@ -35,15 +35,16 @@ export async function Footer() {
             </ul>
           </div>
 
-          {/* TCG types */}
+          {/* TCG types — dedicated landing pages for SEO */}
           <div>
             <h3 className="font-display font-black uppercase text-[#FFDE03] mb-3 text-sm tracking-wide">{t("gamesTitle")}</h3>
             <ul className="space-y-2 text-sm font-medium">
-              <li><Link href="/evenements?tcg=pokemon" prefetch={false} className="text-white/70 hover:text-[#FFDE03] transition-colors">⚡ Pokémon TCG</Link></li>
-              <li><Link href="/evenements?tcg=magic" prefetch={false} className="text-white/70 hover:text-[#FFDE03] transition-colors">✨ Magic: The Gathering</Link></li>
-              <li><Link href="/evenements?tcg=yugioh" prefetch={false} className="text-white/70 hover:text-[#FFDE03] transition-colors">🃏 Yu-Gi-Oh!</Link></li>
-              <li><Link href="/evenements?tcg=one_piece" prefetch={false} className="text-white/70 hover:text-[#FFDE03] transition-colors">🏴‍☠️ One Piece Card Game</Link></li>
-              <li><Link href="/evenements?tcg=lorcana" prefetch={false} className="text-white/70 hover:text-[#FFDE03] transition-colors">🌊 Disney Lorcana</Link></li>
+              <li><Link href="/evenements/pokemon" className="text-white/70 hover:text-[#FFDE03] transition-colors">⚡ Pokémon TCG</Link></li>
+              <li><Link href="/evenements/magic" className="text-white/70 hover:text-[#FFDE03] transition-colors">✨ Magic: The Gathering</Link></li>
+              <li><Link href="/evenements/yugioh" className="text-white/70 hover:text-[#FFDE03] transition-colors">🃏 Yu-Gi-Oh!</Link></li>
+              <li><Link href="/evenements/sports-cards" className="text-white/70 hover:text-[#FFDE03] transition-colors">⚽ Cartes Sportives</Link></li>
+              <li><Link href="/evenements/one-piece" className="text-white/70 hover:text-[#FFDE03] transition-colors">🏴‍☠️ One Piece Card Game</Link></li>
+              <li><Link href="/evenements/lorcana" className="text-white/70 hover:text-[#FFDE03] transition-colors">🌊 Disney Lorcana</Link></li>
             </ul>
           </div>
         </div>
