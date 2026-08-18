@@ -189,7 +189,7 @@ export default async function EventDetailPage({
             </h1>
 
             {event.description && (
-              <p className="text-gray-600 text-lg leading-relaxed">
+              <p className="text-gray-600 text-lg leading-relaxed whitespace-pre-line">
                 {event.description}
               </p>
             )}
