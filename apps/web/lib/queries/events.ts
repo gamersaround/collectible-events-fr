@@ -117,8 +117,12 @@ export type MapEvent = Pick<
 >;
 
 export async function getEventCountryCodes(): Promise<string[]> {
-  const codes = await sanityServerClient.fetch<string[]>(EVENT_COUNTRY_CODES_QUERY);
-  return (codes ?? []).filter(Boolean);
+  try {
+    const rows = await sanityServerClient.fetch<{ c: string }[]>(EVENT_COUNTRY_CODES_QUERY);
+    return [...new Set((rows ?? []).map((r) => r.c).filter(Boolean))];
+  } catch {
+    return [];
+  }
 }
 
 export async function getEventsForMap(): Promise<MapEvent[]> {

@@ -84,7 +84,7 @@ export const ALL_EVENT_SLUGS_QUERY = groq`
 `;
 
 export const EVENT_COUNTRY_CODES_QUERY = groq`
-  array::unique(*[_type == "event" && status in ["a_venir", "en_cours"] && defined(country)].country)
+  *[_type == "event" && status in ["a_venir", "en_cours"] && defined(country)]{ "c": country }
 `;
 
 // Lightweight projection for the map — only events with coordinates (fast, no geocoding)

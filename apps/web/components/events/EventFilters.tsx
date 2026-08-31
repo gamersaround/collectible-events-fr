@@ -15,8 +15,28 @@ export function EventFilters({ countries }: { countries?: string[] }) {
   const searchParams = useSearchParams();
   const t = useTranslations("filters");
   const tc = useTranslations("countries");
-  const ts = useTranslations("filters.countrySections");
   const countrySections = countrySectionsFor(countries);
+
+  const sectionLabel = (id: string) => {
+    switch (id) {
+      case "france":
+        return t("countrySections.france");
+      case "uk":
+        return t("countrySections.uk");
+      case "benelux":
+        return t("countrySections.benelux");
+      case "dach":
+        return t("countrySections.dach");
+      case "south":
+        return t("countrySections.south");
+      case "north":
+        return t("countrySections.north");
+      case "central":
+        return t("countrySections.central");
+      default:
+        return t("countrySections.other");
+    }
+  };
 
   const createQueryString = useCallback(
     (updates: Record<string, string | string[] | null>) => {
@@ -166,7 +186,7 @@ export function EventFilters({ countries }: { countries?: string[] }) {
           {countrySections.map((section) => (
             <div key={section.id} className="space-y-1.5">
               <p className="px-3 text-xs font-medium uppercase tracking-wide text-gray-500">
-                {ts(section.id)}
+                {sectionLabel(section.id)}
               </p>
               {section.codes.map((code) => {
                 const isActive = activeCountry === code;
@@ -181,7 +201,7 @@ export function EventFilters({ countries }: { countries?: string[] }) {
                         : "text-gray-700 hover:bg-gray-100"
                     )}
                   >
-                    {tc.has(code) ? tc(code) : code}
+                    {tc(code)}
                   </button>
                 );
               })}
