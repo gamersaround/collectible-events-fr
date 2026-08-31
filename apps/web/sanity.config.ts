@@ -1,6 +1,5 @@
 import { defineConfig } from "sanity";
 import { structureTool } from "sanity/structure";
-import { visionTool } from "@sanity/vision";
 import { schemaTypes } from "./schemaTypes";
 import { structure } from "./structure";
 import { PromoteToEventAction } from "./actions/promoteToEvent";
@@ -17,7 +16,6 @@ export default defineConfig({
 
   plugins: [
     structureTool({ structure }),
-    visionTool({ defaultApiVersion: "2024-01-01" }),
   ],
 
   schema: {
