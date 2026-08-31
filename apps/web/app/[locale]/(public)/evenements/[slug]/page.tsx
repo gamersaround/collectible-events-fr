@@ -96,9 +96,16 @@ export async function generateMetadata({
   if (!event) return { title: t("notFound") };
 
   const dateLocale = locale as "fr" | "en";
+  const fallback = `${event.title} — ${event.city}, ${formatDateFr(event.starts_at, "EEEE d MMMM yyyy", dateLocale)}`;
+  const description =
+    (locale === "en"
+      ? event.meta_description_en || event.meta_description_fr
+      : event.meta_description_fr || event.meta_description_en) ||
+    event.description ||
+    fallback;
   return {
     title: event.title,
-    description: event.description ?? `${event.title} — ${event.city}, ${formatDateFr(event.starts_at, "EEEE d MMMM yyyy", dateLocale)}`,
+    description,
     alternates: {
       canonical: `${appUrl}/${locale}/evenements/${slug}`,
       languages: {
@@ -109,7 +116,7 @@ export async function generateMetadata({
     },
     openGraph: {
       title: event.title,
-      description: event.description ?? undefined,
+      description,
       type: "website",
       images: event.image
         ? [{ url: urlFor(event.image).width(1200).height(630).auto("format").url() }]

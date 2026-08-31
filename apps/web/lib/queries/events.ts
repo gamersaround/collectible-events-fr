@@ -20,6 +20,8 @@ export interface EventRow {
   title: string;
   slug: string;
   description: string | null;
+  meta_description_fr: string | null;
+  meta_description_en: string | null;
   tcg_types: string[];
   tcg_sports_ratio: number | null;
   primary_tcg_type: string | null;

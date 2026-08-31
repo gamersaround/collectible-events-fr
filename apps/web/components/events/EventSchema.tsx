@@ -18,7 +18,12 @@ export function EventSchema({ event, locale }: EventSchemaProps) {
     "@context": "https://schema.org",
     "@type": "Event",
     name: event.title,
-    description: event.description ?? undefined,
+    description:
+      (locale === "en"
+        ? event.meta_description_en || event.meta_description_fr
+        : event.meta_description_fr || event.meta_description_en) ||
+      event.description ||
+      undefined,
     startDate: event.starts_at,
     endDate: event.ends_at ?? undefined,
     eventStatus:

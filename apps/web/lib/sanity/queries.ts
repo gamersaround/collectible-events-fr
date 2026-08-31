@@ -6,6 +6,8 @@ const EVENT_PROJECTION = groq`{
   title,
   "slug": slug.current,
   description,
+  "meta_description_fr": metaDescriptionFr,
+  "meta_description_en": metaDescriptionEn,
   "tcg_types": tcgTypes,
   "tcg_sports_ratio": tcgSportsRatio,
   "primary_tcg_type": primaryTcgType,

@@ -28,6 +28,24 @@ export const eventSchema = defineType({
       rows: 3,
     }),
     defineField({
+      name: "metaDescriptionFr",
+      title: "Meta description (FR)",
+      type: "text",
+      rows: 2,
+      description:
+        "Balise meta / Open Graph pour les pages /fr. 140–155 caractères. Faits seulement.",
+      validation: (Rule) => Rule.max(180),
+    }),
+    defineField({
+      name: "metaDescriptionEn",
+      title: "Meta description (EN)",
+      type: "text",
+      rows: 2,
+      description:
+        "Meta / Open Graph tag for /en pages. 140–155 characters. Same facts as FR, not a second pitch.",
+      validation: (Rule) => Rule.max(180),
+    }),
+    defineField({
       name: "image",
       title: "Photo de l'événement",
       type: "image",
