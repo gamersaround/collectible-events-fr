@@ -32,7 +32,9 @@ export function countrySectionsFor(available?: string[]) {
   })).filter((section) => section.codes.length > 0);
 
   if (allow) {
-    const extras = [...allow].filter((c) => !SECTION_CODE_SET.has(c)).sort();
+    const extras = Array.from(allow)
+      .filter((c) => !SECTION_CODE_SET.has(c))
+      .sort();
     if (extras.length > 0) {
       sections.push({ id: "other", codes: extras });
     }

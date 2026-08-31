@@ -119,7 +119,7 @@ export type MapEvent = Pick<
 export async function getEventCountryCodes(): Promise<string[]> {
   try {
     const rows = await sanityServerClient.fetch<{ c: string }[]>(EVENT_COUNTRY_CODES_QUERY);
-    return [...new Set((rows ?? []).map((r) => r.c).filter(Boolean))];
+    return Array.from(new Set((rows ?? []).map((r) => r.c).filter(Boolean)));
   } catch {
     return [];
   }
