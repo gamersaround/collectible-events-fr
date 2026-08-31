@@ -1,7 +1,7 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
 import { getTranslations, getLocale } from "next-intl/server";
-import { getEvents } from "@/lib/queries/events";
+import { getEvents, getEventCountryCodes } from "@/lib/queries/events";
 import { EventList, EventListSkeleton } from "@/components/events/EventList";
 import { EventFilters } from "@/components/events/EventFilters";
 import { parseFiltersFromParams } from "@/lib/utils/filters";
@@ -53,6 +53,7 @@ export default async function EventsPage({
   const page = parseInt((params.page as string) ?? "1", 10) || 1;
 
   const { data: events, total, totalPages } = await getEvents(filters, page, PER_PAGE);
+  const countryCodes = await getEventCountryCodes();
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
   const isFr = locale === "fr";
@@ -92,7 +93,7 @@ export default async function EventsPage({
         {/* Sidebar filters */}
         <div className="w-full md:w-64 shrink-0">
           <Suspense>
-            <EventFilters />
+            <EventFilters countries={countryCodes} />
           </Suspense>
         </div>
 

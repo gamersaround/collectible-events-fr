@@ -10,7 +10,11 @@ const submissionSchema = z.object({
   venue_name: z.string().max(200).nullable().optional(),
   address: z.string().max(300).nullable().optional(),
   city: z.string().min(2).max(100),
-  country: z.enum(["FR", "BE", "CH", "LU", "CA"]).optional().default("FR"),
+  country: z
+    .string()
+    .regex(/^[A-Z]{2}$|^OTHER$/, "Invalid country")
+    .optional()
+    .default("FR"),
   department_code: z.string().max(10).nullable().optional(),
   postal_code: z.string().max(10).nullable().optional(),
   starts_at: z.string().datetime({ offset: true }).or(z.string().min(1)),
