@@ -296,20 +296,48 @@ export const eventSchema = defineType({
       type: "string",
     }),
   ],
+  orderings: [
+    {
+      title: "Derniers ajouts",
+      name: "createdAtDesc",
+      by: [{ field: "_createdAt", direction: "desc" }],
+    },
+    {
+      title: "Dernières modifications",
+      name: "updatedAtDesc",
+      by: [{ field: "_updatedAt", direction: "desc" }],
+    },
+    {
+      title: "Date d'événement (proche d'abord)",
+      name: "startsAtAsc",
+      by: [{ field: "startsAt", direction: "asc" }],
+    },
+    {
+      title: "Date d'événement (lointain d'abord)",
+      name: "startsAtDesc",
+      by: [{ field: "startsAt", direction: "desc" }],
+    },
+  ],
   preview: {
     select: {
       title: "title",
       city: "city",
       startsAt: "startsAt",
       status: "status",
+      createdAt: "_createdAt",
+      media: "image",
     },
-    prepare({ title, city, startsAt, status }) {
+    prepare({ title, city, startsAt, status, createdAt, media }) {
       const date = startsAt
         ? new Date(startsAt).toLocaleDateString("fr-FR")
         : "—";
+      const added = createdAt
+        ? new Date(createdAt).toLocaleDateString("fr-FR")
+        : "";
       return {
         title: title ?? "Sans titre",
-        subtitle: `${city ?? ""} — ${date} [${status ?? ""}]`,
+        subtitle: `${city ?? ""} — ${date} [${status ?? ""}]${added ? ` · +${added}` : ""}`,
+        media,
       };
     },
   },

@@ -1,5 +1,20 @@
 import { StructureBuilder } from "sanity/structure";
 
+type Order = { field: string; direction: "asc" | "desc" };
+
+function eventList(
+  S: StructureBuilder,
+  title: string,
+  ordering: Order[],
+  filter = '_type == "event"'
+) {
+  return S.documentList()
+    .title(title)
+    .schemaType("event")
+    .filter(filter)
+    .defaultOrdering(ordering);
+}
+
 export const structure = (S: StructureBuilder) =>
   S.list()
     .title("Agenda Cartes FR")
@@ -29,15 +44,104 @@ export const structure = (S: StructureBuilder) =>
 
       S.divider(),
 
-      // Events
+      // Events — nested views so latest imports are one click, not buried by startsAt
       S.listItem()
         .title("📅 Événements")
+        .id("evenements")
         .schemaType("event")
         .child(
-          S.documentList()
-            .title("Tous les événements")
-            .filter('_type == "event"')
-            .defaultOrdering([{ field: "startsAt", direction: "asc" }])
+          S.list()
+            .title("Événements")
+            .items([
+              S.listItem()
+                .title("🆕 Derniers ajouts")
+                .id("evenements-ajouts")
+                .schemaType("event")
+                .child(
+                  eventList(S, "Derniers ajouts", [
+                    { field: "_createdAt", direction: "desc" },
+                  ])
+                ),
+              S.listItem()
+                .title("✏️ Dernières modifications")
+                .id("evenements-modifs")
+                .schemaType("event")
+                .child(
+                  eventList(S, "Dernières modifications", [
+                    { field: "_updatedAt", direction: "desc" },
+                  ])
+                ),
+              S.listItem()
+                .title("📅 Par date d'événement")
+                .id("evenements-par-date")
+                .schemaType("event")
+                .child(
+                  eventList(S, "Par date d'événement", [
+                    { field: "startsAt", direction: "asc" },
+                  ])
+                ),
+              S.divider(),
+              S.listItem()
+                .title("Tous les événements")
+                .id("evenements-tous")
+                .schemaType("event")
+                .child(
+                  S.documentTypeList("event")
+                    .title("Tous les événements")
+                    .defaultOrdering([
+                      { field: "_createdAt", direction: "desc" },
+                    ])
+                ),
+              S.divider(),
+              S.listItem()
+                .title("À venir")
+                .id("evenements-a-venir")
+                .schemaType("event")
+                .child(
+                  eventList(
+                    S,
+                    "À venir",
+                    [{ field: "startsAt", direction: "asc" }],
+                    '_type == "event" && status == "a_venir"'
+                  )
+                ),
+              S.listItem()
+                .title("En cours")
+                .id("evenements-en-cours")
+                .schemaType("event")
+                .child(
+                  eventList(
+                    S,
+                    "En cours",
+                    [{ field: "startsAt", direction: "asc" }],
+                    '_type == "event" && status == "en_cours"'
+                  )
+                ),
+              S.listItem()
+                .title("Terminés")
+                .id("evenements-termines")
+                .schemaType("event")
+                .child(
+                  eventList(
+                    S,
+                    "Terminés",
+                    [{ field: "startsAt", direction: "desc" }],
+                    '_type == "event" && status == "termine"'
+                  )
+                ),
+              S.listItem()
+                .title("Annulés")
+                .id("evenements-annules")
+                .schemaType("event")
+                .child(
+                  eventList(
+                    S,
+                    "Annulés",
+                    [{ field: "_updatedAt", direction: "desc" }],
+                    '_type == "event" && status == "annule"'
+                  )
+                ),
+            ])
         ),
 
       // All submissions (including reviewed)
