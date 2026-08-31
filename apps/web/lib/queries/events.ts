@@ -11,6 +11,7 @@ import {
   EVENTS_COUNT_QUERY,
   EVENT_BY_SLUG_QUERY,
   ALL_EVENT_SLUGS_QUERY,
+  EVENT_COUNTRY_CODES_QUERY,
   MAP_EVENTS_QUERY,
 } from "@/lib/sanity/queries";
 import type { EventFilters, PaginatedResult } from "@/types/events";
@@ -114,6 +115,11 @@ export type MapEvent = Pick<
   | "format"
   | "starts_at"
 >;
+
+export async function getEventCountryCodes(): Promise<string[]> {
+  const codes = await sanityServerClient.fetch<string[]>(EVENT_COUNTRY_CODES_QUERY);
+  return (codes ?? []).filter(Boolean);
+}
 
 export async function getEventsForMap(): Promise<MapEvent[]> {
   const events = await sanityServerClient.fetch<MapEvent[]>(MAP_EVENTS_QUERY, {

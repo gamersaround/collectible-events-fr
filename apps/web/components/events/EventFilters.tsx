@@ -7,15 +7,16 @@ import { useTranslations } from "next-intl";
 import { useRouter, usePathname } from "@/i18n/navigation";
 import { TCGType, TCG_CONFIG, EventFormat, EVENT_FORMAT_LABELS } from "@agenda-cartes/shared";
 import { cn } from "@/lib/utils/cn";
+import { countrySectionsFor } from "@/lib/countries";
 
-const COUNTRY_CODES = ["FR", "BE", "CH", "LU", "CA"] as const;
-
-export function EventFilters() {
+export function EventFilters({ countries }: { countries?: string[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const t = useTranslations("filters");
   const tc = useTranslations("countries");
+  const ts = useTranslations("filters.countrySections");
+  const countrySections = countrySectionsFor(countries);
 
   const createQueryString = useCallback(
     (updates: Record<string, string | string[] | null>) => {
@@ -158,27 +159,34 @@ export function EventFilters() {
         </div>
       </div>
 
-      {/* Country */}
+      {/* Country — grouped so GB/UK is visible, same chip style */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t("countryLabel")}</label>
-        <div className="space-y-1.5">
-          {COUNTRY_CODES.map((code) => {
-            const isActive = activeCountry === code;
-            return (
-              <button
-                key={code}
-                onClick={() => navigateWithFilter({ pays: isActive ? null : code })}
-                className={cn(
-                  "w-full px-3 py-2 rounded-lg text-sm text-left transition-colors",
-                  isActive
-                    ? "bg-blue-100 text-blue-800 font-medium"
-                    : "text-gray-700 hover:bg-gray-100"
-                )}
-              >
-                {tc(code)}
-              </button>
-            );
-          })}
+        <div className="space-y-4">
+          {countrySections.map((section) => (
+            <div key={section.id} className="space-y-1.5">
+              <p className="px-3 text-xs font-medium uppercase tracking-wide text-gray-500">
+                {ts(section.id)}
+              </p>
+              {section.codes.map((code) => {
+                const isActive = activeCountry === code;
+                return (
+                  <button
+                    key={code}
+                    onClick={() => navigateWithFilter({ pays: isActive ? null : code })}
+                    className={cn(
+                      "w-full px-3 py-2 rounded-lg text-sm text-left transition-colors",
+                      isActive
+                        ? "bg-blue-100 text-blue-800 font-medium"
+                        : "text-gray-700 hover:bg-gray-100"
+                    )}
+                  >
+                    {tc.has(code) ? tc(code) : code}
+                  </button>
+                );
+              })}
+            </div>
+          ))}
         </div>
       </div>
 
