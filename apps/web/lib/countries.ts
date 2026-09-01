@@ -22,6 +22,22 @@ export const COUNTRY_SECTIONS: { id: CountrySectionId; codes: string[] }[] = [
 
 const SECTION_CODE_SET = new Set(COUNTRY_SECTIONS.flatMap((s) => s.codes));
 
+type CountryTranslator = {
+  (key: string): string;
+  has: (key: string) => boolean;
+};
+
+/** Localized flag + name from the `countries` i18n namespace, or the ISO-2 code. */
+export function formatCountryLabel(
+  code: string | null | undefined,
+  t: CountryTranslator
+): string | null {
+  if (!code) return null;
+  const iso = code.trim().toUpperCase();
+  if (!iso) return null;
+  return t.has(iso) ? t(iso) : iso;
+}
+
 export function countrySectionsFor(available?: string[]) {
   const known = (available ?? []).filter((c) => c && c !== "??");
   const allow = known.length > 0 ? new Set(known) : null;

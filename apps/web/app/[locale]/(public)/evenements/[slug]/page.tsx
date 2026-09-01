@@ -25,6 +25,7 @@ import {
   formatEntryFee,
 } from "@/lib/utils/dates";
 import { TCGType, TCG_CONFIG } from "@agenda-cartes/shared";
+import { formatCountryLabel } from "@/lib/countries";
 import { TcgLandingPage } from "@/components/events/TcgLandingPage";
 import dynamic from "next/dynamic";
 
@@ -138,6 +139,7 @@ export default async function EventDetailPage({
   }
 
   const t = await getTranslations({ locale, namespace: "eventDetail" });
+  const tc = await getTranslations({ locale, namespace: "countries" });
   const event = await getEventBySlug(slug);
 
   if (!event) notFound();
@@ -145,6 +147,7 @@ export default async function EventDetailPage({
   const isCancelled = event.status === "annule";
   const dateLocale = locale as "fr" | "en";
   const freeLabel = locale === "fr" ? "Gratuit" : "Free";
+  const countryLabel = formatCountryLabel(event.country, tc);
 
   return (
     <>
@@ -230,6 +233,9 @@ export default async function EventDetailPage({
               <p className="text-gray-700">
                 {event.postal_code && `${event.postal_code} `}
                 <span className="font-medium">{event.city}</span>
+                {countryLabel && (
+                  <span className="text-gray-500"> · {countryLabel}</span>
+                )}
               </p>
               {event.latitude && event.longitude && (
                 <>
