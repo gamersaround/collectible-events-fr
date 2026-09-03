@@ -109,6 +109,7 @@ export type MapEvent = Pick<
   | "slug"
   | "title"
   | "city"
+  | "country"
   | "latitude"
   | "longitude"
   | "tcg_types"

@@ -15,6 +15,7 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { getEventBySlug, getAllEventSlugs } from "@/lib/queries/events";
+import { countryCode } from "@/lib/countries";
 import { urlFor } from "@/lib/sanity/image";
 import { EventBadge, FormatBadge } from "@/components/events/EventBadge";
 import { EventSchema } from "@/components/events/EventSchema";
@@ -138,6 +139,7 @@ export default async function EventDetailPage({
   }
 
   const t = await getTranslations({ locale, namespace: "eventDetail" });
+  const tc = await getTranslations({ locale, namespace: "countries" });
   const event = await getEventBySlug(slug);
 
   if (!event) notFound();
@@ -145,6 +147,8 @@ export default async function EventDetailPage({
   const isCancelled = event.status === "annule";
   const dateLocale = locale as "fr" | "en";
   const freeLabel = locale === "fr" ? "Gratuit" : "Free";
+  const code = countryCode(event.country);
+  const countryLabel = tc.has(code) ? tc(code) : code;
 
   return (
     <>
@@ -231,6 +235,7 @@ export default async function EventDetailPage({
                 {event.postal_code && `${event.postal_code} `}
                 <span className="font-medium">{event.city}</span>
               </p>
+              <p className="text-gray-600 text-sm mt-0.5">{countryLabel}</p>
               {event.latitude && event.longitude && (
                 <>
                   <EventDetailMap
@@ -239,6 +244,7 @@ export default async function EventDetailPage({
                     venueName={event.venue_name}
                     address={event.address}
                     city={event.city}
+                    countryLabel={countryLabel}
                   />
                   <a
                     href={`https://www.openstreetmap.org/?mlat=${event.latitude}&mlon=${event.longitude}&zoom=15`}
