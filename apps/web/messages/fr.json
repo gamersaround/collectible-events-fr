@@ -15,7 +15,7 @@
     "allEvents": "Tous les événements",
     "interactiveMap": "Carte interactive",
     "submitEvent": "Soumettre un événement",
-    "copyright": "© {year} CardAgenda — Made with ❤️ for the TCG community"
+    "copyright": "© {year} CardAgenda : Made with ❤️ for the TCG community"
   },
   "home": {
     "heroTagline": "Tous les événements cartes de collection, en un seul endroit.",
@@ -34,7 +34,7 @@
     "partnerDescription": "scannez vos cartes pour les identifier automatiquement, évaluez votre collection en temps réel et exportez vers eBay ou Whatnot en quelques clics.",
     "partnerCta": "Découvrir CardScanner.fr",
     "submitTitle": "Organisez un événement ?",
-    "submitDescription": "Soumettez votre tournoi, bourse ou convention. Modération sous 24h — 100% gratuit.",
+    "submitDescription": "Soumettez votre tournoi, bourse ou convention. Modération sous 24h : 100% gratuit.",
     "submitCta": "Soumettre un événement",
     "stat1Value": "9+",
     "stat1Label": "Jeux référencés",
@@ -87,7 +87,7 @@
     "honeypot": "Ne pas remplir ce champ",
     "section1Title": "Informations de l'événement",
     "titleLabel": "Titre de l'événement",
-    "titlePlaceholder": "Ex: Tournoi Pokémon TCG — Circuit Régional Paris",
+    "titlePlaceholder": "Ex: Tournoi Pokémon TCG : Circuit Régional Paris",
     "descriptionLabel": "Description",
     "descriptionPlaceholder": "Format, règles, informations supplémentaires...",
     "tcgTypesLabel": "Type(s) de jeu",
@@ -108,7 +108,7 @@
     "endsAtLabel": "Fin",
     "section4Title": "Photo de l'événement",
     "imageLabel": "Image",
-    "imageHint": "(optionnelle, max 5 Mo — JPG, PNG, WebP)",
+    "imageHint": "(optionnelle, max 5 Mo : JPG, PNG, WebP)",
     "section5Title": "Informations pratiques",
     "entryFeeLabel": "Frais d'inscription (€)",
     "entryFeePlaceholder": "0 = gratuit",
@@ -202,14 +202,14 @@
     "CA": "🇨🇦 Canada"
   },
   "metadata": {
-    "defaultTitle": "CardAgenda — Agenda des événements cartes à collectionner",
+    "defaultTitle": "CardAgenda : Agenda des événements cartes à collectionner",
     "titleTemplate": "%s | CardAgenda",
     "defaultDescription": "Trouvez tous les événements cartes de collection en France et en Belgique : tournois Pokémon, Magic, Yu-Gi-Oh, One Piece, Lorcana, cartes NBA, foot et bien plus. Calendrier mis à jour en temps réel."
   },
   "articles": {
     "title": "Blog",
     "subtitle": "Guides, actualités et comptes rendus de tournois",
-    "metaTitle": "Blog — Guides et actualités TCG",
+    "metaTitle": "Blog : Guides et actualités TCG",
     "metaDescription": "Guides de tournois, actualités cartes à collectionner et comptes rendus d'événements TCG en France.",
     "noArticles": "Aucun article pour le moment. Revenez bientôt !",
     "articleCountOne": "article",

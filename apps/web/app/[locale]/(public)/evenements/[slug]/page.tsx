@@ -71,8 +71,8 @@ export async function generateMetadata({
     const tcgType = TCG_SLUG_MAP[slug];
     const config = TCG_CONFIG[tcgType as TCGType];
     const title = locale === "fr"
-      ? `Événements ${config.label} en France — Tournois, Bourses & Conventions`
-      : `${config.label} Events in France — Tournaments, Trade Fairs & Conventions`;
+      ? `Événements ${config.label} en France : tournois, bourses et conventions`
+      : `${config.label} events in France: tournaments, trade fairs and conventions`;
     const description = locale === "fr"
       ? `Tous les événements ${config.label} en France et en Belgique : tournois, bourses, conventions, drafts. Agenda mis à jour quotidiennement.`
       : `All ${config.label} events in France and Belgium: tournaments, trade fairs, conventions, drafts. Calendar updated daily.`;
@@ -97,7 +97,7 @@ export async function generateMetadata({
   if (!event) return { title: t("notFound") };
 
   const dateLocale = locale as "fr" | "en";
-  const fallback = `${event.title} — ${event.city}, ${formatDateFr(event.starts_at, "EEEE d MMMM yyyy", dateLocale)}`;
+  const fallback = `${event.title} : ${event.city}, ${formatDateFr(event.starts_at, "EEEE d MMMM yyyy", dateLocale)}`;
   const description =
     (locale === "en"
       ? event.meta_description_en || event.meta_description_fr

@@ -23,8 +23,8 @@ export async function TcgLandingPage({ tcgType, locale, urlSlug }: TcgLandingPag
     : `${config.label} Events in France`;
 
   const subtitle = isFr
-    ? `Tournois, bourses, conventions et drafts — agenda complet mis à jour quotidiennement.`
-    : `Tournaments, trade fairs, conventions and drafts — complete calendar updated daily.`;
+    ? `Tournois, bourses, conventions et drafts : agenda complet mis à jour quotidiennement.`
+    : `Tournaments, trade fairs, conventions and drafts: complete calendar updated daily.`;
 
   const collectionSchema = {
     "@context": "https://schema.org",

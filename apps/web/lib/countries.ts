@@ -31,6 +31,16 @@ export function countryCode(country?: string | null): string {
   return c;
 }
 
+export function countryFlagEmoji(country?: string | null): string {
+  const c = countryCode(country);
+  if (!/^[A-Z]{2}$/.test(c)) return "";
+  const base = 0x1f1e6;
+  return String.fromCodePoint(
+    base + c.charCodeAt(0) - 65,
+    base + c.charCodeAt(1) - 65
+  );
+}
+
 export function countrySectionsFor(available?: string[]) {
   const known = (available ?? []).filter((c) => c && c !== "??");
   const allow = known.length > 0 ? new Set(known) : null;

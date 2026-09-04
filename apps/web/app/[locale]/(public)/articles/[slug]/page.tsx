@@ -208,7 +208,7 @@ export default async function ArticleDetailPage({
               {formatDateFr(article.published_at, "d MMMM yyyy", dateLocale)}
             </time>
             {article.author && (
-              <span className="text-sm text-gray-500">— {article.author}</span>
+              <span className="text-sm text-gray-500">· {article.author}</span>
             )}
           </div>
 

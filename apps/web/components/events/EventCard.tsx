@@ -10,7 +10,7 @@ import { EventBadge, FormatBadge } from "./EventBadge";
 import { formatDateFr, formatEntryFee } from "@/lib/utils/dates";
 import { TCG_CONFIG, TCGType } from "@agenda-cartes/shared";
 import { urlFor } from "@/lib/sanity/image";
-import { countryCode } from "@/lib/countries";
+import { countryCode, countryFlagEmoji } from "@/lib/countries";
 
 interface EventCardProps {
   event: EventRow;
@@ -22,6 +22,7 @@ export function EventCard({ event }: EventCardProps) {
   const tc = useTranslations("countries");
   const code = countryCode(event.country);
   const countryLabel = tc.has(code) ? tc(code) : code;
+  const flag = countryFlagEmoji(event.country);
 
   const startDate = new Date(event.starts_at);
   const day = startDate.getDate();
@@ -121,23 +122,24 @@ export function EventCard({ event }: EventCardProps) {
 
             {/* Title */}
             <h2 className="font-display font-black text-sm leading-snug mb-3 text-black uppercase line-clamp-2">
+              {flag && (
+                <span className="mr-1.5 normal-case" aria-hidden>
+                  {flag}
+                </span>
+              )}
               {event.title}
             </h2>
 
             {/* Meta info */}
             <div className="space-y-1">
-              <div className="flex items-start gap-1.5 text-xs font-medium text-black/70">
-                <MapPin className="h-3 w-3 shrink-0 mt-0.5" />
-                <span className="min-w-0">
-                  <span className="block truncate">
-                    {event.city}
-                    {event.department_code && (
-                      <span className="text-black/40 ml-1">({event.department_code})</span>
-                    )}
-                  </span>
-                  <span className="block truncate text-[11px] font-semibold text-black/50">
-                    {countryLabel}
-                  </span>
+              <div className="flex items-center gap-1.5 text-xs font-medium text-black/70">
+                <MapPin className="h-3 w-3 shrink-0" />
+                <span className="truncate">
+                  {event.city}
+                  {event.department_code && (
+                    <span className="text-black/40 ml-1">({event.department_code})</span>
+                  )}
+                  <span className="ml-1.5 font-bold text-black/80">· {countryLabel}</span>
                 </span>
               </div>
 

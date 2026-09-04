@@ -15,7 +15,7 @@
     "allEvents": "All events",
     "interactiveMap": "Interactive map",
     "submitEvent": "Submit an event",
-    "copyright": "© {year} CardAgenda — Made with ❤️ for the TCG community"
+    "copyright": "© {year} CardAgenda : Made with ❤️ for the TCG community"
   },
   "home": {
     "heroTagline": "All collectible card events, in one place.",
@@ -34,7 +34,7 @@
     "partnerDescription": "scan your cards to automatically identify them, value your collection in real time and export to eBay or Whatnot in just a few clicks.",
     "partnerCta": "Discover CardScanner.fr",
     "submitTitle": "Organising an event?",
-    "submitDescription": "Submit your tournament, trade fair or convention. Moderated within 24h — 100% free.",
+    "submitDescription": "Submit your tournament, trade fair or convention. Moderated within 24h : 100% free.",
     "submitCta": "Submit an event",
     "stat1Value": "9+",
     "stat1Label": "Games listed",
@@ -87,7 +87,7 @@
     "honeypot": "Do not fill in this field",
     "section1Title": "Event information",
     "titleLabel": "Event title",
-    "titlePlaceholder": "E.g.: Pokémon TCG Tournament — Regional Circuit Paris",
+    "titlePlaceholder": "E.g.: Pokémon TCG Tournament : Regional Circuit Paris",
     "descriptionLabel": "Description",
     "descriptionPlaceholder": "Format, rules, additional information...",
     "tcgTypesLabel": "Game type(s)",
@@ -108,7 +108,7 @@
     "endsAtLabel": "End",
     "section4Title": "Event photo",
     "imageLabel": "Image",
-    "imageHint": "(optional, max 5 MB — JPG, PNG, WebP)",
+    "imageHint": "(optional, max 5 MB : JPG, PNG, WebP)",
     "section5Title": "Practical information",
     "entryFeeLabel": "Entry fee (€)",
     "entryFeePlaceholder": "0 = free",
@@ -202,14 +202,14 @@
     "CA": "🇨🇦 Canada"
   },
   "metadata": {
-    "defaultTitle": "CardAgenda — Collectible card event calendar",
+    "defaultTitle": "CardAgenda : Collectible card event calendar",
     "titleTemplate": "%s | CardAgenda",
     "defaultDescription": "Find all collectible card events in France and Belgium: Pokémon, Magic, Yu-Gi-Oh, One Piece, Lorcana, NBA cards, football cards and more. Calendar updated in real time."
   },
   "articles": {
     "title": "Blog",
     "subtitle": "Guides, news and tournament reports",
-    "metaTitle": "Blog — TCG Guides & News",
+    "metaTitle": "Blog : TCG Guides & News",
     "metaDescription": "Tournament guides, collectible card news and TCG event reports in France and Belgium.",
     "noArticles": "No articles yet. Check back soon!",
     "articleCountOne": "article",
