@@ -10,6 +10,7 @@ interface EventDetailMapProps {
   venueName?: string | null;
   address?: string | null;
   city: string;
+  countryLabel?: string | null;
 }
 
 export default function EventDetailMap({
@@ -18,6 +19,7 @@ export default function EventDetailMap({
   venueName,
   address,
   city,
+  countryLabel,
 }: EventDetailMapProps) {
   const mapRef = useRef<LeafletMap | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -72,6 +74,7 @@ export default function EventDetailMap({
         venueName ? `<div style="font-weight:600;font-size:13px;color:#111827;margin-bottom:2px;">${venueName}</div>` : "",
         address ? `<div style="font-size:12px;color:#6b7280;">${address}</div>` : "",
         `<div style="font-size:12px;color:#6b7280;">${city}</div>`,
+        countryLabel ? `<div style="font-size:11px;color:#6b7280;">${countryLabel}</div>` : "",
       ].filter(Boolean).join("");
 
       L.marker([latitude, longitude], { icon })
@@ -85,7 +88,7 @@ export default function EventDetailMap({
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [latitude, longitude, venueName, address, city]);
+  }, [latitude, longitude, venueName, address, city, countryLabel]);
 
   return (
     <div

@@ -22,6 +22,25 @@ export const COUNTRY_SECTIONS: { id: CountrySectionId; codes: string[] }[] = [
 
 const SECTION_CODE_SET = new Set(COUNTRY_SECTIONS.flatMap((s) => s.codes));
 
+/** ISO-2 for display; Sanity stores alpha-2, with a few aliases. */
+export function countryCode(country?: string | null): string {
+  if (!country) return "FR";
+  const c = country.trim().toUpperCase();
+  if (c === "UK") return "GB";
+  if (c === "FRANCE") return "FR";
+  return c;
+}
+
+export function countryFlagEmoji(country?: string | null): string {
+  const c = countryCode(country);
+  if (!/^[A-Z]{2}$/.test(c)) return "";
+  const base = 0x1f1e6;
+  return String.fromCodePoint(
+    base + c.charCodeAt(0) - 65,
+    base + c.charCodeAt(1) - 65
+  );
+}
+
 export function countrySectionsFor(available?: string[]) {
   const known = (available ?? []).filter((c) => c && c !== "??");
   const allow = known.length > 0 ? new Set(known) : null;

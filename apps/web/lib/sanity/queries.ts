@@ -99,6 +99,7 @@ export const MAP_EVENTS_QUERY = groq`
     "slug": slug.current,
     title,
     city,
+    "country": coalesce(country, "FR"),
     "tcg_types": tcgTypes,
     format,
     "starts_at": startsAt,

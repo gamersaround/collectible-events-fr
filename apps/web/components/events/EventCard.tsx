@@ -10,6 +10,7 @@ import { EventBadge, FormatBadge } from "./EventBadge";
 import { formatDateFr, formatEntryFee } from "@/lib/utils/dates";
 import { TCG_CONFIG, TCGType } from "@agenda-cartes/shared";
 import { urlFor } from "@/lib/sanity/image";
+import { countryCode, countryFlagEmoji } from "@/lib/countries";
 
 interface EventCardProps {
   event: EventRow;
@@ -18,6 +19,10 @@ interface EventCardProps {
 export function EventCard({ event }: EventCardProps) {
   const locale = useLocale() as "fr" | "en";
   const t = useTranslations("form");
+  const tc = useTranslations("countries");
+  const code = countryCode(event.country);
+  const countryLabel = tc.has(code) ? tc(code) : code;
+  const flag = countryFlagEmoji(event.country);
 
   const startDate = new Date(event.starts_at);
   const day = startDate.getDate();
@@ -117,6 +122,11 @@ export function EventCard({ event }: EventCardProps) {
 
             {/* Title */}
             <h2 className="font-display font-black text-sm leading-snug mb-3 text-black uppercase line-clamp-2">
+              {flag && (
+                <span className="mr-1.5 normal-case" aria-hidden>
+                  {flag}
+                </span>
+              )}
               {event.title}
             </h2>
 
@@ -129,6 +139,7 @@ export function EventCard({ event }: EventCardProps) {
                   {event.department_code && (
                     <span className="text-black/40 ml-1">({event.department_code})</span>
                   )}
+                  <span className="ml-1.5 font-bold text-black/80">· {countryLabel}</span>
                 </span>
               </div>
 

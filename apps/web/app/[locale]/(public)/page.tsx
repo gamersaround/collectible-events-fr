@@ -20,7 +20,7 @@ export async function generateMetadata({
   const t = await getTranslations({ locale, namespace: "home" });
 
   return {
-    title: "CardAgenda — " + (locale === "fr"
+    title: "CardAgenda : " + (locale === "fr"
       ? "Agenda des événements cartes à collectionner"
       : "Collectible card event calendar"),
     description: locale === "fr"
@@ -218,7 +218,7 @@ export default async function HomePage({
                 {t("partnerTitle")}
               </h2>
               <p className="text-white/70 font-medium mb-6 text-sm leading-relaxed">
-                <span className="text-[#FFDE03] font-black">CardScanner.fr</span> — {t("partnerDescription")}
+                <span className="text-[#FFDE03] font-black">CardScanner.fr</span> : {t("partnerDescription")}
               </p>
               <div className="flex flex-wrap gap-2 mb-8">
                 {["📷 Scan auto", "💶 Cote en direct", "📦 Collections", "🛒 Export eBay"].map((tag) => (
