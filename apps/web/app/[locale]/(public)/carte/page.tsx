@@ -17,8 +17,8 @@ export async function generateMetadata({
   return {
     title: t("title"),
     description: locale === "fr"
-      ? "Visualisez tous les événements cartes à collectionner sur carte interactive : tournois Pokémon, Magic, Yu-Gi-Oh, cartes NBA et foot, en France et Belgique."
-      : "View all collectible card events on an interactive map: Pokémon, Magic, Yu-Gi-Oh, NBA and football cards in France and Belgium.",
+      ? "Visualisez tous les événements cartes à collectionner sur carte interactive : tournois Pokémon, Magic, Yu-Gi-Oh, cartes NBA et foot, en Europe (France, Belgique, Royaume-Uni…)."
+      : "View all collectible card events on an interactive map: Pokémon, Magic, Yu-Gi-Oh, NBA and football cards in Europe (France, Belgium, UK…).",
   };
 }
 

@@ -24,8 +24,8 @@ export async function generateMetadata({
       ? "Agenda des événements cartes à collectionner"
       : "Collectible card event calendar"),
     description: locale === "fr"
-      ? "Tous les événements cartes de collection en France et Belgique : tournois Pokémon, Magic the Gathering, Yu-Gi-Oh!, NBA, foot et bien plus. Gratuit, mis à jour en continu."
-      : "All collectible card events in France and Belgium: Pokémon, Magic, Yu-Gi-Oh!, NBA, football cards and more. Free, updated continuously.",
+      ? "Tous les événements cartes de collection en Europe (France, Belgique, Royaume-Uni…) : tournois Pokémon, Magic the Gathering, Yu-Gi-Oh!, NBA, foot. Gratuit, mis à jour en continu."
+      : "All collectible card events in Europe (France, Belgium, UK…): Pokémon, Magic, Yu-Gi-Oh!, NBA, football cards. Free, updated continuously.",
     openGraph: {
       title: "CardAgenda",
       description: t("heroTagline"),

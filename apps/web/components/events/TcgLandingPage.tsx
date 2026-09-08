@@ -19,8 +19,8 @@ export async function TcgLandingPage({ tcgType, locale, urlSlug }: TcgLandingPag
   const isFr = locale === "fr";
 
   const pageTitle = isFr
-    ? `Événements ${config.label} en France`
-    : `${config.label} Events in France`;
+    ? `Événements ${config.label} en Europe`
+    : `${config.label} Events in Europe`;
 
   const subtitle = isFr
     ? `Tournois, bourses, conventions et drafts : agenda complet mis à jour quotidiennement.`

@@ -60,10 +60,10 @@ export default async function EventsPage({
   const collectionSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: isFr ? "Événements cartes à collectionner en France" : "Collectible card events in France",
+    name: isFr ? "Événements cartes à collectionner en Europe" : "Collectible card events in Europe",
     description: isFr
-      ? "Tous les tournois, bourses et conventions de cartes à collectionner en France et en Belgique."
-      : "All tournaments, trade fairs and conventions for collectible cards in France and Belgium.",
+      ? "Tous les tournois, bourses et conventions de cartes à collectionner en Europe (France, Belgique, Royaume-Uni…)."
+      : "All tournaments, trade fairs and conventions for collectible cards in Europe (France, Belgium, UK…).",
     url: `${appUrl}/${locale}/evenements`,
     mainEntity: {
       "@type": "ItemList",

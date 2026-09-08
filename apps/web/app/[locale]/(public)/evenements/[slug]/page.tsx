@@ -71,11 +71,11 @@ export async function generateMetadata({
     const tcgType = TCG_SLUG_MAP[slug];
     const config = TCG_CONFIG[tcgType as TCGType];
     const title = locale === "fr"
-      ? `Événements ${config.label} en France : tournois, bourses et conventions`
-      : `${config.label} events in France: tournaments, trade fairs and conventions`;
+      ? `Événements ${config.label} en Europe : tournois, bourses et conventions`
+      : `${config.label} events in Europe: tournaments, trade fairs and conventions`;
     const description = locale === "fr"
-      ? `Tous les événements ${config.label} en France et en Belgique : tournois, bourses, conventions, drafts. Agenda mis à jour quotidiennement.`
-      : `All ${config.label} events in France and Belgium: tournaments, trade fairs, conventions, drafts. Calendar updated daily.`;
+      ? `Tous les événements ${config.label} en Europe (France, Belgique, Royaume-Uni…) : tournois, bourses, conventions, drafts. Agenda mis à jour quotidiennement.`
+      : `All ${config.label} events in Europe (France, Belgium, UK…): tournaments, trade fairs, conventions, drafts. Calendar updated daily.`;
     return {
       title,
       description,
