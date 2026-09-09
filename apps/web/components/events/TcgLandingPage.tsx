@@ -4,6 +4,7 @@ import { TCG_CONFIG, TCGType } from "@agenda-cartes/shared";
 import { getEvents } from "@/lib/queries/events";
 import { EventList } from "@/components/events/EventList";
 import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
+import { eventsUrl, eventsBasePath } from "@/lib/paths";
 
 interface TcgLandingPageProps {
   tcgType: string;
@@ -15,23 +16,22 @@ export async function TcgLandingPage({ tcgType, locale, urlSlug }: TcgLandingPag
   const config = TCG_CONFIG[tcgType as TCGType];
   const { data: events, total } = await getEvents({ tcgTypes: [tcgType] }, 1, 24);
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
   const isFr = locale === "fr";
 
   const pageTitle = isFr
-    ? `Événements ${config.label} en France`
-    : `${config.label} Events in France`;
+    ? `Événements ${config.label} en Europe`
+    : `${config.label} events in Europe`;
 
   const subtitle = isFr
-    ? `Tournois, bourses, conventions et drafts : agenda complet mis à jour quotidiennement.`
-    : `Tournaments, trade fairs, conventions and drafts: complete calendar updated daily.`;
+    ? `Tournois, bourses, conventions et drafts : agenda Europe mis à jour quotidiennement.`
+    : `Tournaments, trade fairs, conventions and drafts: Europe calendar updated daily.`;
 
   const collectionSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
     name: pageTitle,
     description: subtitle,
-    url: `${appUrl}/${locale}/evenements/${urlSlug}`,
+    url: eventsUrl(locale, urlSlug),
     mainEntity: {
       "@type": "ItemList",
       name: pageTitle,
@@ -40,7 +40,7 @@ export async function TcgLandingPage({ tcgType, locale, urlSlug }: TcgLandingPag
         "@type": "ListItem",
         position: i + 1,
         name: event.title,
-        url: `${appUrl}/${locale}/evenements/${event.slug}`,
+        url: eventsUrl(locale, event.slug),
       })),
     },
   };
@@ -55,6 +55,7 @@ export async function TcgLandingPage({ tcgType, locale, urlSlug }: TcgLandingPag
         locale={locale}
         eventTitle={config.label}
         slug={urlSlug}
+        sectionPath={eventsBasePath(locale)}
       />
 
       <div className="container py-8">

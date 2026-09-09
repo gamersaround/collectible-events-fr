@@ -1,5 +1,6 @@
 import { urlFor } from "@/lib/sanity/image";
 import type { EventRow } from "@/lib/queries/events";
+import { eventsUrl } from "@/lib/paths";
 
 interface EventSchemaProps {
   event: EventRow;
@@ -12,7 +13,7 @@ interface EventSchemaProps {
  */
 export function EventSchema({ event, locale }: EventSchemaProps) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
-  const eventUrl = `${appUrl}/${locale}/evenements/${event.slug}`;
+  const eventUrl = eventsUrl(locale, event.slug);
 
   const schema = {
     "@context": "https://schema.org",

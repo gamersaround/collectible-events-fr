@@ -6,6 +6,7 @@ import { EventList, EventListSkeleton } from "@/components/events/EventList";
 import { EventFilters } from "@/components/events/EventFilters";
 import { parseFiltersFromParams } from "@/lib/utils/filters";
 import { Pagination } from "@/components/ui/Pagination";
+import { eventsUrl } from "@/lib/paths";
 
 export const revalidate = 3600;
 
@@ -24,17 +25,16 @@ export async function generateMetadata({
 
   const title = tcg ? t("metaTitleWithTcg", { tcg }) : t("metaTitleDefault");
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
   const otherLocale = locale === "fr" ? "en" : "fr";
   return {
     title,
     description: t("metaDescription", { tcg: tcg ?? (locale === "fr" ? "événements de cartes à collectionner" : "collectible card events") }),
     alternates: {
-      canonical: `${appUrl}/${locale}/evenements`,
+      canonical: eventsUrl(locale),
       languages: {
-        [locale]: `${appUrl}/${locale}/evenements`,
-        [otherLocale]: `${appUrl}/${otherLocale}/evenements`,
-        "x-default": `${appUrl}/fr/evenements`,
+        [locale]: eventsUrl(locale),
+        [otherLocale]: eventsUrl(otherLocale),
+        "x-default": eventsUrl("fr"),
       },
     },
   };
@@ -55,16 +55,15 @@ export default async function EventsPage({
   const { data: events, total, totalPages } = await getEvents(filters, page, PER_PAGE);
   const countryCodes = await getEventCountryCodes();
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
   const isFr = locale === "fr";
   const collectionSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
-    name: isFr ? "Événements cartes à collectionner en France" : "Collectible card events in France",
+    name: isFr ? "Événements cartes à collectionner en Europe" : "Collectible card events in Europe",
     description: isFr
-      ? "Tous les tournois, bourses et conventions de cartes à collectionner en France et en Belgique."
-      : "All tournaments, trade fairs and conventions for collectible cards in France and Belgium.",
-    url: `${appUrl}/${locale}/evenements`,
+      ? "Tournois, bourses et conventions de cartes à collectionner en Europe."
+      : "Collectible card tournaments, trade fairs and conventions in Europe.",
+    url: eventsUrl(locale),
     mainEntity: {
       "@type": "ItemList",
       name: isFr ? "Événements à venir" : "Upcoming events",
@@ -73,7 +72,7 @@ export default async function EventsPage({
         "@type": "ListItem",
         position: i + 1,
         name: event.title,
-        url: `${appUrl}/${locale}/evenements/${event.slug}`,
+        url: eventsUrl(locale, event.slug),
       })),
     },
   };

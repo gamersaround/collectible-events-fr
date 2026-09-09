@@ -14,7 +14,7 @@ import {
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { getEventBySlug, getAllEventSlugs } from "@/lib/queries/events";
+import { getEventBySlug, getAllEventSlugs, getEventLocations } from "@/lib/queries/events";
 import { countryCode } from "@/lib/countries";
 import { urlFor } from "@/lib/sanity/image";
 import { EventBadge, FormatBadge } from "@/components/events/EventBadge";
@@ -27,6 +27,18 @@ import {
 } from "@/lib/utils/dates";
 import { TCGType, TCG_CONFIG } from "@agenda-cartes/shared";
 import { TcgLandingPage } from "@/components/events/TcgLandingPage";
+import { GeoLandingPage } from "@/components/events/GeoLandingPage";
+import { TCG_SLUG_MAP, TCG_LANDING_SLUGS } from "@/lib/tcg-slugs";
+import { eventsUrl, eventsPath } from "@/lib/paths";
+import {
+  citySlug,
+  countryPathSlug,
+  EUROPE_COUNTRY_CODES,
+  geoPageCopy,
+  matchCitySlug,
+  matchCountrySlug,
+} from "@/lib/geo-slugs";
+import { redirect } from "next/navigation";
 import dynamic from "next/dynamic";
 
 const EventDetailMap = dynamic(
@@ -34,26 +46,37 @@ const EventDetailMap = dynamic(
   { ssr: false }
 );
 
-// Maps clean URL slugs to TCGType enum values — these become /fr/evenements/pokemon etc.
-const TCG_SLUG_MAP: Record<string, string> = {
-  "pokemon": "pokemon",
-  "magic": "magic",
-  "yugioh": "yugioh",
-  "sports-cards": "sports_cards",
-  "one-piece": "one_piece",
-  "dragon-ball": "dragon_ball",
-  "lorcana": "lorcana",
-  "flesh-blood": "flesh_blood",
-  "autres": "autres",
-};
-
 export const revalidate = 3600;
 
 export async function generateStaticParams() {
-  const slugs = await getAllEventSlugs();
-  const tcgSlugs = Object.keys(TCG_SLUG_MAP);
+  const [slugs, locations] = await Promise.all([
+    getAllEventSlugs(),
+    getEventLocations(),
+  ]);
+  const europeLocations = locations.filter((row) =>
+    EUROPE_COUNTRY_CODES.has(countryCode(row.country))
+  );
+  const countrySlugs = routing.locales.flatMap((locale) =>
+    Array.from(
+      new Set(
+        europeLocations
+          .map((row) => countryPathSlug(row.country, locale))
+          .filter((s) => s && !(s in TCG_SLUG_MAP))
+      )
+    )
+  );
+  const citySlugs = Array.from(
+    new Set(
+      europeLocations
+        .map((row) => citySlug(row.city))
+        .filter((s) => s && !(s in TCG_SLUG_MAP) && !matchCountrySlug(s, "fr"))
+    )
+  );
+  const all = Array.from(
+    new Set([...slugs, ...TCG_LANDING_SLUGS, ...countrySlugs, ...citySlugs])
+  );
   return routing.locales.flatMap((locale) =>
-    [...slugs, ...tcgSlugs].map((slug) => ({ locale, slug }))
+    all.map((slug) => ({ locale, slug }))
   );
 }
 
@@ -63,29 +86,59 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
   const otherLocale = locale === "fr" ? "en" : "fr";
+
+  const languageAlts = (frSlug: string, enSlug: string) => ({
+    [locale]: eventsUrl(locale, locale === "en" ? enSlug : frSlug),
+    [otherLocale]: eventsUrl(otherLocale, otherLocale === "en" ? enSlug : frSlug),
+    "x-default": eventsUrl("fr", frSlug),
+  });
 
   // TCG landing page metadata
   if (slug in TCG_SLUG_MAP) {
     const tcgType = TCG_SLUG_MAP[slug];
     const config = TCG_CONFIG[tcgType as TCGType];
     const title = locale === "fr"
-      ? `Événements ${config.label} en France : tournois, bourses et conventions`
-      : `${config.label} events in France: tournaments, trade fairs and conventions`;
+      ? `Événements ${config.label} en Europe : tournois, bourses et conventions`
+      : `${config.label} events in Europe: tournaments, trade fairs and conventions`;
     const description = locale === "fr"
-      ? `Tous les événements ${config.label} en France et en Belgique : tournois, bourses, conventions, drafts. Agenda mis à jour quotidiennement.`
-      : `All ${config.label} events in France and Belgium: tournaments, trade fairs, conventions, drafts. Calendar updated daily.`;
+      ? `Événements ${config.label} en Europe : tournois, bourses, conventions, drafts. Agenda mis à jour quotidiennement.`
+      : `${config.label} events in Europe: tournaments, trade fairs, conventions, drafts. Calendar updated daily.`;
     return {
       title,
       description,
       alternates: {
-        canonical: `${appUrl}/${locale}/evenements/${slug}`,
-        languages: {
-          [locale]: `${appUrl}/${locale}/evenements/${slug}`,
-          [otherLocale]: `${appUrl}/${otherLocale}/evenements/${slug}`,
-          "x-default": `${appUrl}/fr/evenements/${slug}`,
-        },
+        canonical: eventsUrl(locale, slug),
+        languages: languageAlts(slug, slug),
+      },
+      openGraph: { title, description, type: "website" },
+    };
+  }
+
+  const country = matchCountrySlug(slug, locale);
+  if (country) {
+    const { title, description } = geoPageCopy(locale, country);
+    return {
+      title,
+      description,
+      alternates: {
+        canonical: eventsUrl(locale, country.canonicalSlug),
+        languages: languageAlts(country.slugFr, country.slugEn),
+      },
+      openGraph: { title, description, type: "website" },
+    };
+  }
+
+  const locations = await getEventLocations();
+  const city = matchCitySlug(slug, locations);
+  if (city) {
+    const { title, description } = geoPageCopy(locale, city);
+    return {
+      title,
+      description,
+      alternates: {
+        canonical: eventsUrl(locale, city.canonicalSlug),
+        languages: languageAlts(city.canonicalSlug, city.canonicalSlug),
       },
       openGraph: { title, description, type: "website" },
     };
@@ -108,12 +161,8 @@ export async function generateMetadata({
     title: event.title,
     description,
     alternates: {
-      canonical: `${appUrl}/${locale}/evenements/${slug}`,
-      languages: {
-        [locale]: `${appUrl}/${locale}/evenements/${slug}`,
-        [otherLocale]: `${appUrl}/${otherLocale}/evenements/${slug}`,
-        "x-default": `${appUrl}/fr/evenements/${slug}`,
-      },
+      canonical: eventsUrl(locale, slug),
+      languages: languageAlts(slug, slug),
     },
     openGraph: {
       title: event.title,
@@ -133,9 +182,33 @@ export default async function EventDetailPage({
 }) {
   const { locale, slug } = await params;
 
-  // TCG landing pages: /fr/evenements/pokemon, /fr/evenements/magic, etc.
+  // TCG landing pages: /fr/evenements/pokemon, /en/events/magic, etc.
   if (slug in TCG_SLUG_MAP) {
     return <TcgLandingPage tcgType={TCG_SLUG_MAP[slug]} locale={locale} urlSlug={slug} />;
+  }
+
+  const country = matchCountrySlug(slug, locale);
+  if (country) {
+    if (slug !== country.canonicalSlug) {
+      redirect(eventsPath(locale, country.canonicalSlug));
+    }
+    const locations = await getEventLocations();
+    const relatedCities = locations.filter(
+      (row) => countryCode(row.country) === country.code
+    );
+    return (
+      <GeoLandingPage
+        locale={locale}
+        match={country}
+        relatedCities={relatedCities}
+      />
+    );
+  }
+
+  const locations = await getEventLocations();
+  const city = matchCitySlug(slug, locations);
+  if (city) {
+    return <GeoLandingPage locale={locale} match={city} />;
   }
 
   const t = await getTranslations({ locale, namespace: "eventDetail" });

@@ -1,3 +1,5 @@
+import { eventsBasePath } from "@/lib/paths";
+
 interface BreadcrumbSchemaProps {
   locale: string;
   /** Title of the leaf page (3rd breadcrumb) */
@@ -18,11 +20,12 @@ export function BreadcrumbSchema({
   eventTitle,
   slug,
   sectionName,
-  sectionPath = "/evenements",
+  sectionPath,
 }: BreadcrumbSchemaProps) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
   const defaultSectionName =
     sectionName ?? (locale === "fr" ? "Événements" : "Events");
+  const resolvedSectionPath = sectionPath ?? eventsBasePath(locale);
 
   const schema = {
     "@context": "https://schema.org",
@@ -38,13 +41,13 @@ export function BreadcrumbSchema({
         "@type": "ListItem",
         position: 2,
         name: defaultSectionName,
-        item: `${appUrl}/${locale}${sectionPath}`,
+        item: `${appUrl}/${locale}${resolvedSectionPath}`,
       },
       {
         "@type": "ListItem",
         position: 3,
         name: eventTitle,
-        item: `${appUrl}/${locale}${sectionPath}/${slug}`,
+        item: `${appUrl}/${locale}${resolvedSectionPath}/${slug}`,
       },
     ],
   };
