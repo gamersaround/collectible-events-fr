@@ -27,6 +27,7 @@ export async function GeoLandingPage({
     match.kind === "country"
       ? { country: match.code }
       : { cities: match.cityNames };
+  const eventsRoot = eventsBasePath(locale);
   const { data: events, total } = await getEvents(filters, 1, 24);
   const { title, description } = geoPageCopy(locale, match);
   const isFr = locale === "fr";
@@ -75,7 +76,7 @@ export async function GeoLandingPage({
 
       <div className="container py-8">
         <Link
-          href="/evenements"
+          href={eventsRoot}
           className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 mb-6 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -88,7 +89,7 @@ export async function GeoLandingPage({
           {match.kind === "city" && match.countryCode && (
             <p className="mt-3">
               <Link
-                href={`/evenements/${countryPathSlug(match.countryCode, locale)}`}
+                href={`${eventsRoot}/${countryPathSlug(match.countryCode, locale)}`}
                 className="text-sm text-blue-600 hover:underline"
               >
                 {isFr ? "Voir le pays" : "View country"}
@@ -106,7 +107,7 @@ export async function GeoLandingPage({
               {uniqueCities.map((city) => (
                 <li key={citySlug(city)}>
                   <Link
-                    href={`/evenements/${citySlug(city)}`}
+                    href={`${eventsRoot}/${citySlug(city)}`}
                     className="inline-block px-3 py-1.5 rounded-lg text-sm bg-gray-100 text-gray-800 hover:bg-gray-200"
                   >
                     {city}
@@ -124,8 +125,8 @@ export async function GeoLandingPage({
             <Link
               href={
                 match.kind === "country"
-                  ? `/evenements?pays=${match.code}`
-                  : `/evenements?q=${encodeURIComponent(match.displayName)}`
+                  ? `${eventsRoot}?pays=${match.code}`
+                  : `${eventsRoot}?q=${encodeURIComponent(match.displayName)}`
               }
               className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:underline"
             >

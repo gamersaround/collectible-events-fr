@@ -6,6 +6,16 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "@/i18n/navigation";
 import { TCG_CONFIG, TCGType, EVENT_FORMAT_LABELS, EventFormat } from "@agenda-cartes/shared";
 
+const FORM_COUNTRY_GROUPS: { id: "west" | "north" | "central" | "northAmerica" | "southAmerica" | "apac" | "other"; codes: string[] }[] = [
+  { id: "west", codes: ["FR", "BE", "CH", "LU", "DE", "GB", "IE", "NL", "ES", "PT", "IT", "AT"] },
+  { id: "north", codes: ["SE", "NO", "DK", "FI", "IS"] },
+  { id: "central", codes: ["PL", "CZ", "SK", "HU", "RO", "BG", "GR", "SI", "HR", "RS", "LT", "LV", "EE", "MT", "CY"] },
+  { id: "northAmerica", codes: ["US", "CA", "MX"] },
+  { id: "southAmerica", codes: ["BR", "AR"] },
+  { id: "apac", codes: ["JP", "KR", "AU", "NZ"] },
+  { id: "other", codes: ["OTHER"] },
+];
+
 interface FormState {
   status: "idle" | "submitting" | "success" | "error";
   errorMessage?: string;
@@ -14,6 +24,9 @@ interface FormState {
 export function SubmissionForm() {
   const router = useRouter();
   const t = useTranslations("form");
+  const tf = useTranslations("formatLabels");
+  const tt = useTranslations("tcgLabels");
+  const tc = useTranslations("countries");
   const [state, setState] = useState<FormState>({ status: "idle" });
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUploading, setImageUploading] = useState(false);
@@ -169,7 +182,7 @@ export function SubmissionForm() {
                     className="h-4 w-4 rounded border-gray-300 text-blue-600"
                   />
                   <span className="text-sm">
-                    {config.emoji} {config.labelShort}
+                    {config.emoji} {tt(key as TCGType)}
                   </span>
                 </label>
               ))}
@@ -188,8 +201,8 @@ export function SubmissionForm() {
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">{t("formatPlaceholder")}</option>
-              {Object.entries(EVENT_FORMAT_LABELS).map(([key, label]) => (
-                <option key={key} value={key}>{label}</option>
+              {Object.keys(EVENT_FORMAT_LABELS).map((key) => (
+                <option key={key} value={key}>{tf(key as EventFormat)}</option>
               ))}
             </select>
           </div>
@@ -213,62 +226,13 @@ export function SubmissionForm() {
               defaultValue="FR"
               className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
-              <optgroup label="Europe de l'Ouest">
-                <option value="FR">🇫🇷 France</option>
-                <option value="BE">🇧🇪 Belgique</option>
-                <option value="CH">🇨🇭 Suisse</option>
-                <option value="LU">🇱🇺 Luxembourg</option>
-                <option value="DE">🇩🇪 Allemagne</option>
-                <option value="GB">🇬🇧 Royaume-Uni</option>
-                <option value="IE">🇮🇪 Irlande</option>
-                <option value="NL">🇳🇱 Pays-Bas</option>
-                <option value="ES">🇪🇸 Espagne</option>
-                <option value="PT">🇵🇹 Portugal</option>
-                <option value="IT">🇮🇹 Italie</option>
-                <option value="AT">🇦🇹 Autriche</option>
-              </optgroup>
-              <optgroup label="Europe du Nord">
-                <option value="SE">🇸🇪 Suède</option>
-                <option value="NO">🇳🇴 Norvège</option>
-                <option value="DK">🇩🇰 Danemark</option>
-                <option value="FI">🇫🇮 Finlande</option>
-                <option value="IS">🇮🇸 Islande</option>
-              </optgroup>
-              <optgroup label="Europe centrale &amp; de l'Est">
-                <option value="PL">🇵🇱 Pologne</option>
-                <option value="CZ">🇨🇿 République tchèque</option>
-                <option value="SK">🇸🇰 Slovaquie</option>
-                <option value="HU">🇭🇺 Hongrie</option>
-                <option value="RO">🇷🇴 Roumanie</option>
-                <option value="BG">🇧🇬 Bulgarie</option>
-                <option value="GR">🇬🇷 Grèce</option>
-                <option value="SI">🇸🇮 Slovénie</option>
-                <option value="HR">🇭🇷 Croatie</option>
-                <option value="RS">🇷🇸 Serbie</option>
-                <option value="LT">🇱🇹 Lituanie</option>
-                <option value="LV">🇱🇻 Lettonie</option>
-                <option value="EE">🇪🇪 Estonie</option>
-                <option value="MT">🇲🇹 Malte</option>
-                <option value="CY">🇨🇾 Chypre</option>
-              </optgroup>
-              <optgroup label="Amérique du Nord">
-                <option value="US">🇺🇸 États-Unis</option>
-                <option value="CA">🇨🇦 Canada</option>
-                <option value="MX">🇲🇽 Mexique</option>
-              </optgroup>
-              <optgroup label="Amérique du Sud">
-                <option value="BR">🇧🇷 Brésil</option>
-                <option value="AR">🇦🇷 Argentine</option>
-              </optgroup>
-              <optgroup label="Asie-Pacifique">
-                <option value="JP">🇯🇵 Japon</option>
-                <option value="KR">🇰🇷 Corée du Sud</option>
-                <option value="AU">🇦🇺 Australie</option>
-                <option value="NZ">🇳🇿 Nouvelle-Zélande</option>
-              </optgroup>
-              <optgroup label="Autre">
-                <option value="OTHER">🌍 Autre</option>
-              </optgroup>
+              {FORM_COUNTRY_GROUPS.map((group) => (
+                <optgroup key={group.id} label={t(`countryGroups.${group.id}`)}>
+                  {group.codes.map((code) => (
+                    <option key={code} value={code}>{tc(code)}</option>
+                  ))}
+                </optgroup>
+              ))}
             </select>
           </div>
 
