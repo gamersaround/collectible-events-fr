@@ -1,3 +1,5 @@
+import { eventsUrl } from "@/lib/paths";
+
 export function SiteSchemas({ locale }: { locale: string }) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
   const schemas = [
@@ -12,8 +14,8 @@ export function SiteSchemas({ locale }: { locale: string }) {
       },
       description:
         locale === "fr"
-          ? "Agenda des événements cartes à collectionner en France et Belgique"
-          : "Collectible card event calendar for France and Belgium",
+          ? "Agenda des événements cartes à collectionner en Europe"
+          : "Collectible card event calendar for Europe",
     },
     {
       "@context": "https://schema.org",
@@ -22,7 +24,7 @@ export function SiteSchemas({ locale }: { locale: string }) {
       name: "CardAgenda",
       potentialAction: {
         "@type": "SearchAction",
-        target: `${appUrl}/${locale}/evenements?q={search_term_string}`,
+        target: `${eventsUrl(locale)}?q={search_term_string}`,
         "query-input": "required name=search_term_string",
       },
     },

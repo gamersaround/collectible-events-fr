@@ -42,6 +42,7 @@ export const EVENTS_QUERY = groq`
     && (!defined($tcgTypes) || count((tcgTypes[])[@ in $tcgTypes]) > 0)
     && (!defined($format) || format == $format)
     && (!defined($country) || country == $country)
+    && (!defined($cities) || city in $cities)
     && (!defined($q) || title match $q || city match $q || description match $q)
     && (!defined($freeOnly) || $freeOnly == false || entryFee == 0 || !defined(entryFee))
   ] | order(startsAt asc)
@@ -55,6 +56,7 @@ export const EVENTS_PAGINATED_QUERY = groq`
     && (!defined($tcgTypes) || count((tcgTypes[])[@ in $tcgTypes]) > 0)
     && (!defined($format) || format == $format)
     && (!defined($country) || country == $country)
+    && (!defined($cities) || city in $cities)
     && (!defined($q) || title match $q || city match $q || description match $q)
     && (!defined($freeOnly) || $freeOnly == false || entryFee == 0 || !defined(entryFee))
   ] | order(startsAt asc) [$from...$to] ${EVENT_PROJECTION}
@@ -68,6 +70,7 @@ export const EVENTS_COUNT_QUERY = groq`
     && (!defined($tcgTypes) || count((tcgTypes[])[@ in $tcgTypes]) > 0)
     && (!defined($format) || format == $format)
     && (!defined($country) || country == $country)
+    && (!defined($cities) || city in $cities)
     && (!defined($q) || title match $q || city match $q || description match $q)
     && (!defined($freeOnly) || $freeOnly == false || entryFee == 0 || !defined(entryFee))
   ])
@@ -85,6 +88,13 @@ export const ALL_EVENT_SLUGS_QUERY = groq`
 
 export const EVENT_COUNTRY_CODES_QUERY = groq`
   *[_type == "event" && status in ["a_venir", "en_cours"] && defined(country)]{ "c": country }
+`;
+
+export const EVENT_LOCATIONS_QUERY = groq`
+  *[_type == "event" && status in ["a_venir", "en_cours"] && defined(city) && city != ""]{
+    city,
+    "country": coalesce(country, "FR")
+  }
 `;
 
 // Lightweight projection for the map — only events with coordinates (fast, no geocoding)

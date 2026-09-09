@@ -2,6 +2,8 @@ import { type NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
 import { parseBody } from "next-sanity/webhook";
 import { routing } from "@/i18n/routing";
+import { citySlug, countryPathSlug } from "@/lib/geo-slugs";
+import { countryCode } from "@/lib/countries";
 
 export async function POST(req: NextRequest) {
   try {
@@ -14,9 +16,16 @@ export async function POST(req: NextRequest) {
       return new NextResponse("Invalid signature", { status: 401 });
     }
 
-    const doc = body as { _type?: string; slug?: { current?: string } };
+    const doc = body as {
+      _type?: string;
+      slug?: { current?: string };
+      city?: string;
+      country?: string;
+    };
     const slug = doc?.slug?.current;
     const docType = doc?._type;
+    const city = doc?.city;
+    const country = doc?.country;
 
     for (const locale of routing.locales) {
       if (docType === "article") {
@@ -27,6 +36,12 @@ export async function POST(req: NextRequest) {
       } else {
         if (slug) {
           revalidatePath(`/${locale}/evenements/${slug}`);
+        }
+        if (city) {
+          revalidatePath(`/${locale}/evenements/${citySlug(city)}`);
+        }
+        if (country) {
+          revalidatePath(`/${locale}/evenements/${countryPathSlug(countryCode(country), locale)}`);
         }
         revalidatePath(`/${locale}/evenements`);
         revalidatePath(`/${locale}`);

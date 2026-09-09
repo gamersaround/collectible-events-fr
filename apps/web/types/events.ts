@@ -7,6 +7,7 @@ export interface EventFilters {
   tcgTypes?: string[];
   formats?: string[];
   country?: string;
+  cities?: string[];
   search?: string;
   dateFrom?: string;
   dateTo?: string;

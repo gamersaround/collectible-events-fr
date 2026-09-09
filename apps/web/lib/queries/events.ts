@@ -12,6 +12,7 @@ import {
   EVENT_BY_SLUG_QUERY,
   ALL_EVENT_SLUGS_QUERY,
   EVENT_COUNTRY_CODES_QUERY,
+  EVENT_LOCATIONS_QUERY,
   MAP_EVENTS_QUERY,
 } from "@/lib/sanity/queries";
 import type { EventFilters, PaginatedResult } from "@/types/events";
@@ -58,6 +59,8 @@ function buildQueryParams(filters: EventFilters) {
       filters.tcgTypes && filters.tcgTypes.length > 0 ? filters.tcgTypes : null,
     format: filters.formats && filters.formats.length > 0 ? filters.formats[0] : null,
     country: filters.country ?? null,
+    cities:
+      filters.cities && filters.cities.length > 0 ? filters.cities : null,
     q: filters.search ? `${filters.search}*` : null,
     freeOnly: filters.freeOnly ?? false,
   };
@@ -121,6 +124,17 @@ export async function getEventCountryCodes(): Promise<string[]> {
   try {
     const rows = await sanityServerClient.fetch<{ c: string }[]>(EVENT_COUNTRY_CODES_QUERY);
     return Array.from(new Set((rows ?? []).map((r) => r.c).filter(Boolean)));
+  } catch {
+    return [];
+  }
+}
+
+export type EventLocation = { city: string; country: string };
+
+export async function getEventLocations(): Promise<EventLocation[]> {
+  try {
+    const rows = await sanityServerClient.fetch<EventLocation[]>(EVENT_LOCATIONS_QUERY);
+    return (rows ?? []).filter((r) => r.city);
   } catch {
     return [];
   }
