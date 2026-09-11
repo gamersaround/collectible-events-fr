@@ -55,8 +55,8 @@
     "foundOther": "{count} events found",
     "noEventsTitle": "No events found",
     "noEventsDescription": "Try changing your filters or check back later.",
-    "metaTitleDefault": "Collectible card events in France",
-    "metaTitleWithTcg": "{tcg} events in France",
+    "metaTitleDefault": "Collectible card events in Europe",
+    "metaTitleWithTcg": "{tcg} events in Europe",
     "metaDescription": "All {tcg} events: tournaments, trade fairs, conventions, drafts. Calendar updated in real time."
   },
   "eventDetail": {
@@ -208,13 +208,13 @@
   "metadata": {
     "defaultTitle": "CardAgenda : Collectible card event calendar",
     "titleTemplate": "%s | CardAgenda",
-    "defaultDescription": "Find all collectible card events in France and Belgium: Pokémon, Magic, Yu-Gi-Oh, One Piece, Lorcana, NBA cards, football cards and more. Calendar updated in real time."
+    "defaultDescription": "Find all collectible card events in Europe (France, Belgium, UK…): Pokémon, Magic, Yu-Gi-Oh, One Piece, Lorcana, NBA cards, football cards. Calendar updated in real time."
   },
   "articles": {
     "title": "Blog",
     "subtitle": "Guides, news and tournament reports",
     "metaTitle": "Blog : TCG Guides & News",
-    "metaDescription": "Tournament guides, collectible card news and TCG event reports in France and Belgium.",
+    "metaDescription": "Tournament guides, collectible card news and TCG event reports in Europe.",
     "noArticles": "No articles yet. Check back soon!",
     "articleCountOne": "article",
     "articleCountOther": "articles",

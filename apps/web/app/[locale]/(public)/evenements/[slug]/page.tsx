@@ -102,8 +102,8 @@ export async function generateMetadata({
       ? `Événements ${config.label} en Europe : tournois, bourses et conventions`
       : `${config.label} events in Europe: tournaments, trade fairs and conventions`;
     const description = locale === "fr"
-      ? `Événements ${config.label} en Europe : tournois, bourses, conventions, drafts. Agenda mis à jour quotidiennement.`
-      : `${config.label} events in Europe: tournaments, trade fairs, conventions, drafts. Calendar updated daily.`;
+      ? `Tous les événements ${config.label} en Europe (France, Belgique, Royaume-Uni…) : tournois, bourses, conventions, drafts. Agenda mis à jour quotidiennement.`
+      : `All ${config.label} events in Europe (France, Belgium, UK…): tournaments, trade fairs, conventions, drafts. Calendar updated daily.`;
     return {
       title,
       description,
