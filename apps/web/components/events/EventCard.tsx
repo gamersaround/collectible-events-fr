@@ -11,6 +11,7 @@ import { formatDateFr, formatEntryFee } from "@/lib/utils/dates";
 import { TCG_CONFIG, TCGType } from "@agenda-cartes/shared";
 import { urlFor } from "@/lib/sanity/image";
 import { countryCode, countryFlagEmoji } from "@/lib/countries";
+import { eventsBasePath } from "@/lib/paths";
 
 interface EventCardProps {
   event: EventRow;
@@ -19,6 +20,7 @@ interface EventCardProps {
 export function EventCard({ event }: EventCardProps) {
   const locale = useLocale() as "fr" | "en";
   const t = useTranslations("form");
+  const te = useTranslations("events");
   const tc = useTranslations("countries");
   const code = countryCode(event.country);
   const countryLabel = tc.has(code) ? tc(code) : code;
@@ -83,7 +85,7 @@ export function EventCard({ event }: EventCardProps) {
         );
       })()}
 
-      <Link href={`/evenements/${event.slug}`} className="flex flex-col h-full">
+      <Link href={`${eventsBasePath(locale)}/${event.slug}`} className="flex flex-col h-full">
         {/* Shimmer overlay */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none z-20">
           <div className="absolute inset-y-0 left-0 w-1/2 bg-gradient-to-r from-transparent via-white/30 to-transparent opacity-0 group-hover:opacity-100 group-hover:animate-shimmer" />
@@ -151,7 +153,7 @@ export function EventCard({ event }: EventCardProps) {
                 {event.max_participants && (
                   <span className="flex items-center gap-0.5 ml-2 text-black/50">
                     <Users className="h-3 w-3" />
-                    {event.max_participants} pl.
+                    {event.max_participants} {te("spotsAbbr")}
                   </span>
                 )}
               </div>

@@ -1,9 +1,13 @@
 import Image from "next/image";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
+import { eventsBasePath } from "@/lib/paths";
 
 export async function Footer() {
   const t = await getTranslations("footer");
+  const tt = await getTranslations("tcgLabelsFull");
+  const locale = await getLocale();
+  const eventsRoot = eventsBasePath(locale);
 
   return (
     <footer className="border-t-4 border-black bg-black text-white">
@@ -29,7 +33,7 @@ export async function Footer() {
           <div>
             <h3 className="font-display font-black uppercase text-[#FFDE03] mb-3 text-sm tracking-wide">{t("navigationTitle")}</h3>
             <ul className="space-y-2 text-sm font-medium">
-              <li><Link href="/evenements" className="text-white/70 hover:text-[#FFDE03] transition-colors">{t("allEvents")}</Link></li>
+              <li><Link href={eventsRoot} className="text-white/70 hover:text-[#FFDE03] transition-colors">{t("allEvents")}</Link></li>
               <li><Link href="/carte" className="text-white/70 hover:text-[#FFDE03] transition-colors">{t("interactiveMap")}</Link></li>
               <li><Link href="/soumettre" className="text-white/70 hover:text-[#FFDE03] transition-colors">{t("submitEvent")}</Link></li>
             </ul>
@@ -39,12 +43,12 @@ export async function Footer() {
           <div>
             <h3 className="font-display font-black uppercase text-[#FFDE03] mb-3 text-sm tracking-wide">{t("gamesTitle")}</h3>
             <ul className="space-y-2 text-sm font-medium">
-              <li><Link href="/evenements/pokemon" className="text-white/70 hover:text-[#FFDE03] transition-colors">⚡ Pokémon TCG</Link></li>
-              <li><Link href="/evenements/magic" className="text-white/70 hover:text-[#FFDE03] transition-colors">✨ Magic: The Gathering</Link></li>
-              <li><Link href="/evenements/yugioh" className="text-white/70 hover:text-[#FFDE03] transition-colors">🃏 Yu-Gi-Oh!</Link></li>
-              <li><Link href="/evenements/sports-cards" className="text-white/70 hover:text-[#FFDE03] transition-colors">⚽ Cartes Sportives</Link></li>
-              <li><Link href="/evenements/one-piece" className="text-white/70 hover:text-[#FFDE03] transition-colors">🏴‍☠️ One Piece Card Game</Link></li>
-              <li><Link href="/evenements/lorcana" className="text-white/70 hover:text-[#FFDE03] transition-colors">🌊 Disney Lorcana</Link></li>
+              <li><Link href={`${eventsRoot}/pokemon`} className="text-white/70 hover:text-[#FFDE03] transition-colors">⚡ {tt("pokemon")}</Link></li>
+              <li><Link href={`${eventsRoot}/magic`} className="text-white/70 hover:text-[#FFDE03] transition-colors">✨ {tt("magic")}</Link></li>
+              <li><Link href={`${eventsRoot}/yugioh`} className="text-white/70 hover:text-[#FFDE03] transition-colors">🃏 {tt("yugioh")}</Link></li>
+              <li><Link href={`${eventsRoot}/sports-cards`} className="text-white/70 hover:text-[#FFDE03] transition-colors">⚽ {tt("sports_cards")}</Link></li>
+              <li><Link href={`${eventsRoot}/one-piece`} className="text-white/70 hover:text-[#FFDE03] transition-colors">🏴‍☠️ {tt("one_piece")}</Link></li>
+              <li><Link href={`${eventsRoot}/lorcana`} className="text-white/70 hover:text-[#FFDE03] transition-colors">🌊 {tt("lorcana")}</Link></li>
             </ul>
           </div>
         </div>

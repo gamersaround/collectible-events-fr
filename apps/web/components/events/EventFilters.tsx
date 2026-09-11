@@ -9,6 +9,7 @@ import { TCGType, TCG_CONFIG, EventFormat, EVENT_FORMAT_LABELS } from "@agenda-c
 import { cn } from "@/lib/utils/cn";
 import { countrySectionsFor } from "@/lib/countries";
 import { countryCodeFromSlug, countryPathSlug } from "@/lib/geo-slugs";
+import { eventsBasePath } from "@/lib/paths";
 
 export function EventFilters({ countries }: { countries?: string[] }) {
   const router = useRouter();
@@ -17,6 +18,9 @@ export function EventFilters({ countries }: { countries?: string[] }) {
   const locale = useLocale();
   const t = useTranslations("filters");
   const tc = useTranslations("countries");
+  const tf = useTranslations("formatLabels");
+  const tt = useTranslations("tcgLabels");
+  const eventsRoot = eventsBasePath(locale);
   const countrySections = countrySectionsFor(countries);
   const pathSegment = pathname.split("/").filter(Boolean).pop() ?? "";
   const countryFromPath = countryCodeFromSlug(pathSegment);
@@ -151,7 +155,7 @@ export function EventFilters({ countries }: { countries?: string[] }) {
                 )}
               >
                 <span aria-hidden>{config.emoji}</span>
-                {config.labelShort}
+                {tt(tcg)}
               </button>
             );
           })}
@@ -162,7 +166,7 @@ export function EventFilters({ countries }: { countries?: string[] }) {
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">{t("formatLabel")}</label>
         <div className="space-y-1.5">
-          {Object.entries(EVENT_FORMAT_LABELS).map(([key, label]) => {
+          {Object.keys(EVENT_FORMAT_LABELS).map((key) => {
             const format = key as EventFormat;
             const isActive = activeFormats.includes(format);
             return (
@@ -176,7 +180,7 @@ export function EventFilters({ countries }: { countries?: string[] }) {
                     : "text-gray-700 hover:bg-gray-100"
                 )}
               >
-                {label}
+                {tf(format)}
               </button>
             );
           })}
@@ -197,7 +201,7 @@ export function EventFilters({ countries }: { countries?: string[] }) {
                 return (
                   <Link
                     key={code}
-                    href={isActive ? "/evenements" : `/evenements/${countryPathSlug(code, locale)}`}
+                    href={isActive ? eventsRoot : `${eventsRoot}/${countryPathSlug(code, locale)}`}
                     className={cn(
                       "w-full px-3 py-2 rounded-lg text-sm text-left transition-colors block",
                       isActive

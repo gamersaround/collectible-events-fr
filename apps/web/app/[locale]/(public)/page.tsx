@@ -9,6 +9,7 @@ import { EventCard } from "@/components/events/EventCard";
 import { FeaturedEventsSection } from "@/components/events/FeaturedEventsSection";
 import { ArticleCard } from "@/components/articles/ArticleCard";
 import { TCG_CONFIG } from "@agenda-cartes/shared";
+import { eventsBasePath } from "@/lib/paths";
 
 export const revalidate = 3600;
 
@@ -25,8 +26,8 @@ export async function generateMetadata({
       ? "Agenda des événements cartes à collectionner"
       : "Collectible card event calendar"),
     description: locale === "fr"
-      ? "Tous les événements cartes de collection en France et Belgique : tournois Pokémon, Magic the Gathering, Yu-Gi-Oh!, NBA, foot et bien plus. Gratuit, mis à jour en continu."
-      : "All collectible card events in France and Belgium: Pokémon, Magic, Yu-Gi-Oh!, NBA, football cards and more. Free, updated continuously.",
+      ? "Tous les événements cartes de collection en Europe (France, Belgique, Royaume-Uni…) : tournois Pokémon, Magic the Gathering, Yu-Gi-Oh!, NBA, foot. Gratuit, mis à jour en continu."
+      : "All collectible card events in Europe (France, Belgium, UK…): Pokémon, Magic, Yu-Gi-Oh!, NBA, football cards. Free, updated continuously.",
     openGraph: {
       title: "CardAgenda",
       description: t("heroTagline"),
@@ -48,6 +49,7 @@ export default async function HomePage({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "home" });
+  const tt = await getTranslations({ locale, namespace: "tcgLabels" });
   const [{ data: upcomingEvents }, featuredEvents, recentArticles] = await Promise.all([
     getEvents({}, 1, 6),
     getFeaturedEvents(),
@@ -87,8 +89,8 @@ export default async function HomePage({
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
-              href="/evenements"
-              className="inline-flex items-center gap-2 bg-black text-[#FFDE03] px-8 py-4 font-display font-black uppercase text-lg border-2 border-black shadow-[6px_6px_0px_0px_#000,3px_3px_0px_0px_#FFDE03] hover:shadow-[10px_10px_0px_0px_#000,5px_5px_0px_0px_#FFDE03] hover:-translate-x-1 hover:-translate-y-1 active:shadow-none active:translate-x-2 active:translate-y-2 transition-all"
+            href={eventsBasePath(locale)}
+            className="inline-flex items-center gap-2 bg-black text-[#FFDE03] px-8 py-4 font-display font-black uppercase text-lg border-2 border-black shadow-[6px_6px_0px_0px_#000,3px_3px_0px_0px_#FFDE03] hover:shadow-[10px_10px_0px_0px_#000,5px_5px_0px_0px_#FFDE03] hover:-translate-x-1 hover:-translate-y-1 active:shadow-none active:translate-x-2 active:translate-y-2 transition-all"
             >
               <CalendarDays className="h-5 w-5" />
               {t("ctaEvents")}
@@ -123,12 +125,12 @@ export default async function HomePage({
             {Object.entries(TCG_CONFIG).map(([key, config], i) => (
               <Link
                 key={key}
-                href={`/evenements?tcg=${key}`}
+                href={`${eventsBasePath(locale)}?tcg=${key}`}
                 prefetch={false}
                 className={`inline-flex items-center gap-1.5 px-4 py-2 text-sm font-bold border-2 border-black shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all ${STICKER_ROTATIONS[i % STICKER_ROTATIONS.length]} ${config.bgColor} ${config.color}`}
               >
                 <span>{config.emoji}</span>
-                {config.labelShort}
+                {tt(key)}
               </Link>
             ))}
           </div>
@@ -157,7 +159,7 @@ export default async function HomePage({
               <p className="text-black/60 font-medium mt-1">{t("upcomingEventsSubtitle")}</p>
             </div>
             <Link
-              href="/evenements"
+              href={eventsBasePath(locale)}
               className="flex items-center gap-1 font-bold uppercase text-sm border-2 border-black px-4 py-2 shadow-brutal hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-none transition-all bg-white"
             >
               {t("viewAll")}
@@ -234,7 +236,7 @@ export default async function HomePage({
                 <span className="text-[#FFDE03] font-black">CardScanner.fr</span> : {t("partnerDescription")}
               </p>
               <div className="flex flex-wrap gap-2 mb-8">
-                {["📷 Scan auto", "💶 Cote en direct", "📦 Collections", "🛒 Export eBay"].map((tag) => (
+                {[t("partnerTagScan"), t("partnerTagPrice"), t("partnerTagCollections"), t("partnerTagExport")].map((tag) => (
                   <span key={tag} className="text-[10px] font-black uppercase tracking-wider border-2 border-white/40 text-white/60 px-2 py-1">
                     {tag}
                   </span>

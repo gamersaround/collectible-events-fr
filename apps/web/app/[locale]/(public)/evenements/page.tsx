@@ -7,7 +7,7 @@ import { FeaturedEventsSection } from "@/components/events/FeaturedEventsSection
 import { EventFilters } from "@/components/events/EventFilters";
 import { parseFiltersFromParams } from "@/lib/utils/filters";
 import { Pagination } from "@/components/ui/Pagination";
-import { eventsUrl } from "@/lib/paths";
+import { eventsUrl, eventsBasePath } from "@/lib/paths";
 
 export const revalidate = 3600;
 
@@ -66,8 +66,8 @@ export default async function EventsPage({
     "@type": "CollectionPage",
     name: isFr ? "Événements cartes à collectionner en Europe" : "Collectible card events in Europe",
     description: isFr
-      ? "Tournois, bourses et conventions de cartes à collectionner en Europe."
-      : "Collectible card tournaments, trade fairs and conventions in Europe.",
+      ? "Tous les tournois, bourses et conventions de cartes à collectionner en Europe (France, Belgique, Royaume-Uni…)."
+      : "All tournaments, trade fairs and conventions for collectible cards in Europe (France, Belgium, UK…).",
     url: eventsUrl(locale),
     mainEntity: {
       "@type": "ItemList",
@@ -117,7 +117,7 @@ export default async function EventsPage({
               <Pagination
                 currentPage={page}
                 totalPages={totalPages}
-                basePath="/evenements"
+                basePath={eventsBasePath(locale)}
                 searchParams={params}
               />
             </div>

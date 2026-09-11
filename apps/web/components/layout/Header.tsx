@@ -5,6 +5,7 @@ import Image from "next/image";
 import { CalendarDays, Map, PlusCircle, BookOpen, X } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { Link, useRouter, usePathname } from "@/i18n/navigation";
+import { eventsBasePath } from "@/lib/paths";
 
 function LocaleSwitcher() {
   const locale = useLocale();
@@ -27,6 +28,8 @@ function LocaleSwitcher() {
 export function Header() {
   const [open, setOpen] = useState(false);
   const t = useTranslations("nav");
+  const locale = useLocale();
+  const eventsHref = eventsBasePath(locale);
 
   return (
     <header className="sticky top-0 z-50 w-full border-b-4 border-black bg-[#FFDE03]">
@@ -50,7 +53,7 @@ export function Header() {
         {/* Nav desktop */}
         <nav className="hidden md:flex items-center gap-1">
           <Link
-            href="/evenements"
+            href={eventsHref}
             className="flex items-center gap-1.5 px-4 py-2 font-bold uppercase text-sm text-black hover:bg-black hover:text-[#FFDE03] transition-colors"
           >
             <CalendarDays className="h-4 w-4" />
@@ -107,7 +110,7 @@ export function Header() {
         <div className="md:hidden border-t-4 border-black bg-[#FFDE03]">
           <nav className="container flex flex-col py-2">
             <Link
-              href="/evenements"
+              href={eventsHref}
               onClick={() => setOpen(false)}
               className="flex items-center gap-2 px-2 py-3 font-bold uppercase text-sm border-b-2 border-black/20 hover:bg-black hover:text-[#FFDE03] transition-colors"
             >

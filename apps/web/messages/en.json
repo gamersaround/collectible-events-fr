@@ -33,6 +33,10 @@
     "partnerTitle": "Manage your collection",
     "partnerDescription": "scan your cards to automatically identify them, value your collection in real time and export to eBay or Whatnot in just a few clicks.",
     "partnerCta": "Discover CardScanner.fr",
+    "partnerTagScan": "📷 Auto scan",
+    "partnerTagPrice": "💶 Live prices",
+    "partnerTagCollections": "📦 Collections",
+    "partnerTagExport": "🛒 eBay export",
     "submitTitle": "Organising an event?",
     "submitDescription": "Submit your tournament, trade fair or convention. Moderated within 24h : 100% free.",
     "submitCta": "Submit an event",
@@ -55,8 +59,9 @@
     "foundOther": "{count} events found",
     "noEventsTitle": "No events found",
     "noEventsDescription": "Try changing your filters or check back later.",
-    "metaTitleDefault": "Collectible card events in France",
-    "metaTitleWithTcg": "{tcg} events in France",
+    "spotsAbbr": "spots",
+    "metaTitleDefault": "Collectible card events in Europe",
+    "metaTitleWithTcg": "{tcg} events in Europe",
     "metaDescription": "All {tcg} events: tournaments, trade fairs, conventions, drafts. Calendar updated in real time."
   },
   "eventDetail": {
@@ -78,7 +83,9 @@
     "title": "TCG events map",
     "eventsCountOne": "{count} upcoming event",
     "eventsCountOther": "{count} upcoming events",
-    "note": "Only events with geographic coordinates are shown on the map. Click a marker to see details."
+    "note": "Only events with geographic coordinates are shown on the map. Click a marker to see details.",
+    "viewDetails": "View details",
+    "loading": "Loading map…"
   },
   "submit": {
     "title": "Submit an event",
@@ -132,7 +139,16 @@
     "uploadError": "Error uploading image",
     "submissionError": "Error during submission",
     "errorOccurred": "An error occurred",
-    "free": "Free"
+    "free": "Free",
+    "countryGroups": {
+      "west": "Western Europe",
+      "north": "Northern Europe",
+      "central": "Central & Eastern Europe",
+      "northAmerica": "North America",
+      "southAmerica": "South America",
+      "apac": "Asia-Pacific",
+      "other": "Other"
+    }
   },
   "filters": {
     "title": "Filters",
@@ -160,13 +176,35 @@
   },
   "formatLabels": {
     "tournoi": "Tournament",
-    "bourse": "Trade fair",
+    "bourse": "Trade fair / car boot",
     "convention": "Convention",
     "draft": "Draft",
     "prereleases": "Pre-release",
     "league": "League",
-    "casual": "Casual",
+    "casual": "Casual / evening",
     "championship": "Championship"
+  },
+  "tcgLabels": {
+    "pokemon": "Pokémon",
+    "magic": "Magic",
+    "yugioh": "Yu-Gi-Oh",
+    "sports_cards": "Sports cards",
+    "one_piece": "One Piece",
+    "dragon_ball": "Dragon Ball",
+    "lorcana": "Lorcana",
+    "flesh_blood": "Flesh & Blood",
+    "autres": "Other"
+  },
+  "tcgLabelsFull": {
+    "pokemon": "Pokémon TCG",
+    "magic": "Magic: The Gathering",
+    "yugioh": "Yu-Gi-Oh!",
+    "sports_cards": "Sports cards",
+    "one_piece": "One Piece Card Game",
+    "dragon_ball": "Dragon Ball Super CG",
+    "lorcana": "Disney Lorcana",
+    "flesh_blood": "Flesh and Blood",
+    "autres": "Other TCG"
   },
   "countries": {
     "FR": "🇫🇷 France",
@@ -203,18 +241,27 @@
     "LV": "🇱🇻 Latvia",
     "EE": "🇪🇪 Estonia",
     "CY": "🇨🇾 Cyprus",
-    "CA": "🇨🇦 Canada"
+    "CA": "🇨🇦 Canada",
+    "US": "🇺🇸 United States",
+    "MX": "🇲🇽 Mexico",
+    "BR": "🇧🇷 Brazil",
+    "AR": "🇦🇷 Argentina",
+    "JP": "🇯🇵 Japan",
+    "KR": "🇰🇷 South Korea",
+    "AU": "🇦🇺 Australia",
+    "NZ": "🇳🇿 New Zealand",
+    "OTHER": "🌍 Other"
   },
   "metadata": {
     "defaultTitle": "CardAgenda : Collectible card event calendar",
     "titleTemplate": "%s | CardAgenda",
-    "defaultDescription": "Find all collectible card events in France and Belgium: Pokémon, Magic, Yu-Gi-Oh, One Piece, Lorcana, NBA cards, football cards and more. Calendar updated in real time."
+    "defaultDescription": "Find all collectible card events in Europe (France, Belgium, UK…): Pokémon, Magic, Yu-Gi-Oh, One Piece, Lorcana, NBA cards, football cards. Calendar updated in real time."
   },
   "articles": {
     "title": "Blog",
     "subtitle": "Guides, news and tournament reports",
     "metaTitle": "Blog : TCG Guides & News",
-    "metaDescription": "Tournament guides, collectible card news and TCG event reports in France and Belgium.",
+    "metaDescription": "Tournament guides, collectible card news and TCG event reports in Europe.",
     "noArticles": "No articles yet. Check back soon!",
     "articleCountOne": "article",
     "articleCountOther": "articles",
