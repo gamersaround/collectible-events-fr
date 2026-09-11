@@ -45,6 +45,10 @@
     "stat4Value": "🆓",
     "stat4Label": "100% free"
   },
+  "selection": {
+    "title": "Our selection",
+    "subtitle": "Events highlighted for today."
+  },
   "events": {
     "title": "Collectible card events",
     "foundOne": "{count} event found",

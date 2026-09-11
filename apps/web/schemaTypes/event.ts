@@ -4,6 +4,13 @@ export const eventSchema = defineType({
   name: "event",
   title: "Événement",
   type: "document",
+  fieldsets: [
+    {
+      name: "selection",
+      title: "Notre sélection",
+      options: { collapsible: true, collapsed: true },
+    },
+  ],
   fields: [
     defineField({
       name: "title",
@@ -137,6 +144,54 @@ export const eventSchema = defineType({
         ],
       },
       initialValue: "a_venir",
+    }),
+    defineField({
+      name: "featured",
+      title: "Notre sélection",
+      type: "boolean",
+      description:
+        "Mise en avant discrète sur l’accueil et le listing, uniquement entre les dates indiquées.",
+      initialValue: false,
+      fieldset: "selection",
+    }),
+    defineField({
+      name: "featuredFrom",
+      title: "Début de la sélection",
+      type: "date",
+      description: "Premier jour d’affichage dans Notre sélection (inclus).",
+      fieldset: "selection",
+      hidden: ({ document }) => !document?.featured,
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const featured = Boolean(
+            (context.document as { featured?: boolean } | undefined)?.featured
+          );
+          if (featured && !value) {
+            return "Indiquez le début de la fenêtre de sélection.";
+          }
+          return true;
+        }),
+    }),
+    defineField({
+      name: "featuredTo",
+      title: "Fin de la sélection",
+      type: "date",
+      description: "Dernier jour d’affichage dans Notre sélection (inclus).",
+      fieldset: "selection",
+      hidden: ({ document }) => !document?.featured,
+      validation: (Rule) =>
+        Rule.custom((value, context) => {
+          const doc = context.document as
+            | { featured?: boolean; featuredFrom?: string }
+            | undefined;
+          if (doc?.featured && !value) {
+            return "Indiquez la fin de la fenêtre de sélection.";
+          }
+          if (value && doc?.featuredFrom && value < doc.featuredFrom) {
+            return "La fin doit être postérieure ou égale au début.";
+          }
+          return true;
+        }),
     }),
     defineField({
       name: "venueName",
