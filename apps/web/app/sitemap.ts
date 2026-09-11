@@ -19,6 +19,7 @@ const STATIC_ROUTES = [
   { path: "/articles", changeFrequency: "daily" as const, priority: 0.8 },
   { path: "/carte", changeFrequency: "daily" as const, priority: 0.7 },
   { path: "/soumettre", changeFrequency: "monthly" as const, priority: 0.5 },
+  { path: "/sponsoriser", changeFrequency: "monthly" as const, priority: 0.4 },
 ];
 
 function localePathUrl(locale: string, path: string, eventsIndex?: boolean) {

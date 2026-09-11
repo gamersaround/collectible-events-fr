@@ -36,6 +36,7 @@ export async function Footer() {
               <li><Link href={eventsRoot} className="text-white/70 hover:text-[#FFDE03] transition-colors">{t("allEvents")}</Link></li>
               <li><Link href="/carte" className="text-white/70 hover:text-[#FFDE03] transition-colors">{t("interactiveMap")}</Link></li>
               <li><Link href="/soumettre" className="text-white/70 hover:text-[#FFDE03] transition-colors">{t("submitEvent")}</Link></li>
+              <li><Link href="/sponsoriser" className="text-white/70 hover:text-[#FFDE03] transition-colors">{t("sponsorLink")}</Link></li>
             </ul>
           </div>
 

@@ -15,7 +15,8 @@
     "allEvents": "All events",
     "interactiveMap": "Interactive map",
     "submitEvent": "Submit an event",
-    "copyright": "© {year} CardAgenda : Made with ❤️ for the TCG community"
+    "sponsorLink": "Sponsorship / featuring",
+    "copyright": "© {year} CardAgenda : Made with ❤️ for the Card Collectors"
   },
   "home": {
     "heroTagline": "All collectible card events, in one place.",
@@ -90,6 +91,27 @@
   "submit": {
     "title": "Submit an event",
     "description": "Are you organising a tournament, trade fair or convention? Submit it here and it will be published after review by our team (usually within 24h)."
+  },
+  "sponsor": {
+    "title": "Sponsorship and featuring",
+    "description": "Contact form for a sponsorship or featuring request on CardAgenda. We reply afterwards.",
+    "metaDescription": "Contact for a sponsorship or featuring request on CardAgenda.",
+    "successTitle": "Message sent",
+    "successDescription": "Your request has been received. We will reply afterwards.",
+    "submitAnother": "Send another message",
+    "nameLabel": "Name",
+    "namePlaceholder": "Your name",
+    "emailLabel": "Email",
+    "organizationLabel": "Organisation / company",
+    "organizationPlaceholder": "Organisation name",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Your request",
+    "submitButton": "Send",
+    "submittingButton": "Sending…",
+    "errorOccurred": "An error occurred",
+    "submissionError": "Error sending the message",
+    "honeypot": "Do not fill in this field",
+    "reviewNote": "We read messages and reply afterwards."
   },
   "form": {
     "successTitle": "Submission received!",
