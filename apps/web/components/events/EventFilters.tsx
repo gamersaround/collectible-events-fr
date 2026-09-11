@@ -1,8 +1,8 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import { useCallback } from "react";
-import { X, SlidersHorizontal } from "lucide-react";
+import { useCallback, useId, useState } from "react";
+import { X, SlidersHorizontal, ChevronDown } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { Link, useRouter, usePathname } from "@/i18n/navigation";
 import { TCGType, TCG_CONFIG, EventFormat, EVENT_FORMAT_LABELS } from "@agenda-cartes/shared";
@@ -21,6 +21,8 @@ export function EventFilters({ countries }: { countries?: string[] }) {
   const tf = useTranslations("formatLabels");
   const tt = useTranslations("tcgLabels");
   const eventsRoot = eventsBasePath(locale);
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const panelId = useId();
   const countrySections = countrySectionsFor(countries);
   const pathSegment = pathname.split("/").filter(Boolean).pop() ?? "";
   const countryFromPath = countryCodeFromSlug(pathSegment);
@@ -98,23 +100,50 @@ export function EventFilters({ countries }: { countries?: string[] }) {
     router.push(pathname, { scroll: false });
   };
 
-  const hasActiveFilters =
-    activeTcgTypes.length > 0 ||
-    activeFormats.length > 0 ||
-    activeCountry !== "" ||
-    activeSearch !== "" ||
-    activeFreeOnly;
+  const activeCount =
+    activeTcgTypes.length +
+    activeFormats.length +
+    (activeCountry !== "" ? 1 : 0) +
+    (activeSearch !== "" ? 1 : 0) +
+    (activeFreeOnly ? 1 : 0);
+  const hasActiveFilters = activeCount > 0;
 
   return (
-    <aside className="space-y-6">
+    <aside>
+      <button
+        type="button"
+        className="md:hidden flex w-full items-center justify-between rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm font-semibold text-gray-900"
+        onClick={() => setMobileOpen((open) => !open)}
+        aria-expanded={mobileOpen}
+        aria-controls={panelId}
+      >
+        <span className="flex items-center gap-2">
+          <SlidersHorizontal className="h-4 w-4" />
+          {t("title")}
+          {activeCount > 0 && (
+            <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-blue-600 px-1.5 py-0.5 text-xs font-medium text-white">
+              {activeCount}
+            </span>
+          )}
+        </span>
+        <ChevronDown
+          className={cn("h-4 w-4 text-gray-500 transition-transform", mobileOpen && "rotate-180")}
+        />
+      </button>
+
+      <div
+        id={panelId}
+        className={cn("space-y-6", mobileOpen ? "mt-4 block md:mt-0" : "hidden md:mt-0 md:block")}
+      >
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="hidden md:flex items-center justify-between">
         <div className="flex items-center gap-2 font-semibold text-gray-900">
           <SlidersHorizontal className="h-4 w-4" />
           {t("title")}
         </div>
         {hasActiveFilters && (
           <button
+            type="button"
             onClick={clearAll}
             className="flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800"
           >
@@ -123,6 +152,16 @@ export function EventFilters({ countries }: { countries?: string[] }) {
           </button>
         )}
       </div>
+      {hasActiveFilters && (
+        <button
+          type="button"
+          onClick={clearAll}
+          className="md:hidden flex items-center gap-1 text-xs text-blue-600 hover:text-blue-800"
+        >
+          <X className="h-3 w-3" />
+          {t("clearAll")}
+        </button>
+      )}
 
       {/* Search */}
       <div>
@@ -229,6 +268,7 @@ export function EventFilters({ countries }: { countries?: string[] }) {
           />
           <span className="text-sm text-gray-700">{t("freeOnlyLabel")}</span>
         </label>
+      </div>
       </div>
     </aside>
   );
