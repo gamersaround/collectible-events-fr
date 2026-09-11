@@ -33,6 +33,10 @@
     "partnerTitle": "Gérez votre collection",
     "partnerDescription": "scannez vos cartes pour les identifier automatiquement, évaluez votre collection en temps réel et exportez vers eBay ou Whatnot en quelques clics.",
     "partnerCta": "Découvrir CardScanner.fr",
+    "partnerTagScan": "📷 Scan auto",
+    "partnerTagPrice": "💶 Cote en direct",
+    "partnerTagCollections": "📦 Collections",
+    "partnerTagExport": "🛒 Export eBay",
     "submitTitle": "Organisez un événement ?",
     "submitDescription": "Soumettez votre tournoi, bourse ou convention. Modération sous 24h : 100% gratuit.",
     "submitCta": "Soumettre un événement",
@@ -55,6 +59,7 @@
     "foundOther": "{count} événements trouvés",
     "noEventsTitle": "Aucun événement trouvé",
     "noEventsDescription": "Essayez de modifier vos filtres ou revenez plus tard.",
+    "spotsAbbr": "pl.",
     "metaTitleDefault": "Événements cartes à collectionner en Europe",
     "metaTitleWithTcg": "Événements {tcg} en Europe",
     "metaDescription": "Tous les {tcg} : tournois, bourses, conventions, drafts. Agenda mis à jour en temps réel."
@@ -78,7 +83,9 @@
     "title": "Carte des événements TCG",
     "eventsCountOne": "{count} événement à venir",
     "eventsCountOther": "{count} événements à venir",
-    "note": "Seuls les événements avec des coordonnées géographiques sont affichés sur la carte. Cliquez sur un marqueur pour voir les détails."
+    "note": "Seuls les événements avec des coordonnées géographiques sont affichés sur la carte. Cliquez sur un marqueur pour voir les détails.",
+    "viewDetails": "Voir les détails",
+    "loading": "Chargement de la carte…"
   },
   "submit": {
     "title": "Soumettre un événement",
@@ -132,7 +139,16 @@
     "uploadError": "Erreur lors de l'upload de l'image",
     "submissionError": "Erreur lors de la soumission",
     "errorOccurred": "Une erreur est survenue",
-    "free": "Gratuit"
+    "free": "Gratuit",
+    "countryGroups": {
+      "west": "Europe de l'Ouest",
+      "north": "Europe du Nord",
+      "central": "Europe centrale & de l'Est",
+      "northAmerica": "Amérique du Nord",
+      "southAmerica": "Amérique du Sud",
+      "apac": "Asie-Pacifique",
+      "other": "Autre"
+    }
   },
   "filters": {
     "title": "Filtres",
@@ -160,13 +176,35 @@
   },
   "formatLabels": {
     "tournoi": "Tournoi",
-    "bourse": "Bourse",
+    "bourse": "Bourse / Vide-greniers",
     "convention": "Convention",
     "draft": "Draft",
     "prereleases": "Prélancement",
     "league": "Ligue",
-    "casual": "Casual",
+    "casual": "Casual / Soirée",
     "championship": "Championnat"
+  },
+  "tcgLabels": {
+    "pokemon": "Pokémon",
+    "magic": "Magic",
+    "yugioh": "Yu-Gi-Oh",
+    "sports_cards": "Cartes sportives",
+    "one_piece": "One Piece",
+    "dragon_ball": "Dragon Ball",
+    "lorcana": "Lorcana",
+    "flesh_blood": "Flesh & Blood",
+    "autres": "Autres"
+  },
+  "tcgLabelsFull": {
+    "pokemon": "Pokémon TCG",
+    "magic": "Magic: The Gathering",
+    "yugioh": "Yu-Gi-Oh!",
+    "sports_cards": "Cartes sportives",
+    "one_piece": "One Piece Card Game",
+    "dragon_ball": "Dragon Ball Super CG",
+    "lorcana": "Disney Lorcana",
+    "flesh_blood": "Flesh and Blood",
+    "autres": "Autres TCG"
   },
   "countries": {
     "FR": "🇫🇷 France",
@@ -203,7 +241,16 @@
     "LV": "🇱🇻 Lettonie",
     "EE": "🇪🇪 Estonie",
     "CY": "🇨🇾 Chypre",
-    "CA": "🇨🇦 Canada"
+    "CA": "🇨🇦 Canada",
+    "US": "🇺🇸 États-Unis",
+    "MX": "🇲🇽 Mexique",
+    "BR": "🇧🇷 Brésil",
+    "AR": "🇦🇷 Argentine",
+    "JP": "🇯🇵 Japon",
+    "KR": "🇰🇷 Corée du Sud",
+    "AU": "🇦🇺 Australie",
+    "NZ": "🇳🇿 Nouvelle-Zélande",
+    "OTHER": "🌍 Autre"
   },
   "metadata": {
     "defaultTitle": "CardAgenda : Agenda des événements cartes à collectionner",

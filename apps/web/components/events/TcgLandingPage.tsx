@@ -1,5 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import { ArrowLeft } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { TCG_CONFIG, TCGType } from "@agenda-cartes/shared";
 import { getEvents } from "@/lib/queries/events";
 import { EventList } from "@/components/events/EventList";
@@ -15,12 +16,15 @@ interface TcgLandingPageProps {
 export async function TcgLandingPage({ tcgType, locale, urlSlug }: TcgLandingPageProps) {
   const config = TCG_CONFIG[tcgType as TCGType];
   const { data: events, total } = await getEvents({ tcgTypes: [tcgType] }, 1, 24);
+  const tt = await getTranslations({ locale, namespace: "tcgLabelsFull" });
+  const tcgLabel = tt.has(tcgType) ? tt(tcgType) : config.label;
+  const eventsRoot = eventsBasePath(locale);
 
   const isFr = locale === "fr";
 
   const pageTitle = isFr
-    ? `Événements ${config.label} en Europe`
-    : `${config.label} events in Europe`;
+    ? `Événements ${tcgLabel} en Europe`
+    : `${tcgLabel} events in Europe`;
 
   const subtitle = isFr
     ? `Tournois, bourses, conventions et drafts : agenda Europe mis à jour quotidiennement.`
@@ -53,14 +57,14 @@ export async function TcgLandingPage({ tcgType, locale, urlSlug }: TcgLandingPag
       />
       <BreadcrumbSchema
         locale={locale}
-        eventTitle={config.label}
+        eventTitle={tcgLabel}
         slug={urlSlug}
         sectionPath={eventsBasePath(locale)}
       />
 
       <div className="container py-8">
         <Link
-          href="/evenements"
+          href={eventsRoot}
           className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 mb-6 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
@@ -80,7 +84,7 @@ export async function TcgLandingPage({ tcgType, locale, urlSlug }: TcgLandingPag
         {total > 24 && (
           <div className="mt-8 text-center">
             <Link
-              href={`/evenements?tcg=${tcgType}`}
+              href={`${eventsRoot}?tcg=${tcgType}`}
               className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:underline"
             >
               {isFr ? `Voir les ${total} événements →` : `View all ${total} events →`}

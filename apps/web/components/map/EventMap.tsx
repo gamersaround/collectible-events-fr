@@ -5,8 +5,9 @@ import "leaflet/dist/leaflet.css";
 import type { Map as LeafletMap } from "leaflet";
 import type { EventRow } from "@/lib/queries/events";
 import { TCGType, TCG_CONFIG } from "@agenda-cartes/shared";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { countryCode } from "@/lib/countries";
+import { eventsPath } from "@/lib/paths";
 
 interface EventMapProps {
   events: Pick<EventRow, "id" | "slug" | "title" | "city" | "country" | "latitude" | "longitude" | "tcg_types" | "format" | "starts_at">[];
@@ -18,6 +19,8 @@ export default function EventMap({ events, height = "600px" }: EventMapProps) {
   const mapRef = useRef<LeafletMap | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [mapReady, setMapReady] = useState(false);
+  const locale = useLocale();
+  const t = useTranslations("map");
   const tc = useTranslations("countries");
 
   // Fire-and-forget: trigger background geocoding for events without coordinates
@@ -107,12 +110,14 @@ export default function EventMap({ events, height = "600px" }: EventMapProps) {
           popupAnchor: [0, -30],
         });
 
-        const startDate = new Date(event.starts_at).toLocaleDateString("fr-FR", {
+        const startDate = new Date(event.starts_at).toLocaleDateString(locale === "fr" ? "fr-FR" : "en-GB", {
           day: "numeric",
           month: "short",
         });
         const code = countryCode(event.country);
         const countryLabel = tc.has(code) ? tc(code) : code;
+        const detailsHref = eventsPath(locale, event.slug);
+        const detailsLabel = t("viewDetails");
 
         const popup = L.popup({
           maxWidth: 250,
@@ -123,9 +128,9 @@ export default function EventMap({ events, height = "600px" }: EventMapProps) {
             <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px; color: #111827;">${event.title}</div>
             <div style="font-size: 12px; color: #6b7280; margin-bottom: 2px;">📍 ${event.city}</div>
             <div style="font-size: 11px; color: #6b7280; margin-bottom: 8px;">${countryLabel}</div>
-            <a href="/evenements/${event.slug}"
+            <a href="${detailsHref}"
                style="display: inline-block; background: #2563eb; color: white; padding: 4px 12px; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 500;">
-              Voir les détails
+              ${detailsLabel}
             </a>
           </div>
         `);
@@ -151,14 +156,14 @@ export default function EventMap({ events, height = "600px" }: EventMapProps) {
       mapRef.current?.remove();
       mapRef.current = null;
     };
-  }, [events, tc]);
+  }, [events, tc, locale, t]);
 
   return (
     <div className="relative" style={{ height, width: "100%" }}>
       {!mapReady && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 border-2 border-black z-10">
           <div className="w-10 h-10 border-4 border-black border-t-[#FFDE03] rounded-full animate-spin mb-3" />
-          <p className="font-bold text-sm uppercase tracking-widest text-black">Chargement de la carte…</p>
+          <p className="font-bold text-sm uppercase tracking-widest text-black">{t("loading")}</p>
         </div>
       )}
       <div

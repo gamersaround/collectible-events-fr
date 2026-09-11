@@ -29,7 +29,7 @@ import { TCGType, TCG_CONFIG } from "@agenda-cartes/shared";
 import { TcgLandingPage } from "@/components/events/TcgLandingPage";
 import { GeoLandingPage } from "@/components/events/GeoLandingPage";
 import { TCG_SLUG_MAP, TCG_LANDING_SLUGS } from "@/lib/tcg-slugs";
-import { eventsUrl, eventsPath } from "@/lib/paths";
+import { eventsUrl, eventsPath, eventsBasePath } from "@/lib/paths";
 import {
   citySlug,
   countryPathSlug,
@@ -231,7 +231,7 @@ export default async function EventDetailPage({
       <div className="container py-8 max-w-4xl">
         {/* Back link */}
         <Link
-          href="/evenements"
+          href={eventsBasePath(locale)}
           className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 mb-6 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />

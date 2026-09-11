@@ -7,7 +7,7 @@ import { FeaturedEventsSection } from "@/components/events/FeaturedEventsSection
 import { EventFilters } from "@/components/events/EventFilters";
 import { parseFiltersFromParams } from "@/lib/utils/filters";
 import { Pagination } from "@/components/ui/Pagination";
-import { eventsUrl } from "@/lib/paths";
+import { eventsUrl, eventsBasePath } from "@/lib/paths";
 
 export const revalidate = 3600;
 
@@ -117,7 +117,7 @@ export default async function EventsPage({
               <Pagination
                 currentPage={page}
                 totalPages={totalPages}
-                basePath="/evenements"
+                basePath={eventsBasePath(locale)}
                 searchParams={params}
               />
             </div>

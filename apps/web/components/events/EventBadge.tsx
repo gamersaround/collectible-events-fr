@@ -26,6 +26,7 @@ const BADGE_ROTATIONS: Partial<Record<TCGType, string>> = {
 export function EventBadge({ tcgType, size = "md", className }: EventBadgeProps) {
   const config = TCG_CONFIG[tcgType];
   const rotation = BADGE_ROTATIONS[tcgType] ?? "rotate-0";
+  const tt = useTranslations("tcgLabels");
 
   return (
     <span
@@ -39,7 +40,7 @@ export function EventBadge({ tcgType, size = "md", className }: EventBadgeProps)
       )}
     >
       <span aria-hidden>{config.emoji}</span>
-      {config.labelShort}
+      {tt(tcgType)}
     </span>
   );
 }

@@ -36,6 +36,7 @@ export default async function MapPage({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "map" });
+  const tt = await getTranslations({ locale, namespace: "tcgLabels" });
   const events = await getEventsForMap();
 
   const eventsCountLabel = events.length === 1
@@ -59,7 +60,7 @@ export default async function MapPage({
               className="w-3 h-3 rounded-full border border-white shadow-sm"
               style={{ backgroundColor: config.markerColor }}
             />
-            <span className="text-gray-600">{config.labelShort}</span>
+            <span className="text-gray-600">{tt(key)}</span>
           </div>
         ))}
       </div>
