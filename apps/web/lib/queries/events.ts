@@ -14,6 +14,7 @@ import {
   EVENT_COUNTRY_CODES_QUERY,
   EVENT_LOCATIONS_QUERY,
   MAP_EVENTS_QUERY,
+  FEATURED_EVENTS_QUERY,
 } from "@/lib/sanity/queries";
 import type { EventFilters, PaginatedResult } from "@/types/events";
 
@@ -138,6 +139,23 @@ export async function getEventLocations(): Promise<EventLocation[]> {
   } catch {
     return [];
   }
+}
+
+function todayInParis(): string {
+  return new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Europe/Paris",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date());
+}
+
+export async function getFeaturedEvents(): Promise<EventRow[]> {
+  const today = todayInParis();
+  const events = await sanityServerClient.fetch<EventRow[]>(FEATURED_EVENTS_QUERY, {
+    today,
+  });
+  return events ?? [];
 }
 
 export async function getEventsForMap(): Promise<MapEvent[]> {

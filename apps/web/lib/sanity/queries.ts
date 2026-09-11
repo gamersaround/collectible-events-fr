@@ -98,6 +98,17 @@ export const EVENT_LOCATIONS_QUERY = groq`
 `;
 
 // Lightweight projection for the map — only events with coordinates (fast, no geocoding)
+export const FEATURED_EVENTS_QUERY = groq`
+  *[_type == "event"
+    && featured == true
+    && defined(featuredFrom)
+    && defined(featuredTo)
+    && featuredFrom <= $today
+    && featuredTo >= $today
+    && status in ["a_venir", "en_cours"]
+  ] | order(startsAt asc) [0...6] ${EVENT_PROJECTION}
+`;
+
 export const MAP_EVENTS_QUERY = groq`
   *[_type == "event"
     && status in ["a_venir", "en_cours"]

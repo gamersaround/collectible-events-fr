@@ -45,6 +45,10 @@
     "stat4Value": "🆓",
     "stat4Label": "100% gratuit"
   },
+  "selection": {
+    "title": "Notre sélection",
+    "subtitle": "Événements mis en avant pour aujourd’hui."
+  },
   "events": {
     "title": "Événements cartes à collectionner",
     "foundOne": "{count} événement trouvé",

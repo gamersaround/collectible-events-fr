@@ -82,6 +82,19 @@ export const structure = (S: StructureBuilder) =>
                 ),
               S.divider(),
               S.listItem()
+                .title("Notre sélection")
+                .id("evenements-selection")
+                .schemaType("event")
+                .child(
+                  eventList(
+                    S,
+                    "Notre sélection",
+                    [{ field: "featuredFrom", direction: "desc" }],
+                    '_type == "event" && featured == true'
+                  )
+                ),
+              S.divider(),
+              S.listItem()
                 .title("Tous les événements")
                 .id("evenements-tous")
                 .schemaType("event")

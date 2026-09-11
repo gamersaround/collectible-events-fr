@@ -3,9 +3,10 @@ import Image from "next/image";
 import { ArrowRight, CalendarDays, Map, PlusCircle } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { getEvents } from "@/lib/queries/events";
+import { getEvents, getFeaturedEvents } from "@/lib/queries/events";
 import { getRecentArticles } from "@/lib/queries/articles";
 import { EventCard } from "@/components/events/EventCard";
+import { FeaturedEventsSection } from "@/components/events/FeaturedEventsSection";
 import { ArticleCard } from "@/components/articles/ArticleCard";
 import { TCG_CONFIG } from "@agenda-cartes/shared";
 
@@ -47,8 +48,9 @@ export default async function HomePage({
 }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "home" });
-  const [{ data: upcomingEvents }, recentArticles] = await Promise.all([
+  const [{ data: upcomingEvents }, featuredEvents, recentArticles] = await Promise.all([
     getEvents({}, 1, 6),
+    getFeaturedEvents(),
     getRecentArticles(),
   ]);
 
@@ -132,6 +134,17 @@ export default async function HomePage({
           </div>
         </div>
       </section>
+
+      {featuredEvents.length > 0 && (
+        <section
+          className="py-12 border-b-4 border-black bg-[#FAFAF7]"
+          aria-labelledby="notre-selection-heading"
+        >
+          <div className="container">
+            <FeaturedEventsSection events={featuredEvents} />
+          </div>
+        </section>
+      )}
 
       {/* Upcoming events */}
       <section className="py-14">
