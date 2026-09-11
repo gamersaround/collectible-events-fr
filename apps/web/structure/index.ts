@@ -168,6 +168,16 @@ export const structure = (S: StructureBuilder) =>
             .defaultOrdering([{ field: "_createdAt", direction: "desc" }])
         ),
 
+      S.listItem()
+        .title("📣 Demandes sponsoring")
+        .schemaType("sponsorInquiry")
+        .child(
+          S.documentList()
+            .title("Demandes sponsoring / mise en avant")
+            .filter('_type == "sponsorInquiry"')
+            .defaultOrdering([{ field: "_createdAt", direction: "desc" }])
+        ),
+
       S.divider(),
 
       // Crawler sources

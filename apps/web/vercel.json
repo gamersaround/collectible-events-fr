@@ -1,3 +1,9 @@
 {
-  "installCommand": "npm install --prefix ../.."
+  "installCommand": "npm install --prefix ../..",
+  "crons": [
+    {
+      "path": "/api/cron/sponsor-digest",
+      "schedule": "0 8 * * *"
+    }
+  ]
 }

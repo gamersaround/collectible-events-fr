@@ -15,7 +15,8 @@
     "allEvents": "Tous les événements",
     "interactiveMap": "Carte interactive",
     "submitEvent": "Soumettre un événement",
-    "copyright": "© {year} CardAgenda : Made with ❤️ for the TCG community"
+    "sponsorLink": "Sponsoring / mise en avant",
+    "copyright": "© {year} CardAgenda : Made with ❤️ for the Card Collectors"
   },
   "home": {
     "heroTagline": "Tous les événements cartes de collection, en un seul endroit.",
@@ -90,6 +91,27 @@
   "submit": {
     "title": "Soumettre un événement",
     "description": "Vous organisez un tournoi, une bourse ou une convention ? Soumettez-le ici et il sera publié après validation par notre équipe (généralement sous 24h)."
+  },
+  "sponsor": {
+    "title": "Sponsoring et mise en avant",
+    "description": "Formulaire de contact pour une demande de sponsoring ou de mise en avant sur CardAgenda. Nous vous répondons ensuite.",
+    "metaDescription": "Contact pour une demande de sponsoring ou de mise en avant sur CardAgenda.",
+    "successTitle": "Message envoyé",
+    "successDescription": "Votre demande a bien été reçue. Nous vous répondrons ensuite.",
+    "submitAnother": "Envoyer un autre message",
+    "nameLabel": "Nom",
+    "namePlaceholder": "Votre nom",
+    "emailLabel": "Email",
+    "organizationLabel": "Organisation / société",
+    "organizationPlaceholder": "Nom de l’organisation",
+    "messageLabel": "Message",
+    "messagePlaceholder": "Votre demande",
+    "submitButton": "Envoyer",
+    "submittingButton": "Envoi en cours…",
+    "errorOccurred": "Une erreur est survenue",
+    "submissionError": "Erreur lors de l’envoi",
+    "honeypot": "Ne pas remplir ce champ",
+    "reviewNote": "Nous lisons les messages et répondons ensuite."
   },
   "form": {
     "successTitle": "Soumission reçue !",
