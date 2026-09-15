@@ -7,6 +7,7 @@ import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import type { EventRow } from "@/lib/queries/events";
 import { EventBadge, FormatBadge } from "./EventBadge";
+import { EventLikeButton } from "./EventLikeButton";
 import { formatDateFr, formatEntryFee } from "@/lib/utils/dates";
 import { TCG_CONFIG, TCGType } from "@agenda-cartes/shared";
 import { urlFor } from "@/lib/sanity/image";
@@ -170,6 +171,7 @@ export function EventCard({ event }: EventCardProps) {
           </div>
         )}
       </Link>
+      <EventLikeButton eventId={event.id} variant="compact" />
     </article>
   );
 }

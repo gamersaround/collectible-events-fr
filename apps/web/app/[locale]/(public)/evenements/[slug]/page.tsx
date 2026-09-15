@@ -18,6 +18,7 @@ import { getEventBySlug, getAllEventSlugs, getEventLocations } from "@/lib/queri
 import { countryCode } from "@/lib/countries";
 import { urlFor } from "@/lib/sanity/image";
 import { EventBadge, FormatBadge } from "@/components/events/EventBadge";
+import { EventLikeButton } from "@/components/events/EventLikeButton";
 import { EventSchema } from "@/components/events/EventSchema";
 import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
 import {
@@ -271,6 +272,10 @@ export default async function EventDetailPage({
             <h1 className={`text-3xl font-bold text-gray-900 mb-3 ${isCancelled ? "line-through opacity-60" : ""}`}>
               {event.title}
             </h1>
+
+            <div className="mb-4">
+              <EventLikeButton eventId={event.id} variant="detail" />
+            </div>
 
             {event.description && (
               <p className="text-gray-600 text-lg leading-relaxed whitespace-pre-line">

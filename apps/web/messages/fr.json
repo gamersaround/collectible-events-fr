@@ -80,6 +80,11 @@
     "cancelled": "Annulé",
     "notFound": "Événement introuvable"
   },
+  "likes": {
+    "like": "J'aime",
+    "liked": "Aimé",
+    "unlike": "Retirer le like"
+  },
   "map": {
     "title": "Carte des événements TCG",
     "eventsCountOne": "{count} événement à venir",
