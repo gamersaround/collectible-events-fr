@@ -80,6 +80,11 @@
     "cancelled": "Cancelled",
     "notFound": "Event not found"
   },
+  "likes": {
+    "like": "Like",
+    "liked": "Liked",
+    "unlike": "Remove like"
+  },
   "map": {
     "title": "TCG events map",
     "eventsCountOne": "{count} upcoming event",
