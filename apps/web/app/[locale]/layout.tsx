@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Script from "next/script";
 import { Archivo_Black, Space_Grotesk } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
@@ -98,13 +97,12 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <head>
-        {/* AdSense site verification only — no ad units */}
-        <Script
-          id="google-adsense"
+        {/* Native <script> in <head> so Google sees adsbygoogle.js on every public page.
+            next/script afterInteractive injects outside <head>; beforeInteractive is root-layout only. */}
+        <script
           async
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
           crossOrigin="anonymous"
-          strategy="afterInteractive"
         />
       </head>
       <body className={`${archivoBlack.variable} ${spaceGrotesk.variable} font-body`}>
