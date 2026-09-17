@@ -97,8 +97,8 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <head>
-        {/* Native <script> in <head> so Google sees adsbygoogle.js on every public page.
-            next/script afterInteractive injects outside <head>; beforeInteractive is root-layout only. */}
+        {/* Native tags in <head> so Google can associate the site. No ad units. */}
+        <meta name="google-adsense-account" content={ADSENSE_CLIENT} />
         <script
           async
           src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
