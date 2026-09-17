@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Archivo_Black, Space_Grotesk } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
@@ -7,6 +8,8 @@ import { routing } from "@/i18n/routing";
 import { NoiseSVG } from "@/components/ui/NoiseSVG";
 import { SiteSchemas } from "@/components/seo/SiteSchemas";
 import "../globals.css";
+
+const ADSENSE_CLIENT = "ca-pub-8480412242622897";
 
 const archivoBlack = Archivo_Black({
   weight: "400",
@@ -94,6 +97,16 @@ export default async function LocaleLayout({
 
   return (
     <html lang={locale}>
+      <head>
+        {/* AdSense site verification only — no ad units */}
+        <Script
+          id="google-adsense"
+          async
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+          crossOrigin="anonymous"
+          strategy="afterInteractive"
+        />
+      </head>
       <body className={`${archivoBlack.variable} ${spaceGrotesk.variable} font-body`}>
         <SiteSchemas locale={locale} />
         <NoiseSVG />
