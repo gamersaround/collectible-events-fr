@@ -74,7 +74,8 @@ export async function getEvents(
 ): Promise<PaginatedResult<EventRow>> {
   const params = buildQueryParams(filters);
   const from = (page - 1) * perPage;
-  const to = from + perPage - 1;
+  // GROQ `...` is exclusive of the end index (same as Array.slice).
+  const to = from + perPage;
 
   const [data, total] = await Promise.all([
     sanityServerClient.fetch<EventRow[]>(EVENTS_PAGINATED_QUERY, {
