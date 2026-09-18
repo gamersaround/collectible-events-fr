@@ -32,7 +32,8 @@ export async function getArticles(
   perPage = DEFAULT_PER_PAGE
 ): Promise<PaginatedResult<ArticleRow>> {
   const from = (page - 1) * perPage;
-  const to = from + perPage - 1;
+  // GROQ `...` is exclusive of the end index (same as Array.slice).
+  const to = from + perPage;
 
   const [data, total] = await Promise.all([
     sanityServerClient.fetch<ArticleRow[]>(ARTICLES_PAGINATED_QUERY, { from, to }),

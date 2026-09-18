@@ -34,7 +34,8 @@ const EVENT_PROJECTION = groq`{
   "image": image { asset, hotspot, crop, "alt": alt }
 }`;
 
-// Listing with filters — all params optional
+// Listing with filters — all params optional.
+// No upper date bound: every future a_venir / en_cours is eligible (pagination only).
 export const EVENTS_QUERY = groq`
   *[_type == "event"
     && status in ["a_venir", "en_cours"]
