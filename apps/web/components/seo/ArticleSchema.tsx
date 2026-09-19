@@ -13,8 +13,9 @@ export function ArticleSchema({ article, locale }: ArticleSchemaProps) {
   const schema = {
     "@context": "https://schema.org",
     "@type": "BlogPosting",
+    inLanguage: locale === "en" ? "en-GB" : "fr-FR",
     headline: article.title,
-    description: article.excerpt ?? undefined,
+    description: article.meta_description ?? article.excerpt ?? undefined,
     datePublished: article.published_at,
     author: {
       "@type": "Person",

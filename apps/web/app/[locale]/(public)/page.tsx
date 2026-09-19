@@ -53,7 +53,7 @@ export default async function HomePage({
   const [{ data: upcomingEvents }, featuredEvents, recentArticles] = await Promise.all([
     getEvents({}, 1, 6),
     getFeaturedEvents(),
-    getRecentArticles(),
+    getRecentArticles(locale),
   ]);
 
   return (

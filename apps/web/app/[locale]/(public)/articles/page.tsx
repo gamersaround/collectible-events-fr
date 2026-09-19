@@ -44,7 +44,11 @@ export default async function ArticlesPage({
   const t = await getTranslations({ locale, namespace: "articles" });
 
   const currentPage = Number(sp.page ?? 1);
-  const { data: articles, total, totalPages } = await getArticles(currentPage, PER_PAGE);
+  const { data: articles, total, totalPages } = await getArticles(
+    currentPage,
+    PER_PAGE,
+    locale
+  );
 
   return (
     <div className="container py-8">

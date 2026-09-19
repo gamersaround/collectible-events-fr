@@ -18,7 +18,9 @@ export const maxDuration = 30;
 export async function generateStaticParams() {
   const slugs = await getAllArticleSlugs();
   return routing.locales.flatMap((locale) =>
-    slugs.map((slug) => ({ locale, slug }))
+    slugs
+      .filter((row) => locale !== "en" || row.hasEn)
+      .map((row) => ({ locale, slug: row.slug }))
   );
 }
 
@@ -29,27 +31,30 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { locale, slug } = await params;
   const t = await getTranslations({ locale, namespace: "articleDetail" });
-  const article = await getArticleBySlug(slug);
+  const article = await getArticleBySlug(slug, locale);
 
   if (!article) return { title: t("notFound") };
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
-  const otherLocale = locale === "fr" ? "en" : "fr";
+  const description = article.meta_description ?? article.excerpt ?? undefined;
+  const languages: Record<string, string> = {
+    fr: `${appUrl}/fr/articles/${slug}`,
+    "x-default": `${appUrl}/fr/articles/${slug}`,
+  };
+  if (article.has_en) {
+    languages.en = `${appUrl}/en/articles/${slug}`;
+  }
 
   return {
     title: article.title,
-    description: article.excerpt ?? undefined,
+    description,
     alternates: {
       canonical: `${appUrl}/${locale}/articles/${slug}`,
-      languages: {
-        [locale]: `${appUrl}/${locale}/articles/${slug}`,
-        [otherLocale]: `${appUrl}/${otherLocale}/articles/${slug}`,
-        "x-default": `${appUrl}/fr/articles/${slug}`,
-      },
+      languages,
     },
     openGraph: {
       title: article.title,
-      description: article.excerpt ?? undefined,
+      description,
       type: "article",
       publishedTime: article.published_at,
       authors: [article.author ?? "CardAgenda"],
@@ -147,7 +152,7 @@ export default async function ArticleDetailPage({
 }) {
   const { locale, slug } = await params;
   const t = await getTranslations({ locale, namespace: "articleDetail" });
-  const article = await getArticleBySlug(slug);
+  const article = await getArticleBySlug(slug, locale);
 
   if (!article) notFound();
 
