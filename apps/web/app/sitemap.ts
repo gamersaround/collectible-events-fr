@@ -50,8 +50,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     sanityServerClient.fetch<Array<{ slug: string; updatedAt: string }>>(
       `*[_type == "event" && defined(slug.current)][0...1000] { "slug": slug.current, "updatedAt": _updatedAt }`
     ),
-    sanityServerClient.fetch<Array<{ slug: string; updatedAt: string }>>(
-      `*[_type == "article" && defined(slug.current)][0...500] { "slug": slug.current, "updatedAt": _updatedAt }`
+    sanityServerClient.fetch<Array<{ slug: string; updatedAt: string; hasEn: boolean }>>(
+      `*[_type == "article" && defined(slug.current)][0...500] { "slug": slug.current, "updatedAt": _updatedAt, "hasEn": defined(titleEn) }`
     ),
     sanityServerClient.fetch<Array<{ city: string; country: string }>>(
       `*[_type == "event" && status in ["a_venir", "en_cours"] && defined(city) && city != ""]{
@@ -77,20 +77,23 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   );
 
   const articleAppUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
-  const articlePages: MetadataRoute.Sitemap = (articles ?? []).flatMap((a) =>
-    locales.map((locale) => ({
+  const articlePages: MetadataRoute.Sitemap = (articles ?? []).flatMap((a) => {
+    const articleLocales = a.hasEn ? locales : (["fr"] as const);
+    const languages: Record<string, string> = {
+      fr: `${articleAppUrl}/fr/articles/${a.slug}`,
+      "x-default": `${articleAppUrl}/fr/articles/${a.slug}`,
+    };
+    if (a.hasEn) {
+      languages.en = `${articleAppUrl}/en/articles/${a.slug}`;
+    }
+    return articleLocales.map((locale) => ({
       url: `${articleAppUrl}/${locale}/articles/${a.slug}`,
       lastModified: new Date(a.updatedAt),
       changeFrequency: "monthly" as const,
       priority: 0.7,
-      alternates: {
-        languages: {
-          ...Object.fromEntries(locales.map((l) => [l, `${articleAppUrl}/${l}/articles/${a.slug}`])),
-          "x-default": `${articleAppUrl}/fr/articles/${a.slug}`,
-        },
-      },
-    }))
-  );
+      alternates: { languages },
+    }));
+  });
 
   const tcgLandingPages: MetadataRoute.Sitemap = TCG_LANDING_SLUGS.flatMap((tcgSlug) =>
     locales.map((locale) => ({

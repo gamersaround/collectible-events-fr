@@ -137,47 +137,80 @@ export const PENDING_SUBMISSIONS_QUERY = groq`
 
 // ─── Article queries ──────────────────────────────────────────────────────────
 
+// One Sanity `article` doc, localized fields (titleFr/titleEn, bodyFr/bodyEn, meta FR/EN).
+// /fr: FR fields, with legacy title/excerpt/body as FR fallback.
+// /en: EN fields only — never paste FR copy onto EN.
+const ARTICLE_LOCALE_FILTER = groq`($locale != "en" || defined(titleEn))`;
+
 const ARTICLE_PROJECTION = groq`{
   "id": _id,
-  title,
+  "title": select(
+    $locale == "en" => titleEn,
+    coalesce(titleFr, title)
+  ),
   "slug": slug.current,
-  excerpt,
-  "published_at": publishedAt,
-  author,
-  category,
-  "tcg_types": tcgTypes,
-  "cover_image": coverImage { asset, hotspot, crop, "alt": alt }
-}`;
-
-const ARTICLE_DETAIL_PROJECTION = groq`{
-  "id": _id,
-  title,
-  "slug": slug.current,
-  excerpt,
+  "excerpt": select(
+    $locale == "en" => metaDescriptionEn,
+    coalesce(metaDescriptionFr, excerpt)
+  ),
+  "meta_description": select(
+    $locale == "en" => metaDescriptionEn,
+    coalesce(metaDescriptionFr, excerpt)
+  ),
   "published_at": publishedAt,
   author,
   category,
   "tcg_types": tcgTypes,
   "cover_image": coverImage { asset, hotspot, crop, "alt": alt },
-  body
+  "has_en": defined(titleEn)
+}`;
+
+const ARTICLE_DETAIL_PROJECTION = groq`{
+  "id": _id,
+  "title": select(
+    $locale == "en" => titleEn,
+    coalesce(titleFr, title)
+  ),
+  "slug": slug.current,
+  "excerpt": select(
+    $locale == "en" => metaDescriptionEn,
+    coalesce(metaDescriptionFr, excerpt)
+  ),
+  "meta_description": select(
+    $locale == "en" => metaDescriptionEn,
+    coalesce(metaDescriptionFr, excerpt)
+  ),
+  "published_at": publishedAt,
+  author,
+  category,
+  "tcg_types": tcgTypes,
+  "cover_image": coverImage { asset, hotspot, crop, "alt": alt },
+  "has_en": defined(titleEn),
+  "body": select(
+    $locale == "en" => bodyEn,
+    coalesce(bodyFr, body)
+  )
 }`;
 
 export const ARTICLES_PAGINATED_QUERY = groq`
-  *[_type == "article"] | order(publishedAt desc) [$from...$to] ${ARTICLE_PROJECTION}
+  *[_type == "article" && ${ARTICLE_LOCALE_FILTER}] | order(publishedAt desc) [$from...$to] ${ARTICLE_PROJECTION}
 `;
 
 export const ARTICLES_COUNT_QUERY = groq`
-  count(*[_type == "article"])
+  count(*[_type == "article" && ${ARTICLE_LOCALE_FILTER}])
 `;
 
 export const ARTICLE_BY_SLUG_QUERY = groq`
-  *[_type == "article" && slug.current == $slug][0] ${ARTICLE_DETAIL_PROJECTION}
+  *[_type == "article" && slug.current == $slug && ${ARTICLE_LOCALE_FILTER}][0] ${ARTICLE_DETAIL_PROJECTION}
 `;
 
 export const ALL_ARTICLE_SLUGS_QUERY = groq`
-  *[_type == "article"].slug.current
+  *[_type == "article" && defined(slug.current)]{
+    "slug": slug.current,
+    "hasEn": defined(titleEn)
+  }
 `;
 
 export const RECENT_ARTICLES_QUERY = groq`
-  *[_type == "article"] | order(publishedAt desc) [0...3] ${ARTICLE_PROJECTION}
+  *[_type == "article" && ${ARTICLE_LOCALE_FILTER}] | order(publishedAt desc) [0...3] ${ARTICLE_PROJECTION}
 `;
