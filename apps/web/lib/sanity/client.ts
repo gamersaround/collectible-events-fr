@@ -12,12 +12,14 @@ export const sanityClient = createClient({
   useCdn: true,
 });
 
-// Server-side read client with token (bypasses CDN cache — for fresh data)
+// Public reads go through the API CDN. useCdn: false burns the uncached
+// API quota (402 plan_limit_reached) and takes the site down — home/map
+// SSR every unique $now as a cache-busting API hit.
 export const sanityServerClient = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: false,
+  useCdn: true,
   token: process.env.SANITY_API_READ_TOKEN,
 });
 
