@@ -53,9 +53,16 @@ export interface EventRow {
 
 const DEFAULT_PER_PAGE = 24;
 
+/** Floor to 5 minutes so GROQ `$now` is CDN-cacheable (ISO-to-the-ms busts the CDN). */
+function cacheableNowIso(): string {
+  const d = new Date();
+  d.setMinutes(Math.floor(d.getMinutes() / 5) * 5, 0, 0);
+  return d.toISOString();
+}
+
 function buildQueryParams(filters: EventFilters) {
   return {
-    now: new Date().toISOString(),
+    now: cacheableNowIso(),
     tcgTypes:
       filters.tcgTypes && filters.tcgTypes.length > 0 ? filters.tcgTypes : null,
     format: filters.formats && filters.formats.length > 0 ? filters.formats[0] : null,
@@ -161,7 +168,7 @@ export async function getFeaturedEvents(): Promise<EventRow[]> {
 
 export async function getEventsForMap(): Promise<MapEvent[]> {
   const events = await sanityServerClient.fetch<MapEvent[]>(MAP_EVENTS_QUERY, {
-    now: new Date().toISOString(),
+    now: cacheableNowIso(),
   });
   return events ?? [];
 }

@@ -64,8 +64,9 @@ export function EventCard({ event }: EventCardProps) {
     }, 400);
   };
 
-  const primaryTcg = (event.primary_tcg_type ?? event.tcg_types[0]) as TCGType | undefined;
-  const remainingTcgs = event.tcg_types.slice(1);
+  const tcgTypes = Array.isArray(event.tcg_types) ? event.tcg_types : [];
+  const primaryTcg = (event.primary_tcg_type ?? tcgTypes[0]) as TCGType | undefined;
+  const remainingTcgs = tcgTypes.slice(1);
   const ratio = event.tcg_sports_ratio;
 
   return (
@@ -77,7 +78,7 @@ export function EventCard({ event }: EventCardProps) {
       className="group relative bg-white border-2 border-black shadow-[6px_6px_0px_0px_#000] hover:shadow-[2px_2px_0px_0px_#000] transition-shadow duration-150 hover:z-10"
     >
       {/* Circular TCG seal badge */}
-      {primaryTcg && (() => {
+      {primaryTcg && TCG_CONFIG[primaryTcg] && (() => {
         const cfg = TCG_CONFIG[primaryTcg];
         return (
           <div className={`absolute -top-3 -right-3 z-10 w-11 h-11 rounded-full border-[3px] border-black flex items-center justify-center text-xl shadow-[2px_2px_0px_0px_#000] ${cfg.bgColor}`}>
