@@ -78,7 +78,9 @@
     "register": "Register for this event",
     "originalSource": "Original source",
     "cancelled": "Cancelled",
-    "notFound": "Event not found"
+    "notFound": "Event not found",
+    "free": "Free",
+    "feeNotListed": "Not listed"
   },
   "likes": {
     "like": "Like",
@@ -167,6 +169,7 @@
     "submissionError": "Error during submission",
     "errorOccurred": "An error occurred",
     "free": "Free",
+    "feeNotListed": "Not listed",
     "countryGroups": {
       "west": "Western Europe",
       "north": "Northern Europe",

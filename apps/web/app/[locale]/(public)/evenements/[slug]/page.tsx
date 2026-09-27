@@ -220,7 +220,8 @@ export default async function EventDetailPage({
 
   const isCancelled = event.status === "annule";
   const dateLocale = locale as "fr" | "en";
-  const freeLabel = locale === "fr" ? "Gratuit" : "Free";
+  const freeLabel = t("free");
+  const unknownFeeLabel = t("feeNotListed");
   const code = countryCode(event.country);
   const countryLabel = tc.has(code) ? tc(code) : code;
 
@@ -343,8 +344,8 @@ export default async function EventDetailPage({
                 <Euro className="h-5 w-5" />
                 {t("priceTitle")}
               </div>
-              <p className={`font-medium text-lg ${event.entry_fee === null || event.entry_fee === 0 ? "text-green-600" : "text-gray-900"}`}>
-                {formatEntryFee(event.entry_fee, freeLabel)}
+              <p className={`font-medium text-lg ${event.entry_fee === 0 ? "text-green-600" : "text-gray-900"}`}>
+                {formatEntryFee(event.entry_fee, freeLabel, unknownFeeLabel)}
               </p>
               {event.max_participants && (
                 <p className="flex items-center gap-1.5 text-sm text-gray-500 mt-2">

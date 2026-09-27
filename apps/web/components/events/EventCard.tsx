@@ -149,8 +149,8 @@ export function EventCard({ event }: EventCardProps) {
 
               <div className="flex items-center gap-1.5 text-xs font-medium">
                 <Euro className="h-3 w-3 shrink-0 text-black/70" />
-                <span className={event.entry_fee === null || event.entry_fee === 0 ? "text-green-700 font-bold" : "text-black/70"}>
-                  {formatEntryFee(event.entry_fee, t("free"))}
+                <span className={event.entry_fee === 0 ? "text-green-700 font-bold" : "text-black/70"}>
+                  {formatEntryFee(event.entry_fee, t("free"), t("feeNotListed"))}
                 </span>
                 {event.max_participants && (
                   <span className="flex items-center gap-0.5 ml-2 text-black/50">

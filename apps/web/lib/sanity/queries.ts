@@ -45,7 +45,7 @@ export const EVENTS_QUERY = groq`
     && (!defined($country) || country == $country)
     && (!defined($cities) || city in $cities)
     && (!defined($q) || title match $q || city match $q || description match $q)
-    && (!defined($freeOnly) || $freeOnly == false || entryFee == 0 || !defined(entryFee))
+    && (!defined($freeOnly) || $freeOnly == false || entryFee == 0)
   ] | order(startsAt asc)
 `;
 
@@ -59,7 +59,7 @@ export const EVENTS_PAGINATED_QUERY = groq`
     && (!defined($country) || country == $country)
     && (!defined($cities) || city in $cities)
     && (!defined($q) || title match $q || city match $q || description match $q)
-    && (!defined($freeOnly) || $freeOnly == false || entryFee == 0 || !defined(entryFee))
+    && (!defined($freeOnly) || $freeOnly == false || entryFee == 0)
   ] | order(startsAt asc) [$from...$to] ${EVENT_PROJECTION}
 `;
 
@@ -73,7 +73,7 @@ export const EVENTS_COUNT_QUERY = groq`
     && (!defined($country) || country == $country)
     && (!defined($cities) || city in $cities)
     && (!defined($q) || title match $q || city match $q || description match $q)
-    && (!defined($freeOnly) || $freeOnly == false || entryFee == 0 || !defined(entryFee))
+    && (!defined($freeOnly) || $freeOnly == false || entryFee == 0)
   ])
 `;
 
