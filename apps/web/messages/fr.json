@@ -78,7 +78,9 @@
     "register": "S'inscrire à l'événement",
     "originalSource": "Source originale",
     "cancelled": "Annulé",
-    "notFound": "Événement introuvable"
+    "notFound": "Événement introuvable",
+    "free": "Gratuit",
+    "feeNotListed": "Non mentionné"
   },
   "likes": {
     "like": "J'aime",
@@ -167,6 +169,7 @@
     "submissionError": "Erreur lors de la soumission",
     "errorOccurred": "Une erreur est survenue",
     "free": "Gratuit",
+    "feeNotListed": "Non mentionné",
     "countryGroups": {
       "west": "Europe de l'Ouest",
       "north": "Europe du Nord",

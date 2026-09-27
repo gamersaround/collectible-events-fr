@@ -32,7 +32,6 @@ export function EventSchema({ event, locale }: EventSchemaProps) {
         ? "https://schema.org/EventCancelled"
         : "https://schema.org/EventScheduled",
     eventAttendanceMode: "https://schema.org/OfflineEventAttendanceMode",
-    isAccessibleForFree: event.entry_fee === 0 || event.entry_fee === null,
     url: eventUrl,
     ...(event.image
       ? {
@@ -68,6 +67,11 @@ export function EventSchema({ event, locale }: EventSchemaProps) {
       "@type": "Organization",
       name: event.organizer_name ?? "CardAgenda",
     },
+    ...(event.entry_fee === 0
+      ? { isAccessibleForFree: true }
+      : event.entry_fee !== null
+        ? { isAccessibleForFree: false }
+        : {}),
     ...(event.entry_fee !== null
       ? {
           offers: {
