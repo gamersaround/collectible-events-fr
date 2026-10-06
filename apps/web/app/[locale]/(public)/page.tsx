@@ -221,6 +221,7 @@ export default async function HomePage({
                 fill
                 className="object-cover object-left-top"
                 sizes="(max-width: 768px) 100vw, 50vw"
+                quality={70}
               />
             </div>
 
