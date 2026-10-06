@@ -84,7 +84,7 @@ export default async function HomePage({
           </h1>
           <p className="text-lg md:text-xl font-bold mb-10 max-w-2xl mx-auto text-black/80">
             {t("heroTagline")}{" "}
-            <span className="text-black/50">{t("heroSubTagline")}</span>
+            <span className="text-black/70">{t("heroSubTagline")}</span>
           </p>
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
