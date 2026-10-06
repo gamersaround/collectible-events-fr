@@ -54,7 +54,7 @@ export async function Footer() {
           </div>
         </div>
 
-        <div className="mt-6 text-center text-sm font-bold text-white/40 uppercase tracking-widest">
+        <div className="mt-6 text-center text-sm font-bold text-white/70 uppercase tracking-widest">
           {t("copyright", { year: new Date().getFullYear() })}
         </div>
       </div>
