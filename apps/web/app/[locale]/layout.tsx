@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { Archivo_Black, Space_Grotesk } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, getTranslations } from "next-intl/server";
@@ -97,15 +98,17 @@ export default async function LocaleLayout({
   return (
     <html lang={locale}>
       <head>
-        {/* Native tags in <head> so Google can associate the site. No ad units. */}
+        {/* Account meta stays in <head> for AdSense / Search Console association. */}
         <meta name="google-adsense-account" content={ADSENSE_CLIENT} />
-        <script
-          async
-          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
-          crossOrigin="anonymous"
-        />
       </head>
       <body className={`${archivoBlack.variable} ${spaceGrotesk.variable} font-body`}>
+        {/* Defer Auto Ads until after window.load so they don't contend with LCP/TBT. */}
+        <Script
+          id="adsense"
+          src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+          strategy="lazyOnload"
+          crossOrigin="anonymous"
+        />
         <SiteSchemas locale={locale} />
         <NoiseSVG />
         <NextIntlClientProvider messages={messages}>
