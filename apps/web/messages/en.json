@@ -311,16 +311,24 @@
   },
   "contactPage": {
     "title": "Contact",
-    "metaDescription": "Contact CardAgenda by email. No contact form: to list an event, use the Submit page.",
-    "email": "martin.perret@gmail.com",
-    "sections": [
-      {
-        "body": "For a question about the site (listing, correction, partnership), write to the address below. There is no contact form."
-      },
-      {
-        "body": "To add a tournament, trade fair or convention: use the Submit page."
-      }
-    ]
+    "metaDescription": "Contact CardAgenda: partnership or listing correction form. To add an event, use Submit. Publisher LC PRIZM, SASU, RCS Paris, share capital 1 000,00 €.",
+    "intro": "For a question about the site (listing, correction) or a partnership, use the form below. To add a tournament, trade fair or convention, use the Submit page.",
+    "submitTitle": "Submit an event",
+    "submitBody": "The existing event form records the listing for moderation, then publication on CardAgenda.",
+    "submitCta": "Go to Submit",
+    "formTitle": "Partnership, correction, other request",
+    "formBody": "Same form as the Sponsoring / featuring page. No email address is published on this page.",
+    "publisherTitle": "Site publisher",
+    "legal": {
+      "siren": "SIREN",
+      "siret": "SIRET (registered office)",
+      "legalForm": "Legal form",
+      "vat": "VAT number",
+      "rcs": "RCS number",
+      "rcsStatus": "RCS registration",
+      "rne": "RNE registration",
+      "capital": "Share capital"
+    }
   },
   "legalNoticePage": {
     "title": "Legal notice",

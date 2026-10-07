@@ -1,0 +1,20 @@
+/** Publisher of cardagenda.com. Display values only — no personal name or email. */
+export const PUBLISHER = {
+  name: "LC PRIZM",
+  siren: "992 908 376",
+  siret: "992 908 376 00013",
+  vat: "FR58992908376",
+  rcsNumber: "992 908 376 R.C.S. Paris",
+  rcsRegistryFr: "Greffe de Paris",
+  rcsRegistryEn: "Paris commercial court registry",
+  rcsRegisteredOnIso: "2025-10-22",
+  rcsRegisteredOnFr: "22/10/2025",
+  rcsRegisteredOnEn: "22 October 2025",
+  legalFormFr: "SASU, société par actions simplifiée unipersonnelle",
+  legalFormEn: "SASU (simplified joint-stock company with a single shareholder)",
+  rneStatusFr: "Inscrit",
+  rneStatusEn: "Registered",
+  shareCapital: "1 000,00 €",
+  sirenDigits: "992908376",
+  siretDigits: "99290837600013",
+} as const;
