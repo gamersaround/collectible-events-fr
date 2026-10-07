@@ -3,6 +3,7 @@ import { sanityServerClient } from "@/lib/sanity/client";
 import { routing } from "@/i18n/routing";
 import { TCG_LANDING_SLUGS } from "@/lib/tcg-slugs";
 import { eventsUrl } from "@/lib/paths";
+import { LEGAL_ROUTES } from "@/lib/legal-paths";
 import {
   citySlug,
   countryPathSlug,
@@ -13,19 +14,36 @@ import { countryCode } from "@/lib/countries";
 
 const locales = routing.locales;
 
-const STATIC_ROUTES = [
-  { path: "", changeFrequency: "hourly" as const, priority: 1 },
-  { path: "/evenements", changeFrequency: "hourly" as const, priority: 0.9, eventsIndex: true },
-  { path: "/articles", changeFrequency: "daily" as const, priority: 0.8 },
-  { path: "/carte", changeFrequency: "daily" as const, priority: 0.7 },
-  { path: "/soumettre", changeFrequency: "monthly" as const, priority: 0.5 },
-  { path: "/sponsoriser", changeFrequency: "monthly" as const, priority: 0.4 },
+type LocalePath = string | { fr: string; en: string };
+
+const STATIC_ROUTES: Array<{
+  path: LocalePath;
+  changeFrequency: "hourly" | "daily" | "weekly" | "monthly";
+  priority: number;
+  eventsIndex?: boolean;
+}> = [
+  { path: "", changeFrequency: "hourly", priority: 1 },
+  { path: "/evenements", changeFrequency: "hourly", priority: 0.9, eventsIndex: true },
+  { path: "/articles", changeFrequency: "daily", priority: 0.8 },
+  { path: "/carte", changeFrequency: "daily", priority: 0.7 },
+  { path: "/soumettre", changeFrequency: "monthly", priority: 0.5 },
+  { path: "/sponsoriser", changeFrequency: "monthly", priority: 0.4 },
+  { path: LEGAL_ROUTES.about, changeFrequency: "monthly", priority: 0.4 },
+  { path: LEGAL_ROUTES.contact, changeFrequency: "monthly", priority: 0.4 },
+  { path: LEGAL_ROUTES.legal, changeFrequency: "monthly", priority: 0.4 },
+  { path: LEGAL_ROUTES.privacy, changeFrequency: "monthly", priority: 0.4 },
+  { path: LEGAL_ROUTES.cookies, changeFrequency: "monthly", priority: 0.4 },
 ];
 
-function localePathUrl(locale: string, path: string, eventsIndex?: boolean) {
+function resolveLocalePath(path: LocalePath, locale: string): string {
+  if (typeof path === "string") return path;
+  return locale === "en" ? path.en : path.fr;
+}
+
+function localePathUrl(locale: string, path: LocalePath, eventsIndex?: boolean) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
-  if (eventsIndex || path === "/evenements") return eventsUrl(locale);
-  return `${appUrl}/${locale}${path}`;
+  if (eventsIndex || resolveLocalePath(path, locale) === "/evenements") return eventsUrl(locale);
+  return `${appUrl}/${locale}${resolveLocalePath(path, locale)}`;
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {

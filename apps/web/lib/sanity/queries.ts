@@ -82,9 +82,26 @@ export const EVENT_BY_SLUG_QUERY = groq`
   *[_type == "event" && slug.current == $slug][0] ${EVENT_PROJECTION}
 `;
 
-// All slugs for generateStaticParams + sitemap
+// All real event slugs (including past editions) for generateStaticParams + sitemap
 export const ALL_EVENT_SLUGS_QUERY = groq`
-  *[_type == "event" && status in ["a_venir", "en_cours"]].slug.current
+  *[_type == "event" && defined(slug.current)].slug.current
+`;
+
+// Later editions in the same city/country — series match is applied in JS
+export const NEXT_EDITION_CANDIDATES_QUERY = groq`
+  *[_type == "event"
+    && defined(slug.current)
+    && slug.current != $slug
+    && defined(startsAt)
+    && startsAt > $startsAt
+    && lower(city) == $cityLower
+    && country == $country
+    && status != "annule"
+  ] | order(startsAt asc) [0...30] {
+    title,
+    "slug": slug.current,
+    "starts_at": startsAt
+  }
 `;
 
 export const EVENT_COUNTRY_CODES_QUERY = groq`
