@@ -79,6 +79,8 @@
     "originalSource": "Original source",
     "cancelled": "Cancelled",
     "notFound": "Event not found",
+    "nextEdition": "Next edition: {title}",
+    "nextEditionLink": "View next edition",
     "free": "Free",
     "feeNotListed": "Not listed"
   },

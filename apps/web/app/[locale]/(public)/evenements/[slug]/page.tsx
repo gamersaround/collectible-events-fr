@@ -14,7 +14,7 @@ import {
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { getEventBySlug, getAllEventSlugs, getEventLocations } from "@/lib/queries/events";
+import { getEventBySlug, getAllEventSlugs, getEventLocations, getNextEdition } from "@/lib/queries/events";
 import { countryCode } from "@/lib/countries";
 import { urlFor } from "@/lib/sanity/image";
 import { EventBadge, FormatBadge } from "@/components/events/EventBadge";
@@ -48,6 +48,11 @@ const EventDetailMap = dynamic(
 );
 
 export const revalidate = 3600;
+
+// Unknown slugs must not become ISR 200 pages. Keep true so a newly published
+// Sanity event can still be generated on demand (webhook revalidatePath).
+// Invented slugs 404 via notFound() in generateMetadata.
+export const dynamicParams = true;
 
 export async function generateStaticParams() {
   const [slugs, locations] = await Promise.all([
@@ -145,10 +150,11 @@ export async function generateMetadata({
     };
   }
 
-  const t = await getTranslations({ locale, namespace: "eventDetail" });
   const event = await getEventBySlug(slug);
 
-  if (!event) return { title: t("notFound") };
+  if (!event) {
+    notFound();
+  }
 
   const dateLocale = locale as "fr" | "en";
   const fallback = `${event.title} : ${event.city}, ${formatDateFr(event.starts_at, "EEEE d MMMM yyyy", dateLocale)}`;
@@ -218,6 +224,8 @@ export default async function EventDetailPage({
 
   if (!event) notFound();
 
+  const nextEdition = await getNextEdition(event);
+
   const isCancelled = event.status === "annule";
   const dateLocale = locale as "fr" | "en";
   const freeLabel = t("free");
@@ -273,6 +281,18 @@ export default async function EventDetailPage({
             <h1 className={`text-3xl font-bold text-gray-900 mb-3 ${isCancelled ? "line-through opacity-60" : ""}`}>
               {event.title}
             </h1>
+
+            {nextEdition && nextEdition.slug !== event.slug && (
+              <div className="mb-4 border border-blue-200 bg-blue-50 rounded-xl px-4 py-3 text-sm text-blue-900">
+                <p className="font-medium">{t("nextEdition", { title: nextEdition.title })}</p>
+                <Link
+                  href={`${eventsBasePath(locale)}/${nextEdition.slug}`}
+                  className="inline-flex items-center gap-1 mt-1 text-blue-700 hover:underline"
+                >
+                  {t("nextEditionLink")}
+                </Link>
+              </div>
+            )}
 
             <div className="mb-4">
               <EventLikeButton eventId={event.id} variant="detail" />

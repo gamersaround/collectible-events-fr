@@ -79,6 +79,8 @@
     "originalSource": "Source originale",
     "cancelled": "Annulé",
     "notFound": "Événement introuvable",
+    "nextEdition": "Édition suivante : {title}",
+    "nextEditionLink": "Voir l'édition suivante",
     "free": "Gratuit",
     "feeNotListed": "Non mentionné"
   },

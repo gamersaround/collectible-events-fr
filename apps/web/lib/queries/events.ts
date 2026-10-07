@@ -1,4 +1,5 @@
 import { sanityServerClient } from "@/lib/sanity/client";
+import { pickNextEdition } from "@/lib/event-series";
 
 export interface SanityImage {
   asset: { _ref: string; _type: string };
@@ -11,6 +12,7 @@ import {
   EVENTS_COUNT_QUERY,
   EVENT_BY_SLUG_QUERY,
   ALL_EVENT_SLUGS_QUERY,
+  NEXT_EDITION_CANDIDATES_QUERY,
   EVENT_COUNTRY_CODES_QUERY,
   EVENT_LOCATIONS_QUERY,
   MAP_EVENTS_QUERY,
@@ -113,6 +115,22 @@ export async function getAllEventSlugs(): Promise<string[]> {
     ALL_EVENT_SLUGS_QUERY
   );
   return (slugs ?? []).filter(Boolean) as string[];
+}
+
+export async function getNextEdition(
+  event: Pick<EventRow, "slug" | "title" | "city" | "country" | "starts_at">
+): Promise<{ title: string; slug: string; starts_at: string } | null> {
+  const cityLower = event.city.trim().toLowerCase();
+  if (!cityLower || !event.starts_at) return null;
+  const candidates = await sanityServerClient.fetch<
+    { title: string; slug: string; starts_at: string }[]
+  >(NEXT_EDITION_CANDIDATES_QUERY, {
+    slug: event.slug,
+    startsAt: event.starts_at,
+    cityLower,
+    country: event.country,
+  });
+  return pickNextEdition(event.title, candidates ?? []);
 }
 
 export type MapEvent = Pick<

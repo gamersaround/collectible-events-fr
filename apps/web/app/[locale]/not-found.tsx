@@ -1,5 +1,11 @@
+import type { Metadata } from "next";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
+import { NOINDEX_ROBOTS } from "@/lib/event-series";
+
+export const metadata: Metadata = {
+  robots: NOINDEX_ROBOTS,
+};
 
 export default function NotFound() {
   const t = useTranslations("notFound");
