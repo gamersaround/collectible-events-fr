@@ -69,6 +69,7 @@ export async function Footer() {
         <div className="mt-6 text-center text-sm font-bold text-white/70 uppercase tracking-widest">
           {t("copyright", { year: new Date().getFullYear() })}
         </div>
+        <p className="mt-2 text-center text-xs text-white/50">{t("publisherLine")}</p>
       </div>
     </footer>
   );

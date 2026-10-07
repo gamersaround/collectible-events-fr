@@ -22,7 +22,8 @@
     "legalNotice": "Legal notice",
     "privacy": "Privacy",
     "cookies": "Cookies",
-    "copyright": "© {year} CardAgenda : Made with ❤️ for the Card Collectors"
+    "copyright": "© {year} CardAgenda : Made with ❤️ for the Card Collectors",
+    "publisherLine": "Publisher: LC PRIZM"
   },
   "home": {
     "heroTagline": "All collectible card events, in one place.",
@@ -332,11 +333,11 @@
   },
   "legalNoticePage": {
     "title": "Legal notice",
-    "metaDescription": "CardAgenda legal notice: publisher Martin Perret, hosted by Vercel, email contact. Directory of card events in Europe.",
+    "metaDescription": "CardAgenda legal notice: publisher LC PRIZM (SASU, RCS Paris), hosted by Vercel. Directory of card events in Europe.",
     "sections": [
       {
         "title": "Publisher",
-        "body": "cardagenda.com is published by Martin Perret, a natural person. No company registration number is published on this page. Publication director: Martin Perret. Contact: martin.perret@gmail.com."
+        "body": "cardagenda.com is published by LC PRIZM, a SASU (simplified joint-stock company with a single shareholder). Identifiers: SIREN, SIRET, VAT, RCS Paris, RNE and share capital below. No personal email is published. To contact the publisher: Contact page."
       },
       {
         "title": "Hosting",
@@ -350,11 +351,11 @@
   },
   "privacyPage": {
     "title": "Privacy",
-    "metaDescription": "Data processed by CardAgenda: event submissions, likes cookie, hosting logs, Google AdSense script. Contact: martin.perret@gmail.com.",
+    "metaDescription": "Data processed by CardAgenda (publisher LC PRIZM): event submissions, likes cookie, hosting logs, Google AdSense script. Contact via the Contact page.",
     "sections": [
       {
         "title": "Controller",
-        "body": "Martin Perret, publisher of cardagenda.com. Contact: martin.perret@gmail.com."
+        "body": "LC PRIZM, publisher of cardagenda.com. To contact the controller: Contact page. No personal email is published."
       },
       {
         "title": "Data collected",
@@ -366,13 +367,13 @@
       },
       {
         "title": "Rights",
-        "body": "To access, correct or delete personal data, write to martin.perret@gmail.com."
+        "body": "To access, correct or delete personal data, use the Contact page."
       }
     ]
   },
   "cookiesPage": {
     "title": "Cookies",
-    "metaDescription": "Cookies on CardAgenda: first-party likes cookie (ca_event_likes), technical hosting cookies, and Google AdSense cookies when ads are shown.",
+    "metaDescription": "Cookies on CardAgenda (publisher LC PRIZM): first-party likes cookie (ca_event_likes), technical hosting cookies, and Google AdSense cookies when ads are shown.",
     "sections": [
       {
         "body": "CardAgenda uses a first-party cookie named ca_event_likes: it stores liked event IDs in the browser. No account, not sent to Sanity."
@@ -381,7 +382,7 @@
         "body": "The host (Vercel) may set technical cookies. Google AdSense, loaded on the site, may set third-party cookies when ads are shown."
       },
       {
-        "body": "Details of data processing are on the Privacy page."
+        "body": "Details of data processing are on the Privacy page. Publisher: LC PRIZM. For a question: Contact page. No personal email is published."
       }
     ]
   },
