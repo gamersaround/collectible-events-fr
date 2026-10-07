@@ -22,7 +22,8 @@
     "legalNotice": "Mentions légales",
     "privacy": "Confidentialité",
     "cookies": "Cookies",
-    "copyright": "© {year} CardAgenda : Made with ❤️ for the Card Collectors"
+    "copyright": "© {year} CardAgenda : Made with ❤️ for the Card Collectors",
+    "publisherLine": "Éditeur : LC PRIZM"
   },
   "home": {
     "heroTagline": "Tous les événements cartes de collection, en un seul endroit.",
@@ -332,11 +333,11 @@
   },
   "legalNoticePage": {
     "title": "Mentions légales",
-    "metaDescription": "Mentions légales de CardAgenda : éditeur Martin Perret, hébergement Vercel, contact e-mail. Annuaire d’événements cartes en Europe.",
+    "metaDescription": "Mentions légales de CardAgenda : éditeur LC PRIZM (SASU, RCS Paris), hébergement Vercel. Annuaire d’événements cartes en Europe.",
     "sections": [
       {
         "title": "Éditeur",
-        "body": "Le site cardagenda.com est édité par Martin Perret, personne physique. Aucun numéro SIRET n’est publié sur cette page. Directeur de la publication : Martin Perret. Contact : martin.perret@gmail.com."
+        "body": "Le site cardagenda.com est édité par LC PRIZM, SASU (société par actions simplifiée unipersonnelle). Identifiants : SIREN, SIRET, TVA, RCS Paris, RNE et capital ci-dessous. Pas d’e-mail personnel publié. Pour contacter l’éditeur : page Contact."
       },
       {
         "title": "Hébergement",
@@ -350,11 +351,11 @@
   },
   "privacyPage": {
     "title": "Confidentialité",
-    "metaDescription": "Données traitées par CardAgenda : soumissions d’événements, cookie de likes, logs d’hébergement, script Google AdSense. Contact : martin.perret@gmail.com.",
+    "metaDescription": "Données traitées par CardAgenda (éditeur LC PRIZM) : soumissions d’événements, cookie de likes, logs d’hébergement, script Google AdSense. Contact via la page Contact.",
     "sections": [
       {
         "title": "Responsable",
-        "body": "Martin Perret, éditeur de cardagenda.com. Contact : martin.perret@gmail.com."
+        "body": "LC PRIZM, éditeur de cardagenda.com. Pour contacter le responsable : page Contact. Pas d’e-mail personnel publié."
       },
       {
         "title": "Données collectées",
@@ -366,13 +367,13 @@
       },
       {
         "title": "Droits",
-        "body": "Pour accéder, rectifier ou supprimer des données personnelles, écrire à martin.perret@gmail.com."
+        "body": "Pour accéder, rectifier ou supprimer des données personnelles, utiliser la page Contact."
       }
     ]
   },
   "cookiesPage": {
     "title": "Cookies",
-    "metaDescription": "Cookies utilisés sur CardAgenda : cookie first-party de likes (ca_event_likes), cookies techniques d’hébergement, cookies Google AdSense si des publicités s’affichent.",
+    "metaDescription": "Cookies utilisés sur CardAgenda (éditeur LC PRIZM) : cookie first-party de likes (ca_event_likes), cookies techniques d’hébergement, cookies Google AdSense si des publicités s’affichent.",
     "sections": [
       {
         "body": "CardAgenda utilise un cookie first-party nommé ca_event_likes : il mémorise dans le navigateur les événements marqués « j’aime ». Pas de compte, pas d’envoi vers Sanity."
@@ -381,7 +382,7 @@
         "body": "L’hébergeur (Vercel) peut poser des cookies techniques. Google AdSense, chargé sur le site, peut poser des cookies tiers lorsque des publicités s’affichent."
       },
       {
-        "body": "Le détail du traitement des données est sur la page Confidentialité."
+        "body": "Le détail du traitement des données est sur la page Confidentialité. Éditeur : LC PRIZM. Pour une question : page Contact. Pas d’e-mail personnel publié."
       }
     ]
   },

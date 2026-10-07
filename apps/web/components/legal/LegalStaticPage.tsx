@@ -6,6 +6,7 @@ import {
   legalPublicPath,
   legalPublicUrl,
 } from "@/lib/legal-paths";
+import { PublisherDetails } from "@/components/legal/PublisherDetails";
 
 const PAGE_NAMESPACE: Record<LegalPageKey, string> = {
   about: "aboutPage",
@@ -93,6 +94,17 @@ export async function LegalStaticPage({
             <p className="whitespace-pre-line">{section.body}</p>
           </section>
         ))}
+        {page === "legal" ? <PublisherDetails locale={locale} /> : null}
+        {page === "legal" || page === "privacy" || page === "cookies" ? (
+          <p>
+            <Link
+              href={legalPublicPath(locale, "contact")}
+              className="font-medium text-gray-900 underline underline-offset-2"
+            >
+              {tf("contact")}
+            </Link>
+          </p>
+        ) : null}
         {page === "cookies" ? (
           <p>
             <Link
