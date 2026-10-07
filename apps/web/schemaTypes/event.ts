@@ -32,7 +32,15 @@ export const eventSchema = defineType({
       name: "description",
       title: "Description",
       type: "text",
-      rows: 3,
+      rows: 6,
+      description:
+        "Faits sourceUrl uniquement. Minimum 140 caractères. Cible 250–400. Ne pas padder.",
+      validation: (Rule) => [
+        Rule.required().min(140),
+        Rule.min(250).max(400).warning(
+          "Cible 250–400 caractères, faits sourceUrl uniquement"
+        ),
+      ],
     }),
     defineField({
       name: "metaDescriptionFr",

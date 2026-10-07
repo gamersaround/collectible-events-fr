@@ -12,6 +12,7 @@ interface WizardsEvent {
   country: string;
   format?: string;
   eventType?: string;
+  description?: string;
   url?: string;
 }
 
@@ -59,6 +60,7 @@ export class MagicAdapter extends BaseAdapter {
           address: e.address1 ?? null,
           postalCode: e.postalCode ?? null,
           venueName: e.storeName,
+          description: e.description?.trim() || null,
           format: this.mapFormat(e.format ?? e.eventType),
           tcgTypes: ["magic"],
           sourceUrl: e.url ?? null,

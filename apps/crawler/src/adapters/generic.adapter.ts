@@ -6,6 +6,7 @@ interface GenericSelectorConfig {
   date: string;           // CSS selector for date
   city?: string;          // CSS selector for city
   address?: string;       // CSS selector for address
+  description?: string;   // CSS selector for source description text
   link?: string;          // CSS selector for event link (href)
   nextPage?: string;      // CSS selector for "next page" link
   dateFormat?: string;    // Optional: hint for date parsing
@@ -72,6 +73,10 @@ export class GenericAdapter extends BaseAdapter {
               ? container.find(selectors.address).first().text().trim() || null
               : null;
 
+            const description = selectors.description
+              ? container.find(selectors.description).first().text().trim() || null
+              : null;
+
             const sourceUrl = selectors.link
               ? this.resolveUrl(
                   container.find(selectors.link).first().attr("href") ?? "",
@@ -84,6 +89,7 @@ export class GenericAdapter extends BaseAdapter {
               city,
               startsAt,
               address,
+              description,
               tcgTypes: this.config.tcgTypes,
               sourceUrl,
               format: (this.config.adapterConfig?.format as string) ?? "tournoi",

@@ -135,6 +135,25 @@ export interface SanityEventInput {
   slug: string;
 }
 
+/** Trim source text only. Never pad or invent copy to pass Studio min(140). */
+export function descriptionFromSource(
+  value: string | null | undefined
+): string | null {
+  const trimmed = value?.trim() ?? "";
+  return trimmed.length > 0 ? trimmed : null;
+}
+
+/**
+ * Prefer crawled source text. If the crawl has none, keep an existing
+ * description rather than upserting empty over a filled document.
+ */
+export function resolveUpsertDescription(
+  incoming: string | null | undefined,
+  existing: string | null | undefined
+): string | null {
+  return descriptionFromSource(incoming) ?? descriptionFromSource(existing);
+}
+
 /**
  * Upsert an event using a deterministic _id based on fingerprint.
  * createOrReplace = create if absent, replace if present → automatic deduplication.
@@ -147,12 +166,22 @@ export async function upsertEvent(event: SanityEventInput): Promise<void> {
     ? `event-${event.sourceId}-${event.externalId}`.replace(/[^a-zA-Z0-9_-]/g, "-")
     : `event-${event.fingerprint}`;
 
+  const incomingDescription = descriptionFromSource(event.description);
+  let description = incomingDescription;
+  if (!description) {
+    const existing = await sanity.fetch<string | null>(
+      `*[_id == $id][0].description`,
+      { id }
+    );
+    description = resolveUpsertDescription(incomingDescription, existing);
+  }
+
   await sanity.createOrReplace({
     _id: id,
     _type: "event",
     title: event.title,
     slug: { _type: "slug", current: event.slug },
-    description: event.description,
+    description,
     tcgTypes: event.tcgTypes,
     format: event.format,
     status: "a_venir",

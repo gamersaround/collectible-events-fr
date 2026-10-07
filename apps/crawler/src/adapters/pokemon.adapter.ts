@@ -73,6 +73,7 @@ export class PokemonAdapter extends BaseAdapter {
                 address: e.venue?.address ?? e.address ?? null,
                 postalCode: e.venue?.postalCode ?? e.postal_code ?? null,
                 venueName: e.venue?.name ?? null,
+                description: e.description ?? e.details ?? e.summary ?? null,
                 format: this.mapFormat(e.type ?? e.format),
                 tcgTypes: ["pokemon"],
                 registrationUrl: e.registrationUrl ?? e.url ?? null,
