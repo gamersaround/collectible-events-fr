@@ -63,7 +63,6 @@ export async function LegalStaticPage({
   const t = await getTranslations({ locale, namespace: PAGE_NAMESPACE[page] });
   const tf = await getTranslations({ locale, namespace: "footer" });
   const sections = t.raw("sections") as Section[];
-  const email = page === "contact" ? t("email") : null;
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
   const schema = {
     "@context": "https://schema.org",
@@ -94,16 +93,6 @@ export async function LegalStaticPage({
             <p className="whitespace-pre-line">{section.body}</p>
           </section>
         ))}
-        {email ? (
-          <p>
-            <a
-              href={`mailto:${email}`}
-              className="font-medium text-gray-900 underline underline-offset-2 hover:text-[#1a1a1a]"
-            >
-              {email}
-            </a>
-          </p>
-        ) : null}
         {page === "cookies" ? (
           <p>
             <Link

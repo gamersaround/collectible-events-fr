@@ -311,16 +311,24 @@
   },
   "contactPage": {
     "title": "Contact",
-    "metaDescription": "Contacter CardAgenda par e-mail. Pas de formulaire de contact : pour un événement, utiliser la page Soumettre.",
-    "email": "martin.perret@gmail.com",
-    "sections": [
-      {
-        "body": "Pour une question sur le site (fiche, correction, partenariat), écrire à l’adresse ci-dessous. Il n’y a pas de formulaire de contact."
-      },
-      {
-        "body": "Pour ajouter un tournoi, une bourse ou une convention : page Soumettre."
-      }
-    ]
+    "metaDescription": "Contacter CardAgenda : formulaire partenariat ou correction. Pour un événement, page Soumettre. Éditeur LC PRIZM, SASU, RCS Paris, capital 1 000,00 €.",
+    "intro": "Pour une question sur le site (fiche, correction) ou un partenariat, utiliser le formulaire ci-dessous. Pour ajouter un tournoi, une bourse ou une convention, utiliser la page Soumettre.",
+    "submitTitle": "Soumettre un événement",
+    "submitBody": "Le formulaire d’événement déjà en place enregistre la fiche pour modération, puis publication sur CardAgenda.",
+    "submitCta": "Aller à Soumettre",
+    "formTitle": "Partenariat, correction, autre demande",
+    "formBody": "Même formulaire que la page Sponsoring / mise en avant. Pas d’adresse e-mail publiée sur cette page.",
+    "publisherTitle": "Éditeur du site",
+    "legal": {
+      "siren": "SIREN",
+      "siret": "SIRET (siège)",
+      "legalForm": "Forme juridique",
+      "vat": "N° de TVA",
+      "rcs": "N° RCS",
+      "rcsStatus": "Inscription au RCS",
+      "rne": "Inscription au RNE",
+      "capital": "Capital social"
+    }
   },
   "legalNoticePage": {
     "title": "Mentions légales",
