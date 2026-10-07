@@ -16,6 +16,12 @@
     "interactiveMap": "Carte interactive",
     "submitEvent": "Soumettre un événement",
     "sponsorLink": "Sponsoring / mise en avant",
+    "legalTitle": "Légal",
+    "about": "À propos",
+    "contact": "Contact",
+    "legalNotice": "Mentions légales",
+    "privacy": "Confidentialité",
+    "cookies": "Cookies",
     "copyright": "© {year} CardAgenda : Made with ❤️ for the Card Collectors"
   },
   "home": {
@@ -283,6 +289,93 @@
     "AU": "🇦🇺 Australie",
     "NZ": "🇳🇿 Nouvelle-Zélande",
     "OTHER": "🌍 Autre"
+  },
+  "aboutPage": {
+    "title": "À propos",
+    "metaDescription": "CardAgenda recense des événements cartes à collectionner en Europe. Annuaire indépendant : nous n’organisons pas les salons listés.",
+    "sections": [
+      {
+        "body": "CardAgenda (cardagenda.com) est un annuaire d’événements de cartes à collectionner en Europe (France, Belgique, Royaume-Uni et d’autres pays européens) : jeux de cartes à collectionner (Pokémon, Magic: The Gathering, Yu-Gi-Oh!, Lorcana, One Piece, Dragon Ball, Flesh and Blood, entre autres) et cartes sportives."
+      },
+      {
+        "body": "Les fiches sont rédigées à partir de pages publiques des organisateurs et de soumissions via le formulaire du site. Elles sont enregistrées dans un CMS (Sanity) puis publiées sur cardagenda.com."
+      },
+      {
+        "title": "Ce que CardAgenda n’est pas",
+        "body": "CardAgenda n’organise pas les événements listés. Nous ne sommes pas l’organisateur, ni un site officiel des éditeurs de jeux. Dates, horaires, tarifs et inscriptions : se reporter à la source indiquée sur chaque fiche."
+      },
+      {
+        "body": "Pour proposer un événement, utiliser la page Soumettre. Pour une question, utiliser la page Contact."
+      }
+    ]
+  },
+  "contactPage": {
+    "title": "Contact",
+    "metaDescription": "Contacter CardAgenda par e-mail. Pas de formulaire de contact : pour un événement, utiliser la page Soumettre.",
+    "email": "martin.perret@gmail.com",
+    "sections": [
+      {
+        "body": "Pour une question sur le site (fiche, correction, partenariat), écrire à l’adresse ci-dessous. Il n’y a pas de formulaire de contact."
+      },
+      {
+        "body": "Pour ajouter un tournoi, une bourse ou une convention : page Soumettre."
+      }
+    ]
+  },
+  "legalNoticePage": {
+    "title": "Mentions légales",
+    "metaDescription": "Mentions légales de CardAgenda : éditeur Martin Perret, hébergement Vercel, contact e-mail. Annuaire d’événements cartes en Europe.",
+    "sections": [
+      {
+        "title": "Éditeur",
+        "body": "Le site cardagenda.com est édité par Martin Perret, personne physique. Aucun numéro SIRET n’est publié sur cette page. Directeur de la publication : Martin Perret. Contact : martin.perret@gmail.com."
+      },
+      {
+        "title": "Hébergement",
+        "body": "Le site est hébergé par Vercel Inc., 440 Terry Avenue North, San Francisco, CA 94158, États-Unis."
+      },
+      {
+        "title": "Contenu",
+        "body": "CardAgenda est un annuaire. Les informations d’événements proviennent de sources publiques et de soumissions. Les noms, logos et contenus des événements restent ceux des organisateurs et des ayants droit. Pokémon, Magic: The Gathering, Yu-Gi-Oh! et les autres marques citées appartiennent à leurs titulaires. Aucune affiliation."
+      }
+    ]
+  },
+  "privacyPage": {
+    "title": "Confidentialité",
+    "metaDescription": "Données traitées par CardAgenda : soumissions d’événements, cookie de likes, logs d’hébergement, script Google AdSense. Contact : martin.perret@gmail.com.",
+    "sections": [
+      {
+        "title": "Responsable",
+        "body": "Martin Perret, éditeur de cardagenda.com. Contact : martin.perret@gmail.com."
+      },
+      {
+        "title": "Données collectées",
+        "body": "Le site n’a pas de comptes utilisateurs. Le formulaire Soumettre enregistre les informations d’un événement (titre, lieu, dates, contact organisateur, éventuellement une image) dans Sanity, pour modération et publication. Un cookie first-party « ca_event_likes » stocke dans le navigateur les identifiants d’événements marqués « j’aime », sans compte."
+      },
+      {
+        "title": "Hébergement et publicité",
+        "body": "Vercel, hébergeur du site, peut conserver des journaux techniques d’accès. Le site charge le script Google AdSense (compte ca-pub-8480412242622897). Google peut déposer des cookies et traiter des données lorsque des publicités sont affichées."
+      },
+      {
+        "title": "Droits",
+        "body": "Pour accéder, rectifier ou supprimer des données personnelles, écrire à martin.perret@gmail.com."
+      }
+    ]
+  },
+  "cookiesPage": {
+    "title": "Cookies",
+    "metaDescription": "Cookies utilisés sur CardAgenda : cookie first-party de likes (ca_event_likes), cookies techniques d’hébergement, cookies Google AdSense si des publicités s’affichent.",
+    "sections": [
+      {
+        "body": "CardAgenda utilise un cookie first-party nommé ca_event_likes : il mémorise dans le navigateur les événements marqués « j’aime ». Pas de compte, pas d’envoi vers Sanity."
+      },
+      {
+        "body": "L’hébergeur (Vercel) peut poser des cookies techniques. Google AdSense, chargé sur le site, peut poser des cookies tiers lorsque des publicités s’affichent."
+      },
+      {
+        "body": "Le détail du traitement des données est sur la page Confidentialité."
+      }
+    ]
   },
   "metadata": {
     "defaultTitle": "CardAgenda : Agenda des événements cartes à collectionner",

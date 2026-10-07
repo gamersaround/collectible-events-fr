@@ -40,6 +40,18 @@ const nextConfig = {
         source: "/en/events/:slug",
         destination: "/en/evenements/:slug",
       },
+      {
+        source: "/en/about",
+        destination: "/en/a-propos",
+      },
+      {
+        source: "/en/legal",
+        destination: "/en/mentions-legales",
+      },
+      {
+        source: "/en/privacy",
+        destination: "/en/confidentialite",
+      },
     ];
   },
 };

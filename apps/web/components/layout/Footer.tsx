@@ -2,6 +2,7 @@ import Image from "next/image";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { eventsBasePath } from "@/lib/paths";
+import { legalPublicPath } from "@/lib/legal-paths";
 
 export async function Footer() {
   const t = await getTranslations("footer");
@@ -12,7 +13,7 @@ export async function Footer() {
   return (
     <footer className="border-t-4 border-black bg-black text-white">
       <div className="container py-10">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-b-2 border-white/20 pb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 border-b-2 border-white/20 pb-8">
           {/* Brand */}
           <div>
             <div className="mb-3">
@@ -50,6 +51,17 @@ export async function Footer() {
               <li><Link href={`${eventsRoot}/sports-cards`} className="text-white/70 hover:text-[#FFDE03] transition-colors">⚽ {tt("sports_cards")}</Link></li>
               <li><Link href={`${eventsRoot}/one-piece`} className="text-white/70 hover:text-[#FFDE03] transition-colors">🏴‍☠️ {tt("one_piece")}</Link></li>
               <li><Link href={`${eventsRoot}/lorcana`} className="text-white/70 hover:text-[#FFDE03] transition-colors">🌊 {tt("lorcana")}</Link></li>
+            </ul>
+          </div>
+
+          <div>
+            <h3 className="font-display font-black uppercase text-[#FFDE03] mb-3 text-sm tracking-wide">{t("legalTitle")}</h3>
+            <ul className="space-y-2 text-sm font-medium">
+              <li><Link href={legalPublicPath(locale, "about")} className="text-white/70 hover:text-[#FFDE03] transition-colors">{t("about")}</Link></li>
+              <li><Link href={legalPublicPath(locale, "contact")} className="text-white/70 hover:text-[#FFDE03] transition-colors">{t("contact")}</Link></li>
+              <li><Link href={legalPublicPath(locale, "legal")} className="text-white/70 hover:text-[#FFDE03] transition-colors">{t("legalNotice")}</Link></li>
+              <li><Link href={legalPublicPath(locale, "privacy")} className="text-white/70 hover:text-[#FFDE03] transition-colors">{t("privacy")}</Link></li>
+              <li><Link href={legalPublicPath(locale, "cookies")} className="text-white/70 hover:text-[#FFDE03] transition-colors">{t("cookies")}</Link></li>
             </ul>
           </div>
         </div>
