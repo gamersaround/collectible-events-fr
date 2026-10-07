@@ -3,6 +3,7 @@ import { BaseAdapter, type AdapterConfig, type CrawlResult, type RawEvent } from
 interface BrocabracJsonLd {
   "@type": string;
   name: string;
+  description?: string;
   url?: string;
   startDate?: string;
   endDate?: string;
@@ -97,6 +98,7 @@ export class BrocabracAdapter extends BaseAdapter {
             endsAt: data.endDate ?? null,
             address,
             postalCode,
+            description: data.description?.trim() || null,
             tcgTypes: this.config.tcgTypes,
             sourceUrl,
             format: (this.config.adapterConfig?.format as string) ?? "bourse",

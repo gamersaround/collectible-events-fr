@@ -75,6 +75,7 @@ export function normalizeEvent(event: ValidatedEvent): NormalizedEvent {
 
   return {
     title,
+    // Source text only — never pad to Studio min(140).
     description: event.description?.trim() || null,
     city,
     address: event.address?.trim() || null,
