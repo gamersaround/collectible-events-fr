@@ -1,6 +1,12 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import createNextIntlPlugin from "next-intl/plugin";
 
 const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
+const emptyPolyfill = path.join(
+  path.dirname(fileURLToPath(import.meta.url)),
+  "lib/empty-polyfill.js"
+);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -15,6 +21,18 @@ const nextConfig = {
   },
   experimental: {
     optimizePackageImports: ["lucide-react"],
+  },
+  webpack(config, { isServer, webpack }) {
+    // Next 14 ships next-polyfill-module in every client bundle, ignoring browserslist.
+    if (!isServer) {
+      config.plugins.push(
+        new webpack.NormalModuleReplacementPlugin(
+          /next\/dist\/build\/polyfills\/polyfill-module/,
+          emptyPolyfill
+        )
+      );
+    }
+    return config;
   },
   async redirects() {
     return [
