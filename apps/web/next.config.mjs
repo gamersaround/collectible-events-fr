@@ -5,6 +5,7 @@ const withNextIntl = createNextIntlPlugin("./i18n/request.ts");
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ["@agenda-cartes/shared"],
+  productionBrowserSourceMaps: process.env.ANALYZE === "1",
   images: {
     remotePatterns: [
       {
@@ -14,7 +15,7 @@ const nextConfig = {
     ],
   },
   experimental: {
-    optimizePackageImports: ["lucide-react"],
+    optimizePackageImports: ["lucide-react", "date-fns", "date-fns/locale"],
   },
   async redirects() {
     return [
