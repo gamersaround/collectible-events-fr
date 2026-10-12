@@ -11,6 +11,7 @@ const emptyPolyfill = path.join(
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   transpilePackages: ["@agenda-cartes/shared"],
+  productionBrowserSourceMaps: process.env.ANALYZE === "1",
   images: {
     remotePatterns: [
       {
@@ -20,7 +21,7 @@ const nextConfig = {
     ],
   },
   experimental: {
-    optimizePackageImports: ["lucide-react"],
+    optimizePackageImports: ["lucide-react", "date-fns", "date-fns/locale"],
   },
   webpack(config, { isServer, webpack }) {
     // Next 14 ships next-polyfill-module in every client bundle, ignoring browserslist.

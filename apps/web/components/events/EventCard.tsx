@@ -8,7 +8,7 @@ import { Link } from "@/i18n/navigation";
 import type { EventRow } from "@/lib/queries/events";
 import { EventBadge, FormatBadge } from "./EventBadge";
 import { EventLikeButton } from "./EventLikeButton";
-import { formatDateFr, formatEntryFee } from "@/lib/utils/dates";
+import { formatEntryFee } from "@/lib/utils/fees";
 import { TCG_CONFIG, TCGType } from "@agenda-cartes/shared";
 import { urlFor } from "@/lib/sanity/image";
 import { countryCode, countryFlagEmoji } from "@/lib/countries";
