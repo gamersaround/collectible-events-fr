@@ -31,6 +31,7 @@ const EVENT_PROJECTION = groq`{
   "website_url": websiteUrl,
   "source_url": sourceUrl,
   fingerprint,
+  "series_slug": seriesSlug,
   "image": image { asset, hotspot, crop, "alt": alt }
 }`;
 
@@ -87,20 +88,47 @@ export const ALL_EVENT_SLUGS_QUERY = groq`
   *[_type == "event" && defined(slug.current)].slug.current
 `;
 
-// Later editions in the same city/country — series match is applied in JS
+// Later editions in the same series.
+// Primary match: same seriesSlug (when set on both events).
+// Fallback: same city/country with JS title normalisation (legacy, no seriesSlug).
 export const NEXT_EDITION_CANDIDATES_QUERY = groq`
   *[_type == "event"
     && defined(slug.current)
     && slug.current != $slug
     && defined(startsAt)
     && startsAt > $startsAt
-    && lower(city) == $cityLower
-    && country == $country
+    && (
+      ($seriesSlug != null && seriesSlug == $seriesSlug)
+      ||
+      ($seriesSlug == null && lower(city) == $cityLower && country == $country)
+    )
     && status != "annule"
   ] | order(startsAt asc) [0...30] {
     title,
     "slug": slug.current,
-    "starts_at": startsAt
+    "starts_at": startsAt,
+    "series_slug": seriesSlug
+  }
+`;
+
+// Previous (most recent terminated) edition in the same series.
+export const PREV_EDITION_CANDIDATES_QUERY = groq`
+  *[_type == "event"
+    && defined(slug.current)
+    && slug.current != $slug
+    && defined(startsAt)
+    && startsAt < $startsAt
+    && (
+      ($seriesSlug != null && seriesSlug == $seriesSlug)
+      ||
+      ($seriesSlug == null && lower(city) == $cityLower && country == $country)
+    )
+    && status == "termine"
+  ] | order(startsAt desc) [0...30] {
+    title,
+    "slug": slug.current,
+    "starts_at": startsAt,
+    "series_slug": seriesSlug
   }
 `;
 

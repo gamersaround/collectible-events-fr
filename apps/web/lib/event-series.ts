@@ -10,17 +10,35 @@ export function normalizeEventSeriesKey(title: string): string {
     .replace(/\s+/g, " ");
 }
 
-export type NextEditionCandidate = {
+export type EditionCandidate = {
   title: string;
   slug: string;
   starts_at: string;
+  series_slug?: string | null;
 };
 
-/** First later event in the same city with the same normalised title. */
-export function pickNextEdition(
+/**
+ * Pick the best candidate edition from a pre-filtered list.
+ *
+ * When the GROQ query was parameterised with a non-null seriesSlug, ALL
+ * candidates already share that seriesSlug — return the first one.
+ * When the query fell back to city/country matching, apply JS title
+ * normalisation to filter out unrelated shows in the same city.
+ */
+export function pickEditionCandidate(
   currentTitle: string,
-  candidates: NextEditionCandidate[]
-): NextEditionCandidate | null {
+  currentSeriesSlug: string | null | undefined,
+  candidates: EditionCandidate[]
+): EditionCandidate | null {
+  if (!candidates.length) return null;
+
+  // seriesSlug-based match: GROQ already filtered by seriesSlug, trust it.
+  if (currentSeriesSlug) {
+    const hit = candidates.find((c) => c.slug);
+    return hit ?? null;
+  }
+
+  // Legacy fallback: title normalisation.
   const key = normalizeEventSeriesKey(currentTitle);
   if (!key) return null;
   for (const candidate of candidates) {
@@ -30,6 +48,14 @@ export function pickNextEdition(
     }
   }
   return null;
+}
+
+/** @deprecated Use pickEditionCandidate — kept for any callers not yet updated. */
+export function pickNextEdition(
+  currentTitle: string,
+  candidates: EditionCandidate[]
+): EditionCandidate | null {
+  return pickEditionCandidate(currentTitle, null, candidates);
 }
 
 export const NOINDEX_ROBOTS = {

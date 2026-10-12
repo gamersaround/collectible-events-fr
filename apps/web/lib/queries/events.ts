@@ -1,5 +1,5 @@
 import { sanityServerClient } from "@/lib/sanity/client";
-import { pickNextEdition } from "@/lib/event-series";
+import { pickEditionCandidate } from "@/lib/event-series";
 
 export interface SanityImage {
   asset: { _ref: string; _type: string };
@@ -13,6 +13,7 @@ import {
   EVENT_BY_SLUG_QUERY,
   ALL_EVENT_SLUGS_QUERY,
   NEXT_EDITION_CANDIDATES_QUERY,
+  PREV_EDITION_CANDIDATES_QUERY,
   EVENT_COUNTRY_CODES_QUERY,
   EVENT_LOCATIONS_QUERY,
   MAP_EVENTS_QUERY,
@@ -50,6 +51,7 @@ export interface EventRow {
   website_url: string | null;
   source_url: string | null;
   fingerprint: string | null;
+  series_slug: string | null;
   image: SanityImage | null;
 }
 
@@ -118,19 +120,38 @@ export async function getAllEventSlugs(): Promise<string[]> {
 }
 
 export async function getNextEdition(
-  event: Pick<EventRow, "slug" | "title" | "city" | "country" | "starts_at">
+  event: Pick<EventRow, "slug" | "title" | "city" | "country" | "starts_at" | "series_slug">
 ): Promise<{ title: string; slug: string; starts_at: string } | null> {
   const cityLower = event.city.trim().toLowerCase();
   if (!cityLower || !event.starts_at) return null;
   const candidates = await sanityServerClient.fetch<
-    { title: string; slug: string; starts_at: string }[]
+    { title: string; slug: string; starts_at: string; series_slug?: string | null }[]
   >(NEXT_EDITION_CANDIDATES_QUERY, {
     slug: event.slug,
     startsAt: event.starts_at,
     cityLower,
     country: event.country,
+    seriesSlug: event.series_slug ?? null,
   });
-  return pickNextEdition(event.title, candidates ?? []);
+  return pickEditionCandidate(event.title, event.series_slug, candidates ?? []);
+}
+
+export async function getPrevEdition(
+  event: Pick<EventRow, "slug" | "title" | "city" | "country" | "starts_at" | "series_slug">
+): Promise<{ title: string; slug: string; starts_at: string } | null> {
+  const cityLower = event.city.trim().toLowerCase();
+  if (!cityLower || !event.starts_at) return null;
+  const candidates = await sanityServerClient.fetch<
+    { title: string; slug: string; starts_at: string; series_slug?: string | null }[]
+  >(PREV_EDITION_CANDIDATES_QUERY, {
+    slug: event.slug,
+    startsAt: event.starts_at,
+    cityLower,
+    country: event.country,
+    seriesSlug: event.series_slug ?? null,
+  });
+  // Most recent terminated edition first (GROQ orders by startsAt desc)
+  return pickEditionCandidate(event.title, event.series_slug, candidates ?? []);
 }
 
 export type MapEvent = Pick<
