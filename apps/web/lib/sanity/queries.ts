@@ -5,6 +5,7 @@ const EVENT_PROJECTION = groq`{
   "id": _id,
   title,
   "slug": slug.current,
+  "series_slug": seriesSlug.current,
   description,
   "meta_description_fr": metaDescriptionFr,
   "meta_description_en": metaDescriptionEn,
@@ -88,6 +89,7 @@ export const ALL_EVENT_SLUGS_QUERY = groq`
 `;
 
 // Later editions in the same city/country — series match is applied in JS
+// seriesSlug takes priority; title-normalization is the fallback.
 export const NEXT_EDITION_CANDIDATES_QUERY = groq`
   *[_type == "event"
     && defined(slug.current)
@@ -100,6 +102,25 @@ export const NEXT_EDITION_CANDIDATES_QUERY = groq`
   ] | order(startsAt asc) [0...30] {
     title,
     "slug": slug.current,
+    "series_slug": seriesSlug.current,
+    "starts_at": startsAt
+  }
+`;
+
+// Earlier editions in the same city/country — series match is applied in JS
+export const PREV_EDITION_CANDIDATES_QUERY = groq`
+  *[_type == "event"
+    && defined(slug.current)
+    && slug.current != $slug
+    && defined(startsAt)
+    && startsAt < $startsAt
+    && lower(city) == $cityLower
+    && country == $country
+    && status != "annule"
+  ] | order(startsAt desc) [0...30] {
+    title,
+    "slug": slug.current,
+    "series_slug": seriesSlug.current,
     "starts_at": startsAt
   }
 `;
