@@ -15,6 +15,11 @@ import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
 export const revalidate = 3600;
 export const maxDuration = 30;
 
+// Unknown slugs must not become ISR 200 pages. Keep true so a newly published
+// Sanity article can still be generated on demand (webhook revalidatePath).
+// Invented slugs 404 via notFound() in generateMetadata.
+export const dynamicParams = true;
+
 export async function generateStaticParams() {
   const slugs = await getAllArticleSlugs();
   return routing.locales.flatMap((locale) =>
@@ -30,10 +35,9 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }): Promise<Metadata> {
   const { locale, slug } = await params;
-  const t = await getTranslations({ locale, namespace: "articleDetail" });
   const article = await getArticleBySlug(slug, locale);
 
-  if (!article) return { title: t("notFound") };
+  if (!article) notFound();
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.cardagenda.com";
   const description = article.meta_description ?? article.excerpt ?? undefined;
