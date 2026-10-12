@@ -44,6 +44,16 @@ const nextConfig = {
         source: "/en/about",
         destination: "/en/a-propos",
       },
+      // Canonical EN slugs (SEO-friendly, indexable)
+      {
+        source: "/en/legal-notice",
+        destination: "/en/mentions-legales",
+      },
+      {
+        source: "/en/privacy-policy",
+        destination: "/en/confidentialite",
+      },
+      // Legacy EN aliases kept for backward compatibility
       {
         source: "/en/legal",
         destination: "/en/mentions-legales",

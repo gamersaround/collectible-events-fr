@@ -12,8 +12,8 @@ export type LegalPageKey = (typeof LEGAL_PAGE_KEYS)[number];
 export const LEGAL_ROUTES: Record<LegalPageKey, { fr: string; en: string }> = {
   about: { fr: "/a-propos", en: "/about" },
   contact: { fr: "/contact", en: "/contact" },
-  legal: { fr: "/mentions-legales", en: "/legal" },
-  privacy: { fr: "/confidentialite", en: "/privacy" },
+  legal: { fr: "/mentions-legales", en: "/legal-notice" },
+  privacy: { fr: "/confidentialite", en: "/privacy-policy" },
   cookies: { fr: "/cookies", en: "/cookies" },
 };
 
