@@ -14,7 +14,7 @@ import {
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { getEventBySlug, getAllEventSlugs, getEventLocations, getNextEdition } from "@/lib/queries/events";
+import { getEventBySlug, getAllEventSlugs, getEventLocations, getNextEdition, getPrevEdition } from "@/lib/queries/events";
 import { countryCode } from "@/lib/countries";
 import { urlFor } from "@/lib/sanity/image";
 import { EventBadge, FormatBadge } from "@/components/events/EventBadge";
@@ -224,7 +224,14 @@ export default async function EventDetailPage({
 
   if (!event) notFound();
 
-  const nextEdition = await getNextEdition(event);
+  const isTerminated = event.status === "termine";
+
+  // Fetch next/prev in parallel. For terminated events, only next matters (banner).
+  // For future/ongoing events, only prev matters (back-reference).
+  const [nextEdition, prevEdition] = await Promise.all([
+    isTerminated ? getNextEdition(event) : Promise.resolve(null),
+    isTerminated ? Promise.resolve(null) : getPrevEdition(event),
+  ]);
 
   const isCancelled = event.status === "annule";
   const dateLocale = locale as "fr" | "en";
@@ -282,14 +289,29 @@ export default async function EventDetailPage({
               {event.title}
             </h1>
 
-            {nextEdition && nextEdition.slug !== event.slug && (
-              <div className="mb-4 border border-blue-200 bg-blue-50 rounded-xl px-4 py-3 text-sm text-blue-900">
-                <p className="font-medium">{t("nextEdition", { title: nextEdition.title })}</p>
+            {/* Terminated edition — show banner + link to next if available */}
+            {isTerminated && (
+              <div className="mb-4 border-2 border-gray-400 bg-gray-100 rounded-xl px-4 py-3 text-sm text-gray-800">
+                <p className="font-semibold">{t("terminatedBanner")}</p>
+                {nextEdition && nextEdition.slug !== event.slug && (
+                  <Link
+                    href={`${eventsBasePath(locale)}/${nextEdition.slug}`}
+                    className="inline-flex items-center gap-1 mt-1 text-blue-700 hover:underline font-medium"
+                  >
+                    {t("nextEditionLink")} →
+                  </Link>
+                )}
+              </div>
+            )}
+
+            {/* Future / ongoing edition — link to previous terminated edition */}
+            {!isTerminated && prevEdition && prevEdition.slug !== event.slug && (
+              <div className="mb-4 border border-gray-200 bg-gray-50 rounded-xl px-4 py-3 text-sm text-gray-700">
                 <Link
-                  href={`${eventsBasePath(locale)}/${nextEdition.slug}`}
-                  className="inline-flex items-center gap-1 mt-1 text-blue-700 hover:underline"
+                  href={`${eventsBasePath(locale)}/${prevEdition.slug}`}
+                  className="inline-flex items-center gap-1 hover:underline"
                 >
-                  {t("nextEditionLink")}
+                  ← {t("prevEditionLink")}
                 </Link>
               </div>
             )}

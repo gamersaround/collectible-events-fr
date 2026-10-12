@@ -89,7 +89,9 @@
     "nextEdition": "Next edition: {title}",
     "nextEditionLink": "View next edition",
     "free": "Free",
-    "feeNotListed": "Not listed"
+    "feeNotListed": "Not listed",
+    "terminatedBanner": "Past edition",
+    "prevEditionLink": "View previous edition"
   },
   "likes": {
     "like": "Like",

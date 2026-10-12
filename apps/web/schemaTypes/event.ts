@@ -339,6 +339,19 @@ export const eventSchema = defineType({
       type: "url",
     }),
     defineField({
+      name: "seriesSlug",
+      title: "Série (slug)",
+      type: "string",
+      description:
+        "Identifiant ascii de la série d'éditions récurrentes. Ex. : lille-card-show. Même valeur sur toutes les éditions d'un même show. Minuscules, chiffres et tirets uniquement.",
+      validation: (Rule) =>
+        Rule.custom((value) => {
+          if (!value) return true; // optional
+          if (/^[a-z0-9-]+$/.test(value)) return true;
+          return "Minuscules, chiffres et tirets uniquement (ex. lille-card-show).";
+        }),
+    }),
+    defineField({
       name: "sourceId",
       title: "Source ID",
       type: "string",
