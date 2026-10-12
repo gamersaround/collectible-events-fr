@@ -14,7 +14,7 @@ import {
 import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
-import { getEventBySlug, getAllEventSlugs, getEventLocations, getNextEdition } from "@/lib/queries/events";
+import { getEventBySlug, getAllEventSlugs, getEventLocations, getNextEdition, getPreviousEdition } from "@/lib/queries/events";
 import { countryCode } from "@/lib/countries";
 import { urlFor } from "@/lib/sanity/image";
 import { EventBadge, FormatBadge } from "@/components/events/EventBadge";
@@ -224,7 +224,10 @@ export default async function EventDetailPage({
 
   if (!event) notFound();
 
-  const nextEdition = await getNextEdition(event);
+  const [nextEdition, prevEdition] = await Promise.all([
+    getNextEdition(event),
+    getPreviousEdition(event),
+  ]);
 
   const isCancelled = event.status === "annule";
   const dateLocale = locale as "fr" | "en";
@@ -290,6 +293,18 @@ export default async function EventDetailPage({
                   className="inline-flex items-center gap-1 mt-1 text-blue-700 hover:underline"
                 >
                   {t("nextEditionLink")}
+                </Link>
+              </div>
+            )}
+
+            {prevEdition && prevEdition.slug !== event.slug && (
+              <div className="mb-4 border border-gray-200 bg-gray-50 rounded-xl px-4 py-3 text-sm text-gray-700">
+                <p className="font-medium">{t("prevEdition", { title: prevEdition.title })}</p>
+                <Link
+                  href={`${eventsBasePath(locale)}/${prevEdition.slug}`}
+                  className="inline-flex items-center gap-1 mt-1 text-gray-500 hover:underline"
+                >
+                  {t("prevEditionLink")}
                 </Link>
               </div>
             )}

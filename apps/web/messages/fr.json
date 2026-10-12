@@ -88,6 +88,8 @@
     "notFound": "Événement introuvable",
     "nextEdition": "Édition suivante : {title}",
     "nextEditionLink": "Voir l'édition suivante",
+    "prevEdition": "Édition précédente : {title}",
+    "prevEditionLink": "Voir l'édition précédente",
     "free": "Gratuit",
     "feeNotListed": "Non mentionné"
   },

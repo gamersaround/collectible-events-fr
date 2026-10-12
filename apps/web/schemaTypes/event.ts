@@ -339,6 +339,27 @@ export const eventSchema = defineType({
       type: "url",
     }),
     defineField({
+      name: "seriesSlug",
+      title: "Série (slug)",
+      type: "slug",
+      description:
+        "Identifiant stable de la série d'éditions (ex. lille-card-show). Même valeur sur toutes les éditions d'un même événement récurrent. ASCII, tirets, sans année.",
+      options: {
+        source: (doc) => {
+          const title = typeof doc.title === "string" ? doc.title : "";
+          return title
+            .normalize("NFD")
+            .replace(/[\u0300-\u036f]/g, "")
+            .toLowerCase()
+            .replace(/\b(?:19|20)\d{2}\b/g, "")
+            .replace(/[^a-z0-9]+/g, "-")
+            .replace(/^-+|-+$/g, "")
+            .slice(0, 80);
+        },
+        maxLength: 100,
+      },
+    }),
+    defineField({
       name: "sourceId",
       title: "Source ID",
       type: "string",
