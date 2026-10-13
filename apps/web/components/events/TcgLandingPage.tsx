@@ -17,6 +17,7 @@ export async function TcgLandingPage({ tcgType, locale, urlSlug }: TcgLandingPag
   const config = TCG_CONFIG[tcgType as TCGType];
   const { data: events, total } = await getEvents({ tcgTypes: [tcgType] }, 1, 24);
   const tt = await getTranslations({ locale, namespace: "tcgLabelsFull" });
+  const t = await getTranslations({ locale, namespace: "tcgLanding" });
   const tcgLabel = tt.has(tcgType) ? tt(tcgType) : config.label;
   const eventsRoot = eventsBasePath(locale);
 
@@ -68,7 +69,7 @@ export async function TcgLandingPage({ tcgType, locale, urlSlug }: TcgLandingPag
           className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 mb-6 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          {isFr ? "Tous les événements" : "All events"}
+          {t("allEvents")}
         </Link>
 
         <header className="mb-8">
@@ -87,7 +88,7 @@ export async function TcgLandingPage({ tcgType, locale, urlSlug }: TcgLandingPag
               href={`${eventsRoot}?tcg=${tcgType}`}
               className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:underline"
             >
-              {isFr ? `Voir les ${total} événements →` : `View all ${total} events →`}
+              {t("viewAllEvents", { count: total })}
             </Link>
           </div>
         )}

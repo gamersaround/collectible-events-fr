@@ -412,5 +412,15 @@
     "title": "404",
     "description": "Cette page n'existe pas ou a été déplacée.",
     "backHome": "Retour à l'accueil"
+  },
+  "geoLanding": {
+    "allEvents": "Tous les événements",
+    "viewCountry": "Voir le pays",
+    "citiesLabel": "Villes",
+    "viewAllEvents": "Voir les {count} événements →"
+  },
+  "tcgLanding": {
+    "allEvents": "Tous les événements",
+    "viewAllEvents": "Voir les {count} événements →"
   }
 }

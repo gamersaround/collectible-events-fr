@@ -1,5 +1,6 @@
 import { Link } from "@/i18n/navigation";
 import { ArrowLeft } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 import { getEvents } from "@/lib/queries/events";
 import { EventList } from "@/components/events/EventList";
 import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
@@ -30,7 +31,7 @@ export async function GeoLandingPage({
   const eventsRoot = eventsBasePath(locale);
   const { data: events, total } = await getEvents(filters, 1, 24);
   const { title, description } = geoPageCopy(locale, match);
-  const isFr = locale === "fr";
+  const t = await getTranslations({ locale, namespace: "geoLanding" });
   const sectionPath = eventsBasePath(locale);
   const pageUrl = eventsUrl(locale, match.canonicalSlug);
 
@@ -80,7 +81,7 @@ export async function GeoLandingPage({
           className="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-blue-600 mb-6 transition-colors"
         >
           <ArrowLeft className="h-4 w-4" />
-          {isFr ? "Tous les événements" : "All events"}
+          {t("allEvents")}
         </Link>
 
         <header className="mb-8">
@@ -92,16 +93,16 @@ export async function GeoLandingPage({
                 href={`${eventsRoot}/${countryPathSlug(match.countryCode, locale)}`}
                 className="text-sm text-blue-600 hover:underline"
               >
-                {isFr ? "Voir le pays" : "View country"}
+                {t("viewCountry")}
               </Link>
             </p>
           )}
         </header>
 
         {match.kind === "country" && uniqueCities.length > 0 && (
-          <nav className="mb-8" aria-label={isFr ? "Villes" : "Cities"}>
+          <nav className="mb-8" aria-label={t("citiesLabel")}>
             <p className="text-sm font-medium text-gray-700 mb-2">
-              {isFr ? "Villes" : "Cities"}
+              {t("citiesLabel")}
             </p>
             <ul className="flex flex-wrap gap-2">
               {uniqueCities.map((city) => (
@@ -130,7 +131,7 @@ export async function GeoLandingPage({
               }
               className="inline-flex items-center gap-2 text-blue-600 font-semibold hover:underline"
             >
-              {isFr ? `Voir les ${total} événements →` : `View all ${total} events →`}
+              {t("viewAllEvents", { count: total })}
             </Link>
           </div>
         )}

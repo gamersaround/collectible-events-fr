@@ -412,5 +412,15 @@
     "title": "404",
     "description": "This page doesn't exist or has been moved.",
     "backHome": "Back to home"
+  },
+  "geoLanding": {
+    "allEvents": "All events",
+    "viewCountry": "View country",
+    "citiesLabel": "Cities",
+    "viewAllEvents": "View all {count} events →"
+  },
+  "tcgLanding": {
+    "allEvents": "All events",
+    "viewAllEvents": "View all {count} events →"
   }
 }
