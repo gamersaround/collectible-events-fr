@@ -15,11 +15,15 @@ const archivoBlack = Archivo_Black({
   weight: "400",
   subsets: ["latin"],
   variable: "--font-display",
+  display: "swap",
+  adjustFontFallback: false,
 });
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
   variable: "--font-body",
+  display: "swap",
+  adjustFontFallback: false,
 });
 
 export async function generateMetadata({

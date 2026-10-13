@@ -185,7 +185,7 @@ export default async function ArticleDetailPage({
 
         {/* Cover image */}
         {article.cover_image?.asset && (
-          <div className="relative h-56 md:h-80 w-full overflow-hidden border-2 border-black mb-8 shadow-brutal">
+          <div className="relative w-full overflow-hidden border-2 border-black mb-8 shadow-brutal" style={{ aspectRatio: "16/7" }}>
             <Image
               src={urlFor(article.cover_image).width(896).height(400).auto("format").url()}
               alt={article.cover_image.alt ?? article.title}

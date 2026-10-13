@@ -68,7 +68,7 @@ export default async function HomePage({
 
         <div className="container text-center relative z-10">
           {/* Big floating card emoji */}
-          <div className="inline-block mb-8 bg-white border-4 border-black shadow-brutal-xl p-5 animate-float">
+          <div className="inline-block mb-8 bg-white border-4 border-black shadow-brutal-xl p-5 animate-float" style={{ willChange: "transform", contain: "layout" }}>
             <Image
               src="/logo.jpg"
               alt="CardAgenda"
@@ -109,7 +109,7 @@ export default async function HomePage({
 
       {/* Marquee */}
       <div className="overflow-hidden border-b-4 border-black bg-black py-3 select-none">
-        <div className="flex whitespace-nowrap animate-marquee">
+        <div className="flex whitespace-nowrap animate-marquee" style={{ willChange: "transform" }}>
           {[0, 1].map((i) => (
             <span key={i} className="text-[#FFDE03] font-display font-black uppercase text-sm tracking-widest pr-0">
               POKÉMON&nbsp;•&nbsp;MAGIC&nbsp;•&nbsp;YU-GI-OH&nbsp;•&nbsp;LORCANA&nbsp;•&nbsp;ONE&nbsp;PIECE&nbsp;•&nbsp;DRAGON&nbsp;BALL&nbsp;•&nbsp;FLESH&nbsp;&amp;&nbsp;BLOOD&nbsp;•&nbsp;NBA&nbsp;•&nbsp;FOOT&nbsp;•&nbsp;SPORTS&nbsp;CARDS&nbsp;•&nbsp;&nbsp;
@@ -214,7 +214,7 @@ export default async function HomePage({
         <div className="container">
           <div className="border-4 border-white shadow-[8px_8px_0px_0px_#FFDE03] grid grid-cols-1 md:grid-cols-2 overflow-hidden">
             {/* Screenshot */}
-            <div className="relative min-h-[240px] md:min-h-0 border-b-4 md:border-b-0 md:border-r-4 border-white overflow-hidden">
+            <div className="relative border-b-4 md:border-b-0 md:border-r-4 border-white overflow-hidden" style={{ aspectRatio: "16/9" }}>
               <Image
                 src="/cardscanner-preview.jpg"
                 alt="CardScanner.fr"
