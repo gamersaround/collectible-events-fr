@@ -44,7 +44,15 @@ import dynamic from "next/dynamic";
 
 const EventDetailMap = dynamic(
   () => import("@/components/map/EventDetailMap"),
-  { ssr: false }
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="rounded-lg border border-gray-200 bg-gray-100 mt-3 animate-pulse"
+        style={{ height: "220px", width: "100%" }}
+      />
+    ),
+  }
 );
 
 export const revalidate = 3600;
@@ -250,7 +258,7 @@ export default async function EventDetailPage({
 
         {/* Hero image */}
         {event.image && (
-          <div className="relative h-56 md:h-80 w-full rounded-xl overflow-hidden border-2 border-black mb-8">
+          <div className="relative w-full rounded-xl overflow-hidden border-2 border-black mb-8" style={{ aspectRatio: "3/1" }}>
             <Image
               src={urlFor(event.image).width(1200).height(400).auto("format").url()}
               alt={event.image.alt ?? event.title}
