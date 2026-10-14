@@ -337,15 +337,11 @@
     "sections": [
       {
         "title": "Publisher",
-        "body": "cardagenda.com is published by LC PRIZM, a SASU (simplified joint-stock company with a single shareholder). Identifiers: SIREN, SIRET, VAT, RCS Paris, RNE and share capital below. No personal email is published. To contact the publisher: Contact page."
+        "body": "cardagenda.com is published by LC PRIZM, SASU. Legal identifiers below. No email address is published: use the Contact page form."
       },
       {
         "title": "Hosting",
-        "body": "The site is hosted by Vercel Inc., 440 Terry Avenue North, San Francisco, CA 94158, United States."
-      },
-      {
-        "title": "Content",
-        "body": "CardAgenda is a directory. Event information comes from public sources and submissions. Names, logos and event content remain those of the organisers and rights holders. Pokémon, Magic: The Gathering, Yu-Gi-Oh! and other mentioned trademarks belong to their owners. No affiliation."
+        "body": "Vercel Inc., 440 Terry Avenue North, San Francisco, CA 94158, United States."
       }
     ]
   },

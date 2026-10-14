@@ -333,19 +333,15 @@
   },
   "legalNoticePage": {
     "title": "Mentions légales",
-    "metaDescription": "Mentions légales de CardAgenda : éditeur LC PRIZM (SASU, RCS Paris), hébergement Vercel. Annuaire d’événements cartes en Europe.",
+    "metaDescription": "Mentions légales de CardAgenda : éditeur LC PRIZM (SASU, RCS Paris), hébergement Vercel. Annuaire d'événements cartes en Europe.",
     "sections": [
       {
         "title": "Éditeur",
-        "body": "Le site cardagenda.com est édité par LC PRIZM, SASU (société par actions simplifiée unipersonnelle). Identifiants : SIREN, SIRET, TVA, RCS Paris, RNE et capital ci-dessous. Pas d’e-mail personnel publié. Pour contacter l’éditeur : page Contact."
+        "body": "Le site cardagenda.com est édité par LC PRIZM, SASU. Identifiants légaux ci-dessous. Pas d'adresse e-mail publiée : formulaire de contact disponible sur la page Contact."
       },
       {
         "title": "Hébergement",
-        "body": "Le site est hébergé par Vercel Inc., 440 Terry Avenue North, San Francisco, CA 94158, États-Unis."
-      },
-      {
-        "title": "Contenu",
-        "body": "CardAgenda est un annuaire. Les informations d’événements proviennent de sources publiques et de soumissions. Les noms, logos et contenus des événements restent ceux des organisateurs et des ayants droit. Pokémon, Magic: The Gathering, Yu-Gi-Oh! et les autres marques citées appartiennent à leurs titulaires. Aucune affiliation."
+        "body": "Vercel Inc., 440 Terry Avenue North, San Francisco, CA 94158, États-Unis."
       }
     ]
   },
