@@ -102,7 +102,11 @@
     "eventsCountOther": "{count} upcoming events",
     "note": "Only events with geographic coordinates are shown on the map. Click a marker to see details.",
     "viewDetails": "View details",
-    "loading": "Loading map…"
+    "loading": "Loading map…",
+    "filterAll": "All",
+    "filterWeekend": "This weekend",
+    "filterWeek": "This week",
+    "filterMonth": "This month"
   },
   "submit": {
     "title": "Submit an event",
