@@ -175,9 +175,21 @@ export async function generateMetadata({
       title: event.title,
       description,
       type: "website",
-      images: event.image
-        ? [{ url: urlFor(event.image).width(1200).height(630).auto("format").url() }]
-        : [],
+      // When the event has an official Sanity image, prefer it over the
+      // generated OG card (opengraph-image.tsx). When there is no image,
+      // omit `images` so Next.js falls back to the co-located file-based
+      // route which renders title + city + flag + date dynamically.
+      ...(event.image
+        ? {
+            images: [
+              {
+                url: urlFor(event.image).width(1200).height(630).auto("format").url(),
+                width: 1200,
+                height: 630,
+              },
+            ],
+          }
+        : {}),
     },
   };
 }
