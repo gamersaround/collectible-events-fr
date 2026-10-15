@@ -1,0 +1,35 @@
+# CardAgenda
+
+> CardAgenda est l'agenda de référence des events cartes à collectionner en Europe (TCG + sports cards). Le site recense les bourses, tournois, championnats, conventions, prereleases, drafts et events casual organisés en France, Belgique, Suisse et dans d'autres pays européens.
+
+## Zones géographiques
+
+France, Belgique, Suisse, Luxembourg et autres pays européens.
+
+## Types d'événements
+
+- Bourse / vide-grenier cartes
+- Tournoi compétitif
+- Championship / Championnat régional ou national
+- Convention / salon spécialisé
+- Prerelease / avant-première
+- Draft
+- Event casual / amical
+
+## Jeux couverts
+
+- Pokémon TCG
+- Magic: The Gathering
+- Yu-Gi-Oh!
+- Disney Lorcana
+- One Piece Card Game
+- Dragon Ball Super Card Game
+- Flesh and Blood
+- Sports cards (NBA, NFL, football, baseball…)
+
+## Liens canoniques
+
+- [Accueil](https://www.cardagenda.com): Page principale — agenda complet des events cartes à collectionner
+- [Événements](https://www.cardagenda.com/evenements): Liste et calendrier de tous les événements en Europe
+- [Carte / Map](https://www.cardagenda.com/carte): Carte interactive des événements par localisation
+- [À propos](https://www.cardagenda.com/a-propos): Présentation du projet CardAgenda
