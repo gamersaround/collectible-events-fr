@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useMemo } from "react";
 import "leaflet/dist/leaflet.css";
 import type { Map as LeafletMap } from "leaflet";
 import type { EventRow } from "@/lib/queries/events";
@@ -8,6 +8,38 @@ import { TCGType, TCG_CONFIG } from "@agenda-cartes/shared";
 import { useLocale, useTranslations } from "next-intl";
 import { countryCode } from "@/lib/countries";
 import { eventsPath } from "@/lib/paths";
+
+type DateFilter = "all" | "weekend" | "week" | "month";
+
+function getDateRange(filter: DateFilter): { from: Date; to: Date } | null {
+  if (filter === "all") return null;
+  const now = new Date();
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+
+  if (filter === "weekend") {
+    const day = today.getDay(); // 0=Sun, 6=Sat
+    const daysToSat = day === 6 ? 0 : (6 - day);
+    const sat = new Date(today);
+    sat.setDate(today.getDate() + daysToSat);
+    const sun = new Date(sat);
+    sun.setDate(sat.getDate() + 1);
+    sun.setHours(23, 59, 59, 999);
+    return { from: sat, to: sun };
+  }
+  if (filter === "week") {
+    const end = new Date(today);
+    end.setDate(today.getDate() + 6);
+    end.setHours(23, 59, 59, 999);
+    return { from: today, to: end };
+  }
+  if (filter === "month") {
+    const end = new Date(today);
+    end.setDate(today.getDate() + 29);
+    end.setHours(23, 59, 59, 999);
+    return { from: today, to: end };
+  }
+  return null;
+}
 
 interface EventMapProps {
   events: Pick<EventRow, "id" | "slug" | "title" | "city" | "country" | "latitude" | "longitude" | "tcg_types" | "format" | "starts_at">[];
@@ -19,9 +51,26 @@ export default function EventMap({ events, height = "600px" }: EventMapProps) {
   const mapRef = useRef<LeafletMap | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [mapReady, setMapReady] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<DateFilter>("all");
   const locale = useLocale();
   const t = useTranslations("map");
   const tc = useTranslations("countries");
+
+  const filters: { key: DateFilter; label: string }[] = [
+    { key: "all", label: t("filterAll") },
+    { key: "weekend", label: t("filterWeekend") },
+    { key: "week", label: t("filterWeek") },
+    { key: "month", label: t("filterMonth") },
+  ];
+
+  const filteredEvents = useMemo(() => {
+    const range = getDateRange(activeFilter);
+    if (!range) return events;
+    return events.filter((e) => {
+      const d = new Date(e.starts_at);
+      return d >= range.from && d <= range.to;
+    });
+  }, [events, activeFilter]);
 
   // Fire-and-forget: trigger background geocoding for events without coordinates
   useEffect(() => {
@@ -158,9 +207,112 @@ export default function EventMap({ events, height = "600px" }: EventMapProps) {
     };
   }, [events, tc, locale, t]);
 
+  // Re-draw markers when filter changes
+  useEffect(() => {
+    if (!mapRef.current) return;
+    import("leaflet").then(async (L) => {
+      const mcMod = await import("leaflet.markercluster");
+      const extL = (mcMod as any).default ?? mcMod;
+
+      // Remove existing layers (non-tile)
+      mapRef.current!.eachLayer((layer: any) => {
+        if (!(layer instanceof L.TileLayer)) {
+          mapRef.current!.removeLayer(layer);
+        }
+      });
+
+      const clusterGroup =
+        typeof extL?.markerClusterGroup === "function"
+          ? extL.markerClusterGroup({ maxClusterRadius: 60 })
+          : L.layerGroup();
+
+      const markerLatLngs: [number, number][] = [];
+
+      for (const event of filteredEvents) {
+        if (!event.latitude || !event.longitude) continue;
+
+        const primaryTcg = (event.tcg_types[0] as TCGType) ?? TCGType.AUTRES;
+        const config = TCG_CONFIG[primaryTcg];
+        const markerColor = config?.markerColor ?? "#374151";
+
+        const icon = L.divIcon({
+          html: `
+            <div style="
+              background-color: ${markerColor};
+              width: 28px;
+              height: 28px;
+              border-radius: 50% 50% 50% 0;
+              transform: rotate(-45deg);
+              border: 2px solid white;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            ">
+              <span style="transform: rotate(45deg); font-size: 12px; line-height: 1;">${config?.emoji ?? "🃏"}</span>
+            </div>
+          `,
+          className: "",
+          iconSize: [28, 28],
+          iconAnchor: [14, 28],
+          popupAnchor: [0, -30],
+        });
+
+        const startDate = new Date(event.starts_at).toLocaleDateString(locale === "fr" ? "fr-FR" : "en-GB", {
+          day: "numeric",
+          month: "short",
+        });
+        const code = countryCode(event.country);
+        const countryLabel = tc.has(code) ? tc(code) : code;
+        const detailsHref = eventsPath(locale, event.slug);
+        const detailsLabel = t("viewDetails");
+
+        const popup = L.popup({
+          maxWidth: 250,
+          className: "event-popup",
+        }).setContent(`
+          <div style="font-family: system-ui, sans-serif; padding: 4px;">
+            <div style="font-size: 11px; color: #6b7280; margin-bottom: 4px;">${startDate}</div>
+            <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px; color: #111827;">${event.title}</div>
+            <div style="font-size: 12px; color: #6b7280; margin-bottom: 2px;">📍 ${event.city}</div>
+            <div style="font-size: 11px; color: #6b7280; margin-bottom: 8px;">${countryLabel}</div>
+            <a href="${detailsHref}"
+               style="display: inline-block; background: #2563eb; color: white; padding: 4px 12px; border-radius: 6px; text-decoration: none; font-size: 12px; font-weight: 500;">
+              ${detailsLabel}
+            </a>
+          </div>
+        `);
+
+        const marker = L.marker([event.latitude, event.longitude], { icon }).bindPopup(popup);
+        clusterGroup.addLayer(marker);
+        markerLatLngs.push([event.latitude, event.longitude]);
+      }
+
+      mapRef.current!.addLayer(clusterGroup);
+    });
+  }, [filteredEvents, locale, t, tc]);
+
   return (
-    <div className="relative" style={{ height, width: "100%" }}>
-      {!mapReady && (
+    <div className="flex flex-col gap-3" style={{ width: "100%" }}>
+      {/* Date filter pills */}
+      <div className="flex flex-wrap gap-2">
+        {filters.map(({ key, label }) => (
+          <button
+            key={key}
+            onClick={() => setActiveFilter(key)}
+            className={`px-4 py-1.5 rounded-full text-sm font-medium border-2 border-black transition-colors ${
+              activeFilter === key
+                ? "bg-black text-white"
+                : "bg-white text-black hover:bg-gray-100"
+            }`}
+          >
+            {label}
+          </button>
+        ))}
+      </div>
+
+      <div className="relative" style={{ height, width: "100%" }}>
+        {!mapReady && (
         <div className="absolute inset-0 flex flex-col items-center justify-center bg-gray-50 border-2 border-black z-10">
           <div className="w-10 h-10 border-4 border-black border-t-[#FFDE03] rounded-full animate-spin mb-3" />
           <p className="font-bold text-sm uppercase tracking-widest text-black">{t("loading")}</p>
@@ -171,6 +323,7 @@ export default function EventMap({ events, height = "600px" }: EventMapProps) {
         style={{ height: "100%", width: "100%" }}
         className="border-2 border-black"
       />
+      </div>
     </div>
   );
 }
