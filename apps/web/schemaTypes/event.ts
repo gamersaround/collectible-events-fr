@@ -358,6 +358,20 @@ export const eventSchema = defineType({
       title: "Empreinte (déduplication)",
       type: "string",
     }),
+    defineField({
+      name: "emailPublishedSentAt",
+      title: "Email 'publié' envoyé le",
+      type: "datetime",
+      description: "Date d'envoi de l'email de confirmation de publication à l'organisateur. Géré automatiquement.",
+      options: { dateFormat: "YYYY-MM-DD", timeFormat: "HH:mm" },
+    }),
+    defineField({
+      name: "emailReminderSentAt",
+      title: "Email rappel J-14 envoyé le",
+      type: "datetime",
+      description: "Date d'envoi du rappel 2 semaines avant l'événement. Géré automatiquement.",
+      options: { dateFormat: "YYYY-MM-DD", timeFormat: "HH:mm" },
+    }),
   ],
   orderings: [
     {
