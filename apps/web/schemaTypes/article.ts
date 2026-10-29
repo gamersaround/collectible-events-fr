@@ -82,8 +82,9 @@ export const articleSchema = defineType({
     }),
     defineField({
       name: "body",
-      title: "Contenu",
+      title: "Contenu (legacy — remplacé par bodyFr)",
       type: "array",
+      description: "Champ hérité. Utilisez bodyFr pour le contenu français.",
       of: [
         { type: "block" },
         {
@@ -92,6 +93,67 @@ export const articleSchema = defineType({
           fields: [
             defineField({ name: "alt", title: "Texte alternatif", type: "string" }),
             defineField({ name: "caption", title: "Légende", type: "string" }),
+          ],
+        },
+      ],
+    }),
+    // ─── Bilingual fields ────────────────────────────────────────────────────
+    defineField({
+      name: "titleFr",
+      title: "Titre FR",
+      type: "string",
+      description: "Titre pour la version française (/fr). Laissez vide pour utiliser « Titre » ci-dessus.",
+    }),
+    defineField({
+      name: "titleEn",
+      title: "Titre EN",
+      type: "string",
+      description: "Titre pour la version anglaise (/en). Si absent, la page /en renvoie une 404.",
+    }),
+    defineField({
+      name: "metaDescriptionFr",
+      title: "Meta description FR",
+      type: "text",
+      rows: 2,
+      description: "140–155 caractères. Meta description pour /fr.",
+    }),
+    defineField({
+      name: "metaDescriptionEn",
+      title: "Meta description EN",
+      type: "text",
+      rows: 2,
+      description: "140–155 characters. Meta description for /en.",
+    }),
+    defineField({
+      name: "bodyFr",
+      title: "Contenu FR",
+      type: "array",
+      description: "Corps de l'article pour /fr. Prioritaire sur le champ legacy « Contenu ».",
+      of: [
+        { type: "block" },
+        {
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            defineField({ name: "alt", title: "Texte alternatif", type: "string" }),
+            defineField({ name: "caption", title: "Légende", type: "string" }),
+          ],
+        },
+      ],
+    }),
+    defineField({
+      name: "bodyEn",
+      title: "Contenu EN",
+      type: "array",
+      description: "Article body for /en. Required if titleEn is set.",
+      of: [
+        { type: "block" },
+        {
+          type: "image",
+          options: { hotspot: true },
+          fields: [
+            defineField({ name: "alt", title: "Alt text", type: "string" }),
+            defineField({ name: "caption", title: "Caption", type: "string" }),
           ],
         },
       ],
