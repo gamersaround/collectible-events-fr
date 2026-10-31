@@ -29,27 +29,40 @@ export async function POST(req: NextRequest) {
 
     for (const locale of routing.locales) {
       if (docType === "article") {
+        // Articles: revalidate only the specific page + listing
         if (slug) {
           revalidatePath(`/${locale}/articles/${slug}`);
         }
         revalidatePath(`/${locale}/articles`);
       } else {
+        // Events: revalidate the event page + listing only.
+        // Skip homepage, /carte, geo pages — they use ISR (7200s)
+        // and will refresh on their own schedule. Revalidating them
+        // on every Sanity mutation was the #1 Fluid CPU driver.
         if (slug) {
           revalidatePath(`/${locale}/evenements/${slug}`);
         }
+        // Revalidate geo pages only when the event has city/country info
         if (city) {
           revalidatePath(`/${locale}/evenements/${citySlug(city)}`);
         }
         if (country) {
-          revalidatePath(`/${locale}/evenements/${countryPathSlug(countryCode(country), locale)}`);
+          revalidatePath(
+            `/${locale}/evenements/${countryPathSlug(countryCode(country), locale)}`
+          );
         }
+        // Revalidate the events listing (keeps "à venir" section fresh)
         revalidatePath(`/${locale}/evenements`);
-        revalidatePath(`/${locale}`);
-        revalidatePath(`/${locale}/carte`);
+        // Skip: revalidatePath(`/${locale}`) — homepage will refresh via ISR
+        // Skip: revalidatePath(`/${locale}/carte`) — map refreshes via ISR
       }
     }
 
-    return NextResponse.json({ revalidated: true, slug: slug ?? null, type: docType ?? null });
+    return NextResponse.json({
+      revalidated: true,
+      slug: slug ?? null,
+      type: docType ?? null,
+    });
   } catch (err) {
     console.error("Sanity webhook error:", err);
     return NextResponse.json({ error: "Webhook error" }, { status: 500 });

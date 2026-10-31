@@ -11,7 +11,7 @@ import { ArticleCard } from "@/components/articles/ArticleCard";
 import { TCG_CONFIG } from "@agenda-cartes/shared";
 import { eventsBasePath } from "@/lib/paths";
 
-export const revalidate = 3600;
+export const revalidate = 7200; // 2h — réduit les re-renders Vercel Fluid CPU
 
 export async function generateMetadata({
   params,

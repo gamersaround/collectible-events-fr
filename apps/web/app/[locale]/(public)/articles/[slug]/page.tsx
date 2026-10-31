@@ -12,7 +12,7 @@ import { formatDateFr } from "@/lib/utils/dates";
 import { ArticleSchema } from "@/components/seo/ArticleSchema";
 import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
 
-export const revalidate = 3600;
+export const revalidate = 86400; // articles are stable content
 export const maxDuration = 30;
 
 // Unknown slugs must not become ISR 200 pages. Keep true so a newly published
