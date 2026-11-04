@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { getEventsForMap } from "@/lib/queries/events";
 import { TCG_CONFIG } from "@agenda-cartes/shared";
 
-export const revalidate = 3600;
+export const revalidate = 7200;
 
 export async function generateMetadata({
   params,

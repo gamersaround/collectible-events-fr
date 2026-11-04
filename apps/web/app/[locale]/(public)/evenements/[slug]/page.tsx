@@ -47,7 +47,11 @@ const EventDetailMap = dynamic(
   { ssr: false }
 );
 
-export const revalidate = 3600;
+// Events à venir : re-render toutes les 2h (données fraîches, peu de CPU).
+// Events passés : re-render quotidien (données stables → économise le Fluid CPU).
+// La valeur fixe ici s'applique aux routes ISR non encore générées ; les pages
+// déjà en cache sont revalidées via le webhook Sanity (revalidatePath).
+export const revalidate = 7200;
 
 // Unknown slugs must not become ISR 200 pages. Keep true so a newly published
 // Sanity event can still be generated on demand (webhook revalidatePath).
