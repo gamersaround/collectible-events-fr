@@ -76,18 +76,20 @@ export function NewsletterSignup({
   if (variant === "compact") {
     return (
       <div className="border-b-4 border-black bg-black">
-        <div className="container py-2.5 flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-          <p className="font-display font-black uppercase text-[#FFDE03] text-[11px] tracking-wide shrink-0">
-            {t("compactLabel")}
-          </p>
-          {status === "ok" ? (
-            <p className="text-sm font-bold text-[#FFDE03]">{t("success")}</p>
-          ) : (
-            form
-          )}
-          {status === "err" ? (
-            <p className="text-xs font-medium text-red-300 sm:ml-0">{t("error")}</p>
-          ) : null}
+        <div className="container py-2.5 flex justify-center">
+          <div className="w-full max-w-xl flex flex-col items-stretch gap-1.5">
+            <p className="font-display font-black uppercase text-[#FFDE03] text-[11px] tracking-wide text-center">
+              {t("compactLabel")}
+            </p>
+            {status === "ok" ? (
+              <p className="text-sm font-bold text-[#FFDE03] text-center">{t("success")}</p>
+            ) : (
+              form
+            )}
+            {status === "err" ? (
+              <p className="text-xs font-medium text-red-300 text-center">{t("error")}</p>
+            ) : null}
+          </div>
         </div>
       </div>
     );
