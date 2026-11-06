@@ -25,6 +25,15 @@
     "copyright": "© {year} CardAgenda : Made with ❤️ for the Card Collectors",
     "publisherLine": "Publisher: LC PRIZM"
   },
+  "newsletter": {
+    "title": "Upcoming events, every 2 weeks",
+    "blurb": "The next collectible-card shows in Europe, in your inbox. Confirm by email. No spam.",
+    "placeholder": "you@email.com",
+    "cta": "Subscribe",
+    "sending": "Sending",
+    "success": "Check your inbox to confirm.",
+    "error": "Could not subscribe. Try again."
+  },
   "home": {
     "heroTagline": "All collectible card events, in one place.",
     "heroSubTagline": "TCG · NBA · Sports · and more.",

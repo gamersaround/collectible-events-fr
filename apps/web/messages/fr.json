@@ -25,6 +25,15 @@
     "copyright": "© {year} CardAgenda : Made with ❤️ for the Card Collectors",
     "publisherLine": "Éditeur : LC PRIZM"
   },
+  "newsletter": {
+    "title": "Les events à venir, toutes les 2 semaines",
+    "blurb": "Les prochains salons cartes en Europe, dans ta boîte. Confirmation par email. Pas de spam.",
+    "placeholder": "toi@email.com",
+    "cta": "S'inscrire",
+    "sending": "Envoi",
+    "success": "Vérifie tes mails pour confirmer.",
+    "error": "Inscription impossible. Réessaie."
+  },
   "home": {
     "heroTagline": "Tous les événements cartes de collection, en un seul endroit.",
     "heroSubTagline": "TCG · NBA · Foot · et bien plus.",
