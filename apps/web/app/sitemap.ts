@@ -1,5 +1,9 @@
 import type { MetadataRoute } from "next";
 import { sanityServerClient } from "@/lib/sanity/client";
+
+// Sitemap is cached for 24h — Googlebot crawls it very frequently and each hit
+// triggered 3 Sanity fetches. 86400s brings that down from dozens/hour to once/day.
+export const revalidate = 86400;
 import { routing } from "@/i18n/routing";
 import { TCG_LANDING_SLUGS } from "@/lib/tcg-slugs";
 import { eventsUrl } from "@/lib/paths";
@@ -64,19 +68,28 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   );
 
+  // Wrap in try/catch — a Sanity timeout must not crash the sitemap with
+  // TypeError: Cannot read properties of null (reading 'map'). Each array
+  // falls back to [] so the sitemap stays valid (just smaller that render).
   const [events, articles, locations] = await Promise.all([
-    sanityServerClient.fetch<Array<{ slug: string; updatedAt: string }>>(
-      `*[_type == "event" && defined(slug.current)][0...1000] { "slug": slug.current, "updatedAt": _updatedAt }`
-    ),
-    sanityServerClient.fetch<Array<{ slug: string; updatedAt: string; hasEn: boolean }>>(
-      `*[_type == "article" && defined(slug.current)][0...500] { "slug": slug.current, "updatedAt": _updatedAt, "hasEn": defined(titleEn) }`
-    ),
-    sanityServerClient.fetch<Array<{ city: string; country: string }>>(
-      `*[_type == "event" && status in ["a_venir", "en_cours"] && defined(city) && city != ""]{
-        city,
-        "country": coalesce(country, "FR")
-      }`
-    ),
+    sanityServerClient
+      .fetch<Array<{ slug: string; updatedAt: string }>>(
+        `*[_type == "event" && defined(slug.current)][0...1000] { "slug": slug.current, "updatedAt": _updatedAt }`
+      )
+      .catch(() => [] as Array<{ slug: string; updatedAt: string }>),
+    sanityServerClient
+      .fetch<Array<{ slug: string; updatedAt: string; hasEn: boolean }>>(
+        `*[_type == "article" && defined(slug.current)][0...500] { "slug": slug.current, "updatedAt": _updatedAt, "hasEn": defined(titleEn) }`
+      )
+      .catch(() => [] as Array<{ slug: string; updatedAt: string; hasEn: boolean }>),
+    sanityServerClient
+      .fetch<Array<{ city: string; country: string }>>(
+        `*[_type == "event" && status in ["a_venir", "en_cours"] && defined(city) && city != ""]{\
+          city,\
+          "country": coalesce(country, "FR")\
+        }`
+      )
+      .catch(() => [] as Array<{ city: string; country: string }>),
   ]);
 
   const eventPages: MetadataRoute.Sitemap = (events ?? []).flatMap((e) =>

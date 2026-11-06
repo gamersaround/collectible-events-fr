@@ -2,6 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { getEvents } from "@/lib/queries/events";
 import { parseFiltersFromParams } from "@/lib/utils/filters";
 
+// This route reads dynamic query params on every request — it must never be
+// statically rendered. Without this Next.js attempts static rendering and
+// crashes with DYNAMIC_SERVER_USAGE on every call, wasting Fluid CPU.
+export const dynamic = "force-dynamic";
+
 export async function GET(request: NextRequest) {
   try {
     const searchParams = request.nextUrl.searchParams;

@@ -32,8 +32,11 @@ cron.schedule("0 */6 * * *", async () => {
   }
 });
 
-// Status refresh every 30 minutes: */30 * * * *
-cron.schedule("*/30 * * * *", async () => {
+// Status refresh every 3 hours: 0 */3 * * *
+// Was every 30min (*/30 * * * * = 48 runs/day). Event statuses change at most
+// a few times per day — 3h polling (8 runs/day) is sufficient and cuts the
+// Sanity mutations + Vercel revalidatePath calls by ~83%.
+cron.schedule("0 */3 * * *", async () => {
   console.log("\n[CRON] Refreshing event statuses");
   try {
     await refreshEventStatuses();
