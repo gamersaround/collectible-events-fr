@@ -10,6 +10,7 @@ import { FeaturedEventsSection } from "@/components/events/FeaturedEventsSection
 import { ArticleCard } from "@/components/articles/ArticleCard";
 import { TCG_CONFIG } from "@agenda-cartes/shared";
 import { eventsBasePath } from "@/lib/paths";
+import { NewsletterSignup } from "@/components/layout/NewsletterSignup";
 
 export const revalidate = 7200; // 2h — réduit les re-renders Vercel Fluid CPU
 
@@ -106,6 +107,8 @@ export default async function HomePage({
           </div>
         </div>
       </section>
+
+      <NewsletterSignup variant="compact" />
 
       {/* Marquee */}
       <div className="overflow-hidden border-b-4 border-black bg-black py-3 select-none">

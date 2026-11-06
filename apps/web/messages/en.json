@@ -32,7 +32,8 @@
     "cta": "Subscribe",
     "sending": "Sending",
     "success": "Check your inbox to confirm.",
-    "error": "Could not subscribe. Try again."
+    "error": "Could not subscribe. Try again.",
+    "compactLabel": "Digest · every 2 weeks"
   },
   "home": {
     "heroTagline": "All collectible card events, in one place.",

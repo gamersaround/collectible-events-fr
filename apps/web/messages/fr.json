@@ -32,7 +32,8 @@
     "cta": "S'inscrire",
     "sending": "Envoi",
     "success": "Vérifie tes mails pour confirmer.",
-    "error": "Inscription impossible. Réessaie."
+    "error": "Inscription impossible. Réessaie.",
+    "compactLabel": "Digest · toutes les 2 semaines"
   },
   "home": {
     "heroTagline": "Tous les événements cartes de collection, en un seul endroit.",
