@@ -3,6 +3,7 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { eventsBasePath } from "@/lib/paths";
 import { legalPublicPath } from "@/lib/legal-paths";
+import { NewsletterSignup } from "@/components/layout/NewsletterSignup";
 
 export async function Footer() {
   const t = await getTranslations("footer");
@@ -64,6 +65,10 @@ export async function Footer() {
               <li><Link href={legalPublicPath(locale, "cookies")} className="text-white/70 hover:text-[#FFDE03] transition-colors">{t("cookies")}</Link></li>
             </ul>
           </div>
+        </div>
+
+        <div className="mt-8">
+          <NewsletterSignup />
         </div>
 
         <div className="mt-6 text-center text-sm font-bold text-white/70 uppercase tracking-widest">
