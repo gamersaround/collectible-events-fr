@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 import type { Metadata } from "next";
-import { getTranslations, getLocale } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 import { getEvents, getEventCountryCodes, getFeaturedEvents } from "@/lib/queries/events";
 import { EventList, EventListSkeleton } from "@/components/events/EventList";
 import { FeaturedEventsSection } from "@/components/events/FeaturedEventsSection";
@@ -44,14 +44,16 @@ export async function generateMetadata({
 const PER_PAGE = 24;
 
 export default async function EventsPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const locale = await getLocale();
-  const params = await searchParams;
-  const filters = parseFiltersFromParams(params);
-  const page = parseInt((params.page as string) ?? "1", 10) || 1;
+  const { locale } = await params;
+  const sp = await searchParams;
+  const filters = parseFiltersFromParams(sp);
+  const page = parseInt((sp.page as string) ?? "1", 10) || 1;
 
   const [{ data: events, total, totalPages }, countryCodes, featuredEvents] =
     await Promise.all([
@@ -118,7 +120,7 @@ export default async function EventsPage({
                 currentPage={page}
                 totalPages={totalPages}
                 basePath={eventsBasePath(locale)}
-                searchParams={params}
+                searchParams={sp}
               />
             </div>
           )}

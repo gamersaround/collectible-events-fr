@@ -11,6 +11,7 @@ import {
   countryPathSlug,
   geoPageCopy,
 } from "@/lib/geo-slugs";
+import { getCountryEditorialCopy } from "@/lib/geo-editorial";
 
 interface GeoLandingPageProps {
   locale: string;
@@ -34,6 +35,12 @@ export async function GeoLandingPage({
   const sectionPath = eventsBasePath(locale);
   const pageUrl = eventsUrl(locale, match.canonicalSlug);
 
+  // Editorial copy + FAQ for priority country pages
+  const editorial =
+    match.kind === "country"
+      ? getCountryEditorialCopy(match.code, locale)
+      : null;
+
   const collectionSchema = {
     "@context": "https://schema.org",
     "@type": "CollectionPage",
@@ -53,6 +60,19 @@ export async function GeoLandingPage({
     },
   };
 
+  const faqSchema =
+    editorial?.faq && editorial.faq.length > 0
+      ? {
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: editorial.faq.map((item) => ({
+            "@type": "Question",
+            name: item.q,
+            acceptedAnswer: { "@type": "Answer", text: item.a },
+          })),
+        }
+      : null;
+
   const uniqueCities = Array.from(
     new Map(
       relatedCities
@@ -67,6 +87,12 @@ export async function GeoLandingPage({
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(collectionSchema) }}
       />
+      {faqSchema && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }}
+        />
+      )}
       <BreadcrumbSchema
         locale={locale}
         eventTitle={match.kind === "country" ? match.label : match.displayName}
@@ -133,6 +159,28 @@ export async function GeoLandingPage({
               {isFr ? `Voir les ${total} événements →` : `View all ${total} events →`}
             </Link>
           </div>
+        )}
+
+        {/* Editorial intro + FAQ — only for priority country pages */}
+        {editorial && (
+          <section className="mt-12 border-t border-gray-100 pt-10 max-w-2xl">
+            <p className="text-gray-600 leading-relaxed mb-8">{editorial.intro}</p>
+            {editorial.faq.length > 0 && (
+              <div>
+                <h2 className="text-xl font-bold text-gray-900 mb-6">
+                  {isFr ? "Questions fréquentes" : "Frequently asked questions"}
+                </h2>
+                <dl className="space-y-6">
+                  {editorial.faq.map((item, i) => (
+                    <div key={i}>
+                      <dt className="font-semibold text-gray-900 mb-1">{item.q}</dt>
+                      <dd className="text-gray-600 leading-relaxed">{item.a}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+            )}
+          </section>
         )}
       </div>
     </>
