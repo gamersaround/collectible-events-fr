@@ -64,9 +64,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   );
 
+  const cutoff12mo = new Date(Date.now() - 365 * 24 * 60 * 60 * 1000).toISOString().slice(0, 10);
+
   const [events, articles, locations] = await Promise.all([
     sanityServerClient.fetch<Array<{ slug: string; updatedAt: string }>>(
-      `*[_type == "event" && defined(slug.current)][0...1000] { "slug": slug.current, "updatedAt": _updatedAt }`
+      `*[_type == "event"
+          && defined(slug.current)
+          && defined(description)
+          && length(description) >= 140
+          && (status in ["a_venir", "en_cours", "publie"] || startsAt >= $cutoff)
+        ][0...1000] { "slug": slug.current, "updatedAt": _updatedAt }`,
+      { cutoff: cutoff12mo }
     ),
     sanityServerClient.fetch<Array<{ slug: string; updatedAt: string; hasEn: boolean }>>(
       `*[_type == "article" && defined(slug.current)][0...500] { "slug": slug.current, "updatedAt": _updatedAt, "hasEn": defined(titleEn) }`
