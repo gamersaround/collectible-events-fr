@@ -21,6 +21,7 @@ export const sanityServerClient = createClient({
   apiVersion,
   useCdn: true,
   token: process.env.SANITY_API_READ_TOKEN,
+  perspective: "published",
 });
 
 // Write client (for submissions API route)
