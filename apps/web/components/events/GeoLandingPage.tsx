@@ -3,6 +3,7 @@ import { ArrowLeft } from "lucide-react";
 import { getEvents } from "@/lib/queries/events";
 import { EventList } from "@/components/events/EventList";
 import { BreadcrumbSchema } from "@/components/seo/BreadcrumbSchema";
+import { CollapsibleCityList } from "@/components/events/CollapsibleCityList";
 import { eventsUrl, eventsBasePath } from "@/lib/paths";
 import {
   type CityMatch,
@@ -125,23 +126,11 @@ export async function GeoLandingPage({
         </header>
 
         {match.kind === "country" && uniqueCities.length > 0 && (
-          <nav className="mb-8" aria-label={isFr ? "Villes" : "Cities"}>
-            <p className="text-sm font-medium text-gray-700 mb-2">
-              {isFr ? "Villes" : "Cities"}
-            </p>
-            <ul className="flex flex-wrap gap-2">
-              {uniqueCities.map((city) => (
-                <li key={citySlug(city)}>
-                  <Link
-                    href={`${eventsRoot}/${citySlug(city)}`}
-                    className="inline-block px-3 py-1.5 rounded-lg text-sm bg-gray-100 text-gray-800 hover:bg-gray-200"
-                  >
-                    {city}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
+          <CollapsibleCityList
+            cities={uniqueCities}
+            eventsRoot={eventsRoot}
+            locale={locale}
+          />
         )}
 
         <EventList events={events} total={total} />

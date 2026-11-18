@@ -11,7 +11,7 @@ import { eventsBasePath } from "@/lib/paths";
  * aggregation query on every homepage hit — the ranking barely changes).
  */
 const TOP_COUNTRIES = [
-  "GB", "NL", "BE", "FR", "DE", "ES", "FI", "PT", "NO", "DK", "IE", "SE",
+  "FR", "GB", "BE", "DE", "NL", "ES", "IT",
 ];
 
 const PILL_ROTATIONS = [
