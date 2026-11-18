@@ -11,6 +11,7 @@ import { ArticleCard } from "@/components/articles/ArticleCard";
 import { TCG_CONFIG } from "@agenda-cartes/shared";
 import { eventsBasePath } from "@/lib/paths";
 import { NewsletterSignup } from "@/components/layout/NewsletterSignup";
+import { CountryFlagBar } from "@/components/home/CountryFlagBar";
 
 export const revalidate = 7200; // 2h — réduit les re-renders Vercel Fluid CPU
 
@@ -139,6 +140,9 @@ export default async function HomePage({
           </div>
         </div>
       </section>
+
+      {/* Country Flag Bar */}
+      <CountryFlagBar locale={locale} />
 
       {featuredEvents.length > 0 && (
         <section
