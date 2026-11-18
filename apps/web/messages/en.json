@@ -65,7 +65,8 @@
     "stat3Value": "6h",
     "stat3Label": "Auto-updated",
     "stat4Value": "🆓",
-    "stat4Label": "100% free"
+    "stat4Label": "100% free",
+    "allCountriesPill": "All countries"
   },
   "selection": {
     "title": "Our selection",
