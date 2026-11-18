@@ -141,9 +141,6 @@ export default async function HomePage({
         </div>
       </section>
 
-      {/* Country Flag Bar */}
-      <CountryFlagBar locale={locale} />
-
       {featuredEvents.length > 0 && (
         <section
           className="py-12 border-b-4 border-black bg-[#FAFAF7]"
@@ -187,6 +184,9 @@ export default async function HomePage({
           )}
         </div>
       </section>
+
+      {/* Country Flag Bar — after upcoming events */}
+      <CountryFlagBar locale={locale} />
 
       {/* Latest articles — hidden when no articles yet */}
       {recentArticles.length > 0 && (
