@@ -26,6 +26,7 @@ import {
   formatDateFr,
   formatEntryFee,
 } from "@/lib/utils/dates";
+import { withCardagendaUtm } from "@/lib/utils/utm";
 import { TCGType, TCG_CONFIG } from "@agenda-cartes/shared";
 import { TcgLandingPage } from "@/components/events/TcgLandingPage";
 import { GeoLandingPage } from "@/components/events/GeoLandingPage";
@@ -412,7 +413,7 @@ export default async function EventDetailPage({
                 )}
                 {event.website_url && (
                   <a
-                    href={event.website_url}
+                    href={withCardagendaUtm(event.website_url)}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-1.5 mt-1 text-sm text-gray-600 hover:text-blue-600"
@@ -431,7 +432,7 @@ export default async function EventDetailPage({
             <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 text-center">
               <h2 className="font-semibold text-blue-900 mb-2">{t("registrationTitle")}</h2>
               <a
-                href={event.registration_url}
+                href={withCardagendaUtm(event.registration_url)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-2 bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors"
@@ -446,7 +447,7 @@ export default async function EventDetailPage({
           {event.source_url && (
             <div className="mt-6 text-center text-sm text-gray-400">
               <a
-                href={event.source_url}
+                href={withCardagendaUtm(event.source_url)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-gray-600"
