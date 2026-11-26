@@ -134,7 +134,7 @@ export function EventSchema({ event, locale }: EventSchemaProps) {
       : {}),
     location: {
       "@type": "Place",
-      name: event.venue_name ?? event.city,
+      name: event.venue_name || event.city || event.title,
       address: {
         "@type": "PostalAddress",
         addressLocality: event.city,
